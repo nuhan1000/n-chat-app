@@ -138,7 +138,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
 <script>
 const firebaseConfig = {
@@ -152,14 +151,13 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-const storage = firebase.storage();
 
 let isSignupMode = false;
 let currentUser = null;
 let activeConversationId = null;
 let activePartner = null;
 let messagesUnsub = null;
-let pendingImageFile = null;
+let pendingImageDataUrl = null;
 
 const AVATAR_COLORS = ['#1F4E4A', '#E0A458', '#8E5572', '#3B6E8F', '#B3423A', '#5B7B4B'];
 function colorForName(name) {
@@ -313,17 +311,28 @@ function escapeHtml(str) {
 function onImageSelected(event) {
   const file = event.target.files[0];
   if (!file) return;
-  pendingImageFile = file;
   const reader = new FileReader();
   reader.onload = (e) => {
-    document.getElementById('imgPreviewThumb').src = e.target.result;
-    document.getElementById('imgPreviewBar').style.display = 'flex';
+    const img = new Image();
+    img.onload = () => {
+      const MAX_W = 800;
+      const scale = Math.min(1, MAX_W / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      pendingImageDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+      document.getElementById('imgPreviewThumb').src = pendingImageDataUrl;
+      document.getElementById('imgPreviewBar').style.display = 'flex';
+    };
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
 
 function clearImagePreview() {
-  pendingImageFile = null;
+  pendingImageDataUrl = null;
   document.getElementById('imageInput').value = '';
   document.getElementById('imgPreviewBar').style.display = 'none';
 }
@@ -331,18 +340,16 @@ function clearImagePreview() {
 async function sendMessage() {
   const input = document.getElementById('messageInput');
   const text = input.value.trim();
-  if (!text && !pendingImageFile) return;
+  if (!text && !pendingImageDataUrl) return;
 
   const sendBtn = document.getElementById('sendBtn');
   sendBtn.disabled = true;
 
   try {
-    let imageUrl = null;
-    if (pendingImageFile) {
-      const path = `chat_images/${activeConversationId}/${Date.now()}_${pendingImageFile.name}`;
-      const ref = storage.ref().child(path);
-      await ref.put(pendingImageFile);
-      imageUrl = await ref.getDownloadURL();
+    if (pendingImageDataUrl && pendingImageDataUrl.length > 900000) {
+      alert('ছবিটা এখনো একটু বড়, দয়া করে অন্য একটা ছবি চেষ্টা করুন');
+      sendBtn.disabled = false;
+      return;
     }
 
     await db.collection('conversations').doc(activeConversationId).set({
@@ -353,7 +360,7 @@ async function sendMessage() {
     await db.collection('conversations').doc(activeConversationId).collection('messages').add({
       senderId: currentUser.uid,
       text: text || null,
-      imageUrl: imageUrl,
+      imageUrl: pendingImageDataUrl || null,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
 
