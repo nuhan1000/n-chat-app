@@ -265,7 +265,7 @@
   .settings-label { font-size: 12.5px; font-weight: 600; color: var(--muted); }
   .settings-select, .settings-input { width: 100%; padding: 11px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; }
 
-  #chatScreen header, #userListScreen header, #contactInfoScreen header, #settingsScreen header {
+  #chatScreen header, #userListScreen header, #contactInfoScreen header, #settingsScreen header, #mediaViewerScreen header {
     background: var(--teal); color: #fff; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative; z-index: 50; border-bottom: 1px solid var(--border);
   }
@@ -311,6 +311,15 @@
   #imageInput, #photoInput, #settingsPhotoInput, #docInput, #audioInput { display: none; }
   .img-preview-bar { padding: 8px 14px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; z-index: 45; position: relative; }
   .img-preview-bar img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; }
+
+  /* Media Viewer screen specific styles */
+  .media-viewer-content { flex: 1; overflow-y: auto; background: var(--bg); padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+  .media-section-title { font-size: 14px; font-weight: 700; color: var(--marigold); text-transform: uppercase; margin-bottom: 8px; }
+  .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; }
+  .media-thumb-box { width: 100%; height: 90px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--panel); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .media-thumb-box img { width: 100%; height: 100%; object-fit: cover; }
+  .media-file-list { display: flex; flex-direction: column; gap: 8px; }
+  .media-file-item { display: flex; align-items: center; gap: 12px; background: var(--panel); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); }
 </style>
 </head>
 <body onclick="closeDropdowns(event)">
@@ -430,6 +439,16 @@
       </div>
     </div>
 
+    <!-- Media, Links & Docs Viewer Screen -->
+    <div class="screen" id="mediaViewerScreen">
+      <header>
+        <button class="back-btn" onclick="historyBack()">←</button>
+        <div class="app-title" style="font-size:18px;">Media, links and docs</div>
+        <div style="width:24px;"></div>
+      </header>
+      <div class="media-viewer-content" id="mediaViewerContentEl"></div>
+    </div>
+
     <div class="screen" id="chatScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
@@ -441,7 +460,6 @@
           </div>
         </div>
         
-        <!-- Three-dot menu-er thik agee Dark/Light mode toggle button -->
         <div style="display: flex; align-items: center; gap: 4px;">
           <button class="three-dot-btn" id="headerThemeToggleBtn" onclick="toggleThemeQuick()" title="Toggle Theme" style="font-size: 18px;">🌙</button>
           <div class="menu-wrapper">
@@ -652,7 +670,6 @@ function avatarHtml(user) {
 }
 function avatarBg(user) { return (user && user.photoBase64) ? 'transparent' : colorForName(user ? user.displayName || '?' : '?'); }
 
-// Updated Last Active format logic: 6 mash (180 din) ba tar beshi hole shudhu "Offline" dekhabe
 function formatLastActive(lastSeenTs) {
   if (!lastSeenTs) return "Offline";
   
@@ -1360,7 +1377,47 @@ async function openContactInfoFromChat() {
 
 async function openMediaLinksDocs() {
   closeDropdowns();
-  alert('Media, link and docs feature coming soon!');
+  if (!activeConversationId) return;
+
+  const container = document.getElementById('mediaViewerContentEl');
+  container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--muted);">Loading media...</div>';
+  navigateToScreen('mediaViewerScreen');
+
+  try {
+    const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').orderBy('timestamp', 'desc').get();
+    
+    let imagesHtml = '';
+    let docsHtml = '';
+    let audioHtml = '';
+
+    snap.docs.forEach(doc => {
+      const m = doc.data();
+      if (m.type === 'image' && m.imageUrl) {
+        imagesHtml += `<div class="media-thumb-box" onclick="window.open('${m.imageUrl}', '_blank')"><img src="${m.imageUrl}" /></div>`;
+      } else if (m.type === 'document') {
+        docsHtml += `<div class="media-file-item"><span style="font-size:24px;">📄</span><div style="flex:1;min-width:0;"><strong style="display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(m.fileName || 'Document')}</strong><span style="font-size:11px;color:var(--muted);">${shortTime(m.timestamp)}</span></div></div>`;
+      } else if (m.type === 'audio') {
+        audioHtml += `<div class="media-file-item"><span style="font-size:24px;">🎵</span><div style="flex:1;min-width:0;"><strong style="display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(m.fileName || 'Audio')}</strong><audio controls style="height:28px;width:100%;margin-top:4px;"><source src="${m.audioUrl || ''}" type="audio/webm"></audio></div></div>`;
+      }
+    });
+
+    container.innerHTML = `
+      <div>
+        <div class="media-section-title">Photos & Videos</div>
+        <div class="media-grid">${imagesHtml || '<div style="font-size:13px;color:var(--muted);">No media shared</div>'}</div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="media-section-title">Documents</div>
+        <div class="media-file-list">${docsHtml || '<div style="font-size:13px;color:var(--muted);">No documents shared</div>'}</div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="media-section-title">Audio Files</div>
+        <div class="media-file-list">${audioHtml || '<div style="font-size:13px;color:var(--muted);">No audio shared</div>'}</div>
+      </div>
+    `;
+  } catch (e) {
+    container.innerHTML = '<div style="text-align:center; padding:40px; color:#ef4444;">Failed to load media files.</div>';
+  }
 }
 
 async function toggleNotificationSettings() {
