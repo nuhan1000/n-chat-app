@@ -100,32 +100,11 @@
   }
   .screen.active { display: flex; z-index: 10; animation: appOpen 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-  /* Mobile Responsive Overrides - Fixed for Mobile Interaction */
   @media(max-width: 768px) {
-    .app-container {
-      position: relative;
-    }
-    .sidebar-pane {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 2;
-    }
-    .main-pane {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      pointer-events: none; /* Prevents hidden main pane from blocking sidebar clicks */
-    }
-    .main-pane .screen.active {
-      z-index: 30;
-      pointer-events: auto;
-    }
+    .app-container { position: relative; }
+    .sidebar-pane { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 2; }
+    .main-pane { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+    .main-pane .screen.active { z-index: 30; pointer-events: auto; }
   }
 
   #authScreen { align-items: center; justify-content: center; background: linear-gradient(135deg, #1E3A8A 0%, #172554 100%); padding: 24px; overflow-y: auto; position: fixed; z-index: 1000; }
@@ -185,22 +164,9 @@
   .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 60px 24px; }
 
   .sidebar-bottom-fab {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    background: var(--marigold);
-    color: #fff;
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    border: none;
-    cursor: pointer;
-    z-index: 20;
+    position: absolute; bottom: 20px; right: 20px; background: var(--marigold); color: #fff;
+    width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 24px; box-shadow: 0 6px 16px rgba(0,0,0,0.15); border: none; cursor: pointer; z-index: 20;
     transition: transform 0.2s, background 0.2s;
   }
   .sidebar-bottom-fab:hover { transform: scale(1.06); background: var(--marigold-hover); }
@@ -450,6 +416,7 @@
           <div class="dropdown-menu" id="chatDropdownMenu">
             <div class="dropdown-item" onclick="openContactInfoFromChat()">ℹ️ View Contact Info</div>
             <div class="dropdown-item" onclick="openMediaLinksDocs()">🖼️ Media, link and docs</div>
+            <div class="dropdown-item" onclick="toggleThemeFromChat()">🌓 Toggle Theme (Light/Dark)</div>
             <div class="dropdown-item" onclick="toggleNotificationSettings()">🔔 Notification settings</div>
             <div class="dropdown-item" onclick="toggleFavouriteChat()">⭐ Add to favourites</div>
             <div class="dropdown-item danger" onclick="blockChatPartner()">🚫 Block User</div>
@@ -621,11 +588,19 @@ function changeTheme(themeName) {
     document.documentElement.removeAttribute('data-theme');
   }
   localStorage.setItem('talknu_theme_mode', themeName);
+  const themeSel = document.getElementById('themeSelector');
+  if (themeSel) themeSel.value = themeName;
+}
+
+function toggleThemeFromChat() {
+  closeDropdowns();
+  const currentTheme = localStorage.getItem('talknu_theme_mode') || 'light';
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  changeTheme(newTheme);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('talknu_theme_mode') || 'light';
-  document.getElementById('themeSelector').value = savedTheme;
   changeTheme(savedTheme);
 });
 
@@ -1367,7 +1342,7 @@ async function clearChatMessages() {
         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
       });
       alert('Chat cleared successfully.');
-    } else {
+    } catch (e) {
       alert('Failed to clear chat.');
     }
   }
