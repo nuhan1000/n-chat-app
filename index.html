@@ -3,61 +3,32 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>N Chat</title>
+<title>N Chat - Mobile Auth</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
-  /* ---------- Theme & Chat Background Variables ---------- */
   :root {
-    --teal: #1F4E4A;
-    --teal-deep: #163a37;
-    --marigold: #E0A458;
-    --rose: #E8B4B8;
-    --bg: #F3F5F1;
+    --teal: #075E54;
+    --teal-deep: #054C44;
+    --marigold: #25D366;
+    --bg: #ECE5DD;
     --panel: #FFFFFF;
     --border: #E2E7E2;
     --text: #1E2A28;
     --muted: #6B7A76;
-    --online: #3FAE5C;
+    --online: #25D366;
   }
 
   [data-theme="dark"] {
-    --teal: #2A3B3C;
-    --teal-deep: #1B2627;
-    --marigold: #D4A373;
-    --rose: #B5838D;
-    --bg: #121817;
-    --panel: #1A2322;
-    --border: #2D3B39;
-    --text: #E3ECEA;
-    --muted: #8FA39E;
-    --online: #52B788;
-  }
-
-  [data-theme="purple"] {
-    --teal: #4A1F48;
-    --teal-deep: #321330;
-    --marigold: #F4A261;
-    --rose: #E7C1D3;
-    --bg: #F8F3F7;
-    --panel: #FFFFFF;
-    --border: #EBE0E8;
-    --text: #2A1E29;
-    --muted: #7A6B78;
-    --online: #2A9D8F;
-  }
-
-  [data-theme="rose"] {
-    --teal: #8A4F52;
-    --teal-deep: #613437;
-    --marigold: #E9C46A;
-    --rose: #F4ACB7;
-    --bg: #FAF4F5;
-    --panel: #FFFFFF;
-    --border: #EAD5D8;
-    --text: #331E20;
-    --muted: #82686A;
-    --online: #40916C;
+    --teal: #1F2C34;
+    --teal-deep: #111B21;
+    --marigold: #00A884;
+    --bg: #0B141A;
+    --panel: #111B21;
+    --border: #222D34;
+    --text: #E9EDEF;
+    --muted: #8696A0;
+    --online: #00A884;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,8 +41,8 @@
     overflow: hidden;
     transition: background 0.3s, color 0.3s;
   }
-  input, button, textarea, select { font-family: 'Hind Siliguri', sans-serif; }
-  input:focus, textarea:focus, select:focus { outline: 2px solid var(--teal); outline-offset: 1px; }
+  input, button, select { font-family: 'Hind Siliguri', sans-serif; }
+  input:focus, select:focus { outline: 2px solid var(--teal); outline-offset: 1px; }
   button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
   .screen { display: none; height: 100vh; height: 100dvh; flex-direction: column; }
@@ -80,47 +51,47 @@
   /* ---------- Auth screen ---------- */
   #authScreen { align-items: center; justify-content: center; background: linear-gradient(160deg, var(--teal) 0%, var(--teal-deep) 100%); padding: 24px; overflow-y: auto; }
   .auth-card { width: 100%; max-width: 360px; background: var(--panel); border-radius: 20px; padding: 32px 26px; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.5); margin: 20px 0; }
-  .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 30px; font-weight: 800; color: var(--teal); text-align: center; margin-bottom: 4px; }
-  .auth-sub { text-align: center; font-size: 12.5px; color: var(--muted); margin-bottom: 22px; }
+  .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 32px; font-weight: 800; color: #25D366; text-align: center; margin-bottom: 4px; }
+  .auth-sub { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 22px; }
   .field { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 14px; margin-bottom: 10px; background: var(--bg); color: var(--text); }
-  .btn-primary { width: 100%; padding: 12px 0; border-radius: 12px; border: none; background: var(--teal); color: #fff; font-weight: 700; font-size: 14px; margin-top: 4px; }
-  .btn-primary:hover { background: var(--teal-deep); }
-  .auth-switch { text-align: center; font-size: 12.5px; color: var(--muted); margin-top: 16px; }
-  .auth-switch a { color: var(--teal); font-weight: 700; text-decoration: none; cursor: pointer; }
-  .auth-error { color: #B3423A; font-size: 12px; text-align: center; min-height: 16px; margin-bottom: 6px; }
+  .btn-primary { width: 100%; padding: 12px 0; border-radius: 12px; border: none; background: #25D366; color: #fff; font-weight: 700; font-size: 15px; margin-top: 6px; }
+  .btn-primary:hover { background: #20bd5a; }
+  .auth-switch { text-align: center; font-size: 13px; color: var(--muted); margin-top: 16px; }
+  .auth-switch a { color: #25D366; font-weight: 700; text-decoration: none; cursor: pointer; }
+  .auth-error { color: #E53935; font-size: 12px; text-align: center; min-height: 16px; margin-bottom: 6px; }
   .photo-picker-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
   .photo-picker-preview { width: 52px; height: 52px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; border: 1.5px solid var(--border); }
   .photo-picker-preview img { width: 100%; height: 100%; object-fit: cover; }
   .photo-picker-btn { font-size: 12px; color: var(--teal); font-weight: 700; background: none; border: 1.5px solid var(--teal); padding: 6px 12px; border-radius: 10px; }
 
-  /* ---------- Contacts screen ---------- */
+  /* ---------- Headers & Panels ---------- */
   #contactsScreen header, #chatScreen header, #settingsScreen header {
     background: var(--teal); color: #fff; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
   }
-  .app-title { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 19px; }
+  .app-title { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 20px; color: #fff; }
   .header-actions { display: flex; align-items: center; gap: 8px; }
-  .icon-btn { background: rgba(255,255,255,0.12); border: none; color: #fff; border-radius: 10px; padding: 8px 12px; font-size: 12px; font-weight: 600; }
-  .contact-list { flex: 1; overflow-y: auto; padding: 8px 0; }
-  .contact-row { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--border); background: var(--panel); cursor: pointer; }
-  .contact-row:hover { opacity: 0.9; }
+  .icon-btn { background: rgba(255,255,255,0.15); border: none; color: #fff; border-radius: 10px; padding: 8px 12px; font-size: 12px; font-weight: 600; }
+  .contact-list { flex: 1; overflow-y: auto; padding: 0; background: var(--panel); }
+  .contact-row { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--border); background: var(--panel); cursor: pointer; }
   .avatar-wrap { position: relative; flex-shrink: 0; }
-  .avatar { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #fff; overflow: hidden; }
+  .avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #fff; overflow: hidden; }
   .avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .online-dot { position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--online); border: 2px solid var(--panel); }
+  .online-dot { position: absolute; bottom: 0; right: 0; width: 13px; height: 13px; border-radius: 50%; background: var(--online); border: 2px solid var(--panel); }
   .contact-main { flex: 1; min-width: 0; }
   .contact-top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-  .contact-name { font-weight: 600; font-size: 14.5px; color: var(--text); }
-  .contact-time { font-size: 10.5px; color: var(--muted); white-space: nowrap; }
-  .contact-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 2px; }
-  .contact-sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .unread-badge { background: var(--marigold); color: #3a2405; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0; }
+  .contact-name { font-weight: 600; font-size: 15px; color: var(--text); }
+  .contact-phone { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .contact-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .contact-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 3px; }
+  .contact-sub { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .unread-badge { background: #25D366; color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0; }
   .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 60px 24px; }
 
   /* ---------- Settings screen ---------- */
   .settings-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
-  .settings-card { width: 100%; max-width: 400px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-  .settings-card h3 { font-size: 15px; color: var(--teal); margin-bottom: 4px; font-family: 'Baloo Da 2', sans-serif; }
+  .settings-card { width: 100%; max-width: 400px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .settings-card h3 { font-size: 16px; color: var(--teal); font-family: 'Baloo Da 2', sans-serif; }
   .settings-profile-center { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 6px; }
   .settings-avatar-preview { width: 80px; height: 80px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 28px; overflow: hidden; border: 2px solid var(--teal); }
   .settings-avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
@@ -129,36 +100,32 @@
 
   /* ---------- Chat screen ---------- */
   #chatScreen header { gap: 10px; }
-  .back-btn { background: none; border: none; color: #fff; font-size: 20px; padding: 0 4px; }
+  .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 0 4px; }
   .chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-  .chat-header-text { min-width: 0; }
   .chat-partner-name { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 16px; }
-  .chat-partner-status { font-size: 11px; color: rgba(255,255,255,0.75); }
-  .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 4px; background: var(--bg); }
+  .chat-partner-status { font-size: 11px; color: rgba(255,255,255,0.8); }
+  .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 6px; background: var(--bg); }
   .msg-row { display: flex; align-items: center; gap: 6px; }
   .msg-row.mine { justify-content: flex-end; }
-  .delete-msg-btn { background: none; border: none; font-size: 12px; opacity: 0.45; padding: 2px 4px; order: -1; color: var(--text); }
-  .delete-msg-btn:hover { opacity: 1; }
-  .bubble { max-width: 72%; padding: 9px 13px; border-radius: 16px; font-size: 14px; line-height: 1.45; position: relative; }
-  .bubble.theirs { background: var(--panel); color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
-  .bubble.mine { background: var(--teal); color: #fff; border-bottom-right-radius: 4px; }
-  .bubble img { max-width: 100%; border-radius: 10px; display: block; margin-top: 4px; }
-  .bubble .meta-row { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 4px; }
-  .bubble .time { font-size: 10px; opacity: 0.7; }
-  .bubble .ticks { font-size: 11px; }
-  .bubble .ticks.seen { color: #7FD8FF; }
+  .delete-msg-btn { background: none; border: none; font-size: 12px; opacity: 0.45; padding: 2px 4px; color: var(--text); }
+  .bubble { max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14px; line-height: 1.4; position: relative; }
+  .bubble.theirs { background: var(--panel); color: var(--text); border-top-left-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+  .bubble.mine { background: #E7FCE3; color: #111; border-top-right-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+  [data-theme="dark"] .bubble.mine { background: #005C4B; color: #E9EDEF; }
+  .bubble img { max-width: 100%; border-radius: 8px; display: block; margin-top: 4px; }
+  .bubble .meta-row { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 2px; }
+  .bubble .time { font-size: 10px; opacity: 0.6; }
+  .bubble .ticks { font-size: 11px; margin-left: 2px; }
+  .bubble .ticks.seen { color: #34B7F1; }
   .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; background: var(--panel); }
-  .composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px; padding-bottom: max(10px, env(safe-area-inset-bottom)); background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; }
+  .composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; }
   .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: var(--bg); color: var(--text); }
   .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
-  .round-btn.img { background: var(--rose); color: var(--teal-deep); }
-  .round-btn.send { background: var(--teal); color: #fff; }
-  .round-btn.send:disabled { opacity: 0.5; }
+  .round-btn.img { background: var(--border); color: var(--text); }
+  .round-btn.send { background: #00A884; color: #fff; }
   #imageInput, #photoInput, #settingsPhotoInput { display: none; }
   .img-preview-bar { padding: 8px 14px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
   .img-preview-bar img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; }
-  .img-preview-bar span { font-size: 12px; color: var(--muted); flex: 1; }
-  .img-preview-bar button { background: none; border: none; color: #B3423A; font-size: 12px; font-weight: 700; }
 </style>
 </head>
 <body>
@@ -166,8 +133,8 @@
 <!-- ================= AUTH SCREEN ================= -->
 <div class="screen active" id="authScreen">
   <div class="auth-card">
-    <div class="auth-logo">N Chat</div>
-    <div class="auth-sub" id="authSubLabel">পরিবার ও কাছের মানুষের জন্য</div>
+    <div class="auth-logo">WhatsApp Chat</div>
+    <div class="auth-sub" id="authSubLabel">মোবাইল নাম্বার দিয়ে চ্যাট শুরু করুন</div>
     <div class="auth-error" id="authError"></div>
     <input class="field" id="displayNameField" placeholder="আপনার নাম" style="display:none;" />
     <div class="photo-picker-row" id="photoPickerRow" style="display:none;">
@@ -175,17 +142,17 @@
       <button type="button" class="photo-picker-btn" onclick="document.getElementById('photoInput').click()">প্রোফাইল ছবি (ঐচ্ছিক)</button>
       <input type="file" id="photoInput" accept="image/*" onchange="onSignupPhotoSelected(event)" />
     </div>
-    <input class="field" id="emailField" type="email" placeholder="ইমেইল" />
+    <input class="field" id="phoneField" type="tel" placeholder="মোবাইল নাম্বার (যেমন: 01712345678)" />
     <input class="field" id="passwordField" type="password" placeholder="পাসওয়ার্ড" />
     <button class="btn-primary" id="authSubmitBtn" onclick="submitAuth()">লগইন করুন</button>
-    <div class="auth-switch" id="authSwitchLabel">অ্যাকাউন্ট নেই? <a onclick="toggleAuthMode()">সাইন আপ করুন</a></div>
+    <div class="auth-switch" id="authSwitchLabel">অ্যাকাউন্ট নেই? <a onclick="toggleAuthMode()">নতুন একাউন্ট খুলুন</a></div>
   </div>
 </div>
 
 <!-- ================= CONTACTS SCREEN ================= -->
 <div class="screen" id="contactsScreen">
   <header>
-    <div class="app-title">N Chat</div>
+    <div class="app-title">WhatsApp</div>
     <div class="header-actions">
       <button class="icon-btn" onclick="openSettings()">⚙️ সেটিংস</button>
       <button class="icon-btn" onclick="logout()">লগ আউট</button>
@@ -198,12 +165,12 @@
 <div class="screen" id="settingsScreen">
   <header>
     <button class="back-btn" onclick="goToContactsFromSettings()">←</button>
-    <div class="app-title">অ্যাপ সেটিংস</div>
+    <div class="app-title">সেটিংস</div>
     <div style="width:24px;"></div>
   </header>
   <div class="settings-content">
     <div class="settings-card">
-      <h3>প্রোফাইল সেটিংস</h3>
+      <h3>প্রোফাইল কাস্টমাইজেশন</h3>
       <div class="settings-profile-center">
         <div class="settings-avatar-preview" id="settingsAvatarPreview">👤</div>
         <button type="button" class="photo-picker-btn" onclick="document.getElementById('settingsPhotoInput').click()">ছবি পরিবর্তন করুন</button>
@@ -211,29 +178,15 @@
       </div>
       <div class="settings-label">আপনার নাম</div>
       <input type="text" class="settings-input" id="settingsNameInput" placeholder="নাম লিখুন" />
-      <button class="btn-primary" onclick="saveProfileChanges()">প্রোফাইল আপডেট করুন</button>
+      <button class="btn-primary" onclick="saveProfileChanges()">আপডেট করুন</button>
     </div>
 
     <div class="settings-card">
-      <h3>অ্যাপ থিম</h3>
-      <div class="settings-label">অ্যাপের কালার স্টাইল বেছে নিন</div>
+      <h3>থিম ও ব্যাকগ্রাউন্ড</h3>
+      <div class="settings-label">অ্যাপ থিম সিলেক্ট করুন</div>
       <select class="settings-select" id="themeSelector" onchange="changeTheme(this.value)">
-        <option value="teal">🎨 টিল (Teal - ডিফল্ট)</option>
+        <option value="light">☀️ লাইট মোড (Light)</option>
         <option value="dark">🌙 ডার্ক মোড (Dark)</option>
-        <option value="purple">💜 রয়্যাল পার্পল (Purple)</option>
-        <option value="rose">🌸 রোজ পিংক (Rose)</option>
-      </select>
-    </div>
-
-    <div class="settings-card">
-      <h3>চ্যাট ব্যাকগ্রাউন্ড (WhatsApp Style)</h3>
-      <div class="settings-label">চ্যাট স্ক্রিনের ব্যাকগ্রাউন্ড কালার</div>
-      <select class="settings-select" id="chatBgSelector" onchange="changeChatBg(this.value)">
-        <option value="default">ডিফল্ট ব্যাকগ্রাউন্ড</option>
-        <option value="whatsapp-light">WhatsApp লাইট (সাদাটে)</option>
-        <option value="whatsapp-dark">WhatsApp ডার্ক চ্যাট (গাড় সবুজ)</option>
-        <option value="soft-blue">সফট স্কাই ব্লু</option>
-        <option value="warm-beige">ওয়ার্ম বেজ (Warm Beige)</option>
       </select>
     </div>
   </div>
@@ -244,8 +197,8 @@
   <header>
     <button class="back-btn" onclick="goToContacts()">←</button>
     <div class="chat-header-info">
-      <div class="avatar" id="chatAvatar" style="width:36px;height:36px;font-size:13px;"></div>
-      <div class="chat-header-text">
+      <div class="avatar" id="chatAvatar" style="width:38px;height:38px;font-size:14px;"></div>
+      <div>
         <div class="chat-partner-name" id="chatPartnerName"></div>
         <div class="chat-partner-status" id="chatPartnerStatus"></div>
       </div>
@@ -255,8 +208,8 @@
   <div class="typing-indicator" id="typingIndicator" style="display:none;">টাইপ করছে...</div>
   <div class="img-preview-bar" id="imgPreviewBar" style="display:none;">
     <img id="imgPreviewThumb" />
-    <span>ছবি পাঠানোর জন্য প্রস্তুত</span>
-    <button onclick="clearImagePreview()">বাতিল</button>
+    <span style="flex:1;font-size:12px;">ছবি পাঠানোর জন্য প্রস্তুত</span>
+    <button onclick="clearImagePreview()" style="background:none;border:none;color:red;font-size:12px;">বাতিল</button>
   </div>
   <div class="composer">
     <input type="file" id="imageInput" accept="image/*" onchange="onImageSelected(event)" />
@@ -299,54 +252,22 @@ let heartbeatInterval = null;
 let allUsers = [];
 let myConversations = {};
 
-// Theme & Chat Background Management
 function changeTheme(themeName) {
-  if (themeName === 'teal') {
-    document.documentElement.removeAttribute('data-theme');
+  if (themeName === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
   } else {
-    document.documentElement.setAttribute('data-theme', themeName);
+    document.documentElement.removeAttribute('data-theme');
   }
-  localStorage.setItem('n_chat_theme', themeName);
+  localStorage.setItem('n_chat_theme_mode', themeName);
 }
 
-function changeChatBg(bgStyle) {
-  const messagesEl = document.getElementById('messagesEl');
-  messagesEl.className = 'messages';
-  if (bgStyle !== 'default') {
-    messagesEl.classList.add('bg-' + bgStyle);
-  }
-  localStorage.setItem('n_chat_bg', bgStyle);
-}
-
-// Custom CSS for WhatsApp Chat Backgrounds
-const styleSheet = document.createElement("style");
-styleSheet.innerHTML = `
-  .bg-whatsapp-light { background: #efeae2 !important; }
-  .bg-whatsapp-dark { background: #0b141a !important; }
-  .bg-soft-blue { background: #e7f3ff !important; }
-  .bg-warm-beige { background: #fdf6ec !important; }
-`;
-document.head.appendChild(styleSheet);
-
-// Load saved settings on startup
 window.addEventListener('DOMContentLoaded', () => {
-  const savedTheme = localStorage.getItem('n_chat_theme') || 'teal';
-  const savedBg = localStorage.getItem('n_chat_bg') || 'default';
-  
-  const themeSelect = document.getElementById('themeSelector');
-  if (themeSelect) themeSelect.value = savedTheme;
-  if (savedTheme !== 'teal') {
-    document.documentElement.setAttribute('data-theme', savedTheme);
-  }
-
-  const bgSelect = document.getElementById('chatBgSelector');
-  if (bgSelect) bgSelect.value = savedBg;
-  if (savedBg !== 'default') {
-    document.getElementById('messagesEl').classList.add('bg-' + savedBg);
-  }
+  const savedTheme = localStorage.getItem('n_chat_theme_mode') || 'light';
+  document.getElementById('themeSelector').value = savedTheme;
+  changeTheme(savedTheme);
 });
 
-const AVATAR_COLORS = ['#1F4E4A', '#E0A458', '#8E5572', '#3B6E8F', '#B3423A', '#5B7B4B'];
+const AVATAR_COLORS = ['#075E54', '#128C7E', '#25D366', '#34B7F1', '#E5423A', '#8E5572'];
 function colorForName(name) {
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
@@ -369,11 +290,10 @@ function timeAgoLabel(ts) {
   const diffMs = Date.now() - ts.toDate().getTime();
   const mins = Math.floor(diffMs / 60000);
   if (mins < 1) return 'এইমাত্র';
-  if (mins < 60) return mins + ' মিনিট আগে';
+  if (mins < 60) return mins + ' মি: আগে';
   const hrs = Math.floor(mins / 60);
   if (hrs < 24) return hrs + ' ঘণ্টা আগে';
-  const days = Math.floor(hrs / 24);
-  return days + ' দিন আগে';
+  return Math.floor(hrs / 24) + ' দিন আগে';
 }
 
 function shortTime(ts) {
@@ -381,16 +301,21 @@ function shortTime(ts) {
   return new Date(ts.toDate()).toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
 }
 
-/* ---------------- Auth ---------------- */
+/* ---------------- Mobile Auth (Without OTP) ---------------- */
 function toggleAuthMode() {
   isSignupMode = !isSignupMode;
   document.getElementById('displayNameField').style.display = isSignupMode ? 'block' : 'none';
   document.getElementById('photoPickerRow').style.display = isSignupMode ? 'flex' : 'none';
-  document.getElementById('authSubmitBtn').textContent = isSignupMode ? 'সাইন আপ করুন' : 'লগইন করুন';
+  document.getElementById('authSubmitBtn').textContent = isSignupMode ? 'রেজিস্টার করুন' : 'লগইন করুন';
   document.getElementById('authSwitchLabel').innerHTML = isSignupMode
-    ? 'আগে থেকেই অ্যাকাউন্ট আছে? <a onclick="toggleAuthMode()">লগইন করুন</a>'
-    : 'অ্যাকাউন্ট নেই? <a onclick="toggleAuthMode()">সাইন আপ করুন</a>';
+    ? 'আগে থেকেই একাউন্ট আছে? <a onclick="toggleAuthMode()">লগইন করুন</a>'
+    : 'অ্যাকাউন্ট নেই? <a onclick="toggleAuthMode()">নতুন একাউন্ট খুলুন</a>';
   document.getElementById('authError').textContent = '';
+}
+
+function phoneToEmail(phone) {
+  const cleanPhone = phone.replace(/[^0-9]/g, '');
+  return `user_${cleanPhone}@nchat.local`;
 }
 
 function onSignupPhotoSelected(event) {
@@ -416,42 +341,39 @@ function onSignupPhotoSelected(event) {
 }
 
 async function submitAuth() {
-  const email = document.getElementById('emailField').value.trim();
+  const phone = document.getElementById('phoneField').value.trim();
   const password = document.getElementById('passwordField').value;
   const errEl = document.getElementById('authError');
   errEl.textContent = '';
-  if (!email || !password) { errEl.textContent = 'ইমেইল ও পাসওয়ার্ড দিন'; return; }
+
+  if (!phone || phone.length < 11) { errEl.textContent = 'সঠিক মোবাইল নাম্বার দিন'; return; }
+  if (!password || password.length < 6) { errEl.textContent = 'পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে'; return; }
+
+  const fakeEmail = phoneToEmail(phone);
 
   try {
     if (isSignupMode) {
       const displayName = document.getElementById('displayNameField').value.trim();
       if (!displayName) { errEl.textContent = 'আপনার নাম দিন'; return; }
-      const cred = await auth.createUserWithEmailAndPassword(email, password);
+      
+      const cred = await auth.createUserWithEmailAndPassword(fakeEmail, password);
       await db.collection('users').doc(cred.user.uid).set({
-        displayName, email, uid: cred.user.uid,
+        displayName,
+        phone,
+        uid: cred.user.uid,
         photoBase64: pendingSignupPhoto || null,
         online: true,
         lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     } else {
-      await auth.signInWithEmailAndPassword(email, password);
+      await auth.signInWithEmailAndPassword(fakeEmail, password);
     }
   } catch (e) {
-    errEl.textContent = friendlyAuthError(e.code);
+    if(e.code === 'auth/email-already-in-use') errEl.textContent = 'এই নাম্বারে আগেই একাউন্ট খোলা আছে!';
+    else if(e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password') errEl.textContent = 'নাম্বার বা পাসওয়ার্ড ভুল!';
+    else errEl.textContent = 'কোনো সমস্যা হয়েছে, আবার চেষ্টা করুন';
   }
-}
-
-function friendlyAuthError(code) {
-  const map = {
-    'auth/email-already-in-use': 'এই ইমেইল দিয়ে আগেই অ্যাকাউন্ট আছে',
-    'auth/invalid-email': 'ইমেইল ঠিক নেই',
-    'auth/weak-password': 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে',
-    'auth/user-not-found': 'এই ইমেইলে কোনো অ্যাকাউন্ট নেই',
-    'auth/wrong-password': 'ভুল পাসওয়ার্ড',
-    'auth/invalid-credential': 'ইমেইল বা পাসওয়ার্ড ভুল',
-  };
-  return map[code] || 'কিছু একটা ভুল হয়েছে, আবার চেষ্টা করুন';
 }
 
 async function setPresence(online) {
@@ -466,8 +388,6 @@ async function setPresence(online) {
 function startHeartbeat() {
   setPresence(true);
   heartbeatInterval = setInterval(() => setPresence(true), 20000);
-  window.addEventListener('beforeunload', () => setPresence(false));
-  document.addEventListener('visibilitychange', () => setPresence(document.visibilityState === 'visible'));
 }
 function stopHeartbeat() {
   if (heartbeatInterval) clearInterval(heartbeatInterval);
@@ -518,13 +438,13 @@ function listenContacts() {
 function renderContactList() {
   const listEl = document.getElementById('contactList');
   if (allUsers.length === 0) {
-    listEl.innerHTML = '<div class="empty-state">এখনো অন্য কেউ সাইন আপ করেননি। পরিবারের অন্যদের এই অ্যাপে অ্যাকাউন্ট বানাতে বলুন।</div>';
+    listEl.innerHTML = '<div class="empty-state">এখনো অন্য কেউ এই অ্যাপে একাউন্ট খোলেনি। অন্য ফোন থেকে রেজিস্ট্রেশন করতে বলুন।</div>';
     return;
   }
   const rows = allUsers.map(u => {
     const convId = conversationIdFor(currentUser.uid, u.uid);
     const conv = myConversations[convId];
-    const preview = conv ? (conv.lastMessageType === 'image' ? '📷 ছবি' : (conv.lastMessageText || '')) : 'চ্যাট শুরু করুন';
+    const preview = conv ? (conv.lastMessageType === 'image' ? '📷 ছবি' : (conv.lastMessageText || '')) : 'চ্যাট করতে ক্লিক করুন';
     const previewPrefixed = conv && conv.lastMessageSenderId === currentUser.uid ? 'আপনি: ' + preview : preview;
     const unread = conv && conv.unreadCount && conv.unreadCount[currentUser.uid] ? conv.unreadCount[currentUser.uid] : 0;
     const sortKey = conv && conv.lastUpdated ? conv.lastUpdated.toMillis() : 0;
@@ -542,6 +462,7 @@ function renderContactList() {
           <div class="contact-name">${r.u.displayName}</div>
           <div class="contact-time">${r.timeLabel}</div>
         </div>
+        <div class="contact-phone">📱 ${r.u.phone || 'নাম্বার নেই'}</div>
         <div class="contact-bottom-row">
           <div class="contact-sub">${escapeHtml(r.previewPrefixed)}</div>
           ${r.unread > 0 ? `<div class="unread-badge">${r.unread}</div>` : ''}
@@ -563,9 +484,7 @@ function openSettings() {
   showScreen('settingsScreen');
 }
 
-function goToContactsFromSettings() {
-  showScreen('contactsScreen');
-}
+function goToContactsFromSettings() { showScreen('contactsScreen'); }
 
 function onSettingsPhotoSelected(event) {
   const file = event.target.files[0];
@@ -593,7 +512,7 @@ function onSettingsPhotoSelected(event) {
 
 async function saveProfileChanges() {
   const newName = document.getElementById('settingsNameInput').value.trim();
-  if (!newName) { alert('নাম খালি রাখা যাবে না'); return; }
+  if (!newName) { alert('নাম প্রদান করুন'); return; }
 
   try {
     await db.collection('users').doc(currentUser.uid).update({
@@ -602,17 +521,15 @@ async function saveProfileChanges() {
     });
     currentUser.displayName = newName;
     currentUser.photoBase64 = pendingSettingsPhoto;
-    alert('প্রোফাইল সফলভাবে আপডেট করা হয়েছে!');
+    alert('প্রোফাইল আপডেট হয়েছে!');
     showScreen('contactsScreen');
-  } catch (e) {
-    alert('আপডেট করতে সমস্যা হয়েছে: ' + e.message);
-  }
+  } catch (e) { alert('আপডেট করতে সমস্যা হয়েছে'); }
 }
 
-/* ---------------- Chat ---------------- */
+/* ---------------- Chat Management ---------------- */
 function goToContacts() {
-  if (messagesUnsub) { messagesUnsub(); messagesUnsub = null; }
-  if (convDocUnsub) { convDocUnsub(); convDocUnsub = null; }
+  if (messagesUnsub) messagesUnsub();
+  if (convDocUnsub) convDocUnsub();
   if (typingTimeout) clearTimeout(typingTimeout);
   if (activeConversationId) setTyping(false);
   activeConversationId = null;
@@ -629,13 +546,13 @@ function openChat(partner) {
   avatarEl.style.background = avatarBg(partner);
   avatarEl.innerHTML = avatarHtml(partner);
   document.getElementById('messagesEl').innerHTML = '';
-  updatePartnerStatusLabel(partner);
+  document.getElementById('chatPartnerStatus').textContent = partner.online ? 'অনলাইন' : (partner.lastSeen ? 'শেষ সক্রিয়: ' + timeAgoLabel(partner.lastSeen) : '');
   showScreen('chatScreen');
 
   db.collection('conversations').doc(activeConversationId).set({
     participants: [currentUser.uid, partner.uid],
     unreadCount: { [currentUser.uid]: 0 }
-  }, { merge: true }).catch(() => {});
+  }, { merge: true });
 
   if (messagesUnsub) messagesUnsub();
   messagesUnsub = db.collection('conversations').doc(activeConversationId)
@@ -651,18 +568,8 @@ function openChat(partner) {
   convDocUnsub = db.collection('conversations').doc(activeConversationId).onSnapshot(doc => {
     const data = doc.data();
     const typingEl = document.getElementById('typingIndicator');
-    if (data && data.typing && data.typing[partner.uid]) {
-      typingEl.style.display = 'block';
-    } else {
-      typingEl.style.display = 'none';
-    }
+    typingEl.style.display = (data && data.typing && data.typing[partner.uid]) ? 'block' : 'none';
   });
-}
-
-function updatePartnerStatusLabel(partner) {
-  const statusEl = document.getElementById('chatPartnerStatus');
-  const live = allUsers.find(u => u.uid === partner.uid) || partner;
-  statusEl.textContent = live.online ? 'অনলাইন' : (live.lastSeen ? 'শেষ সক্রিয়: ' + timeAgoLabel(live.lastSeen) : '');
 }
 
 async function markIncomingAsSeen(docs) {
@@ -683,13 +590,13 @@ function renderMessage(m, docId) {
   const time = shortTime(m.timestamp);
   let inner = '';
   if (m.deleted) {
-    inner += `<div style="font-style:italic;opacity:0.7;">এই মেসেজটি মুছে ফেলা হয়েছে</div>`;
+    inner += `<div style="font-style:italic;opacity:0.7;">মেসেজটি মুছে ফেলা হয়েছে</div>`;
   } else {
     if (m.text) inner += `<div>${escapeHtml(m.text)}</div>`;
-    if (m.imageUrl) inner += `<img src="${m.imageUrl}" alt="photo" />`;
+    if (m.imageUrl) inner += `<img src="${m.imageUrl}" />`;
   }
   const ticks = mine ? `<span class="ticks ${m.seen ? 'seen' : ''}">${m.seen ? '✓✓' : '✓'}</span>` : '';
-  const deleteBtn = (mine && !m.deleted) ? `<button class="delete-msg-btn" onclick="deleteMessage('${docId}')" title="মুছুন">🗑</button>` : '';
+  const deleteBtn = (mine && !m.deleted) ? `<button class="delete-msg-btn" onclick="deleteMessage('${docId}')">🗑</button>` : '';
   return `<div class="msg-row ${mine ? 'mine' : ''}">
             ${deleteBtn}
             <div class="bubble ${mine ? 'mine' : 'theirs'}">${inner}<div class="meta-row"><span class="time">${time}</span>${ticks}</div></div>
@@ -697,9 +604,8 @@ function renderMessage(m, docId) {
 }
 
 async function deleteMessage(docId) {
-  if (!confirm('এই মেসেজটি মুছে ফেলতে চান?')) return;
-  await db.collection('conversations').doc(activeConversationId)
-    .collection('messages').doc(docId).update({ deleted: true });
+  if (!confirm('মেসেজটি ডিলিট করতে চান?')) return;
+  await db.collection('conversations').doc(activeConversationId).collection('messages').doc(docId).update({ deleted: true });
 }
 
 function escapeHtml(str) {
@@ -708,13 +614,13 @@ function escapeHtml(str) {
   return d.innerHTML;
 }
 
-/* ---------------- Typing indicator ---------------- */
 function onTyping() {
   if (!activeConversationId) return;
   setTyping(true);
   if (typingTimeout) clearTimeout(typingTimeout);
   typingTimeout = setTimeout(() => setTyping(false), 3000);
 }
+
 async function setTyping(isTyping) {
   if (!activeConversationId || !activePartner) return;
   try {
@@ -725,7 +631,6 @@ async function setTyping(isTyping) {
   } catch (e) {}
 }
 
-/* ---------------- Images ---------------- */
 function onImageSelected(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -748,13 +653,13 @@ function onImageSelected(event) {
   };
   reader.readAsDataURL(file);
 }
+
 function clearImagePreview() {
   pendingImageDataUrl = null;
   document.getElementById('imageInput').value = '';
   document.getElementById('imgPreviewBar').style.display = 'none';
 }
 
-/* ---------------- Send ---------------- */
 async function sendMessage() {
   const input = document.getElementById('messageInput');
   const text = input.value.trim();
@@ -764,12 +669,6 @@ async function sendMessage() {
   sendBtn.disabled = true;
 
   try {
-    if (pendingImageDataUrl && pendingImageDataUrl.length > 900000) {
-      alert('ছবিটা এখনো একটু বড়, দয়া করে অন্য একটা ছবি চেষ্টা করুন');
-      sendBtn.disabled = false;
-      return;
-    }
-
     const isImage = !!pendingImageDataUrl;
     await db.collection('conversations').doc(activeConversationId).set({
       participants: [currentUser.uid, activePartner.uid],
@@ -793,8 +692,7 @@ async function sendMessage() {
     clearImagePreview();
     if (typingTimeout) clearTimeout(typingTimeout);
   } catch (e) {
-    console.error('sendMessage error:', e);
-    alert('মেসেজ পাঠাতে সমস্যা হয়েছে: ' + (e && e.message ? e.message : 'আবার চেষ্টা করুন'));
+    alert('মেসেজ পাঠাতে সমস্যা হয়েছে');
   } finally {
     sendBtn.disabled = false;
   }
