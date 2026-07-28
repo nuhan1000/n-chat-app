@@ -199,8 +199,8 @@
       <button type="button" class="photo-picker-btn" onclick="document.getElementById('photoInput').click()">Profile Photo (Opt)</button>
       <input type="file" id="photoInput" accept="image/*" onchange="onSignupPhotoSelected(event)" />
     </div>
-    <input class="field" id="phoneField" type="tel" placeholder="Mobile Number (e.g., 01712345678)" />
-    <input class="field" id="passwordField" type="password" placeholder="Password" />
+    <input class="field" id="phoneField" type="tel" maxlength="11" placeholder="Mobile Number (11 digits)" />
+    <input class="field" id="passwordField" type="password" placeholder="Password (min 6 characters)" />
     <button class="btn-primary" id="authSubmitBtn" onclick="submitAuth()">Login</button>
     <div class="auth-switch" id="authSwitchLabel">Don't have an account? <a onclick="toggleAuthMode()">Register now</a></div>
   </div>
@@ -450,8 +450,14 @@ async function submitAuth() {
   const errEl = document.getElementById('authError');
   errEl.textContent = '';
 
-  if (!phone || phone.length < 6) { errEl.textContent = 'Please enter a valid mobile number'; return; }
-  if (!password || password.length < 6) { errEl.textContent = 'Password must be at least 6 characters'; return; }
+  if (!phone || phone.length !== 11 || !/^\d{11}$/.test(phone)) { 
+    errEl.textContent = 'Mobile number must be exactly 11 digits'; 
+    return; 
+  }
+  if (!password || password.length < 6) { 
+    errEl.textContent = 'Password must be at least 6 characters'; 
+    return; 
+  }
 
   const fakeEmail = phoneToEmail(phone);
   const submitBtn = document.getElementById('authSubmitBtn');
@@ -478,7 +484,6 @@ async function submitAuth() {
       } catch (signInErr) {
         if (signInErr.code === 'auth/user-not-found' || signInErr.code === 'auth/invalid-credential' || signInErr.code === 'auth/wrong-password') {
           // Fallback check or auto-register helper if user tries logging in with an unregistered account
-          const displayName = phone; 
           const cred = await auth.createUserWithEmailAndPassword(fakeEmail, password);
           await db.collection('users').doc(cred.user.uid).set({
             displayName: "User " + phone.slice(-4),
