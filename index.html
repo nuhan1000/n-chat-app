@@ -81,7 +81,7 @@
   .photo-picker-btn { font-size: 12px; color: var(--teal); font-weight: 700; background: none; border: 1.5px solid var(--teal); padding: 6px 12px; border-radius: 10px; }
 
   /* ---------- Headers & Panels ---------- */
-  #contactsScreen header, #chatScreen header, #settingsScreen header, #userListScreen header {
+  #contactsScreen header, #chatScreen header, #settingsScreen header, #userListScreen header, #contactInfoScreen header {
     background: var(--teal); color: #fff; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.12); position: relative; z-index: 10;
   }
@@ -99,9 +99,27 @@
   .contact-main { flex: 1; min-width: 0; }
   .contact-top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
   .contact-name { font-weight: 600; font-size: 15px; color: var(--text); }
-  .contact-phone { font-size: 12px; color: var(--muted); margin-top: 1px; }
   .contact-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
-  .contact-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 3px; }
+  
+  /* Animated click here link under name */
+  @keyframes pulseGlow {
+    0% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.02); color: var(--marigold); }
+    100% { opacity: 0.6; transform: scale(1); }
+  }
+  .contact-info-link {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--teal);
+    display: inline-block;
+    margin: 2px 0 4px 0;
+    text-decoration: underline;
+    cursor: pointer;
+    animation: pulseGlow 1.8s infinite ease-in-out;
+  }
+  [data-theme="dark"] .contact-info-link { color: var(--marigold); }
+
+  .contact-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 1px; }
   .contact-sub { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .unread-badge { background: var(--marigold); color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0; }
   .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 60px 24px; }
@@ -128,6 +146,19 @@
     transition: transform 0.2s;
   }
   .fab-btn:hover { transform: scale(1.05); }
+
+  /* ---------- Contact Info Profile Screen (WhatsApp Style) ---------- */
+  .profile-container { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 10px; padding-bottom: 30px; }
+  .profile-hero { background: var(--panel); padding: 24px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; border-bottom: 1px solid var(--border); }
+  .profile-big-avatar { width: 130px; height: 130px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 700; color: #fff; overflow: hidden; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 3px solid var(--panel); }
+  .profile-big-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .profile-name { font-family: 'Baloo Da 2', sans-serif; font-size: 22px; font-weight: 700; color: var(--text); }
+  .profile-status-text { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  
+  .profile-section-card { background: var(--panel); padding: 16px 20px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
+  .profile-section-label { font-size: 12px; font-weight: 700; color: var(--teal); text-transform: uppercase; letter-spacing: 0.5px; }
+  [data-theme="dark"] .profile-section-label { color: var(--marigold); }
+  .profile-section-value { font-size: 15px; color: var(--text); font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
 
   /* ---------- Three Dot Menu Styles ---------- */
   .menu-wrapper { position: relative; }
@@ -158,7 +189,7 @@
   /* ---------- Chat screen ---------- */
   #chatScreen header { gap: 10px; }
   .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 0 4px; }
-  .chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+  .chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer; }
   .chat-partner-name { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 16px; }
   .chat-partner-status { font-size: 11px; color: rgba(255,255,255,0.8); }
   .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 6px; background: var(--bg); }
@@ -206,7 +237,7 @@
   </div>
 </div>
 
-<!-- ================= CONTACTS SCREEN (WhatsApp Style: Shows all users or active chats) ================= -->
+<!-- ================= CONTACTS SCREEN ================= -->
 <div class="screen" id="contactsScreen">
   <header>
     <div class="app-title">N Chat</div>
@@ -227,6 +258,16 @@
     <div style="width:24px;"></div>
   </header>
   <div class="all-users-list" id="allUsersListEl"></div>
+</div>
+
+<!-- ================= CONTACT INFO SCREEN (WhatsApp Style Details View) ================= -->
+<div class="screen" id="contactInfoScreen">
+  <header>
+    <button class="back-btn" onclick="closeContactInfo()">←</button>
+    <div class="app-title">Contact Info</div>
+    <div style="width:24px;"></div>
+  </header>
+  <div class="profile-container" id="profileContainerEl"></div>
 </div>
 
 <!-- ================= SETTINGS SCREEN ================= -->
@@ -264,7 +305,7 @@
 <div class="screen" id="chatScreen">
   <header>
     <button class="back-btn" onclick="goToContacts()">←</button>
-    <div class="chat-header-info">
+    <div class="chat-header-info" onclick='openContactInfo(activePartner)'>
       <div class="avatar" id="chatAvatar" style="width:38px;height:38px;font-size:14px;"></div>
       <div>
         <div class="chat-partner-name" id="chatPartnerName"></div>
@@ -274,6 +315,7 @@
     <div class="menu-wrapper">
       <button class="three-dot-btn" onclick="toggleChatMenu(event)">⋮</button>
       <div class="dropdown-menu" id="chatDropdownMenu">
+        <div class="dropdown-item" onclick="openContactInfoFromChat()">ℹ️ View Contact Info</div>
         <div class="dropdown-item" onclick="openSettingsFromChat()">⚙️ App Settings</div>
         <div class="dropdown-item" onclick="toggleDarkModeQuick()">🌙 Toggle Theme</div>
         <div class="dropdown-item" onclick="goToContacts()">🚪 Close Chat</div>
@@ -316,6 +358,7 @@ let isSignupMode = false;
 let currentUser = null;
 let activeConversationId = null;
 let activePartner = null;
+let previousScreenBeforeInfo = 'contactsScreen';
 let messagesUnsub = null;
 let convDocUnsub = null;
 let usersUnsub = null;
@@ -352,6 +395,13 @@ function closeDropdowns(event) {
 function openSettingsFromChat() {
   closeDropdowns();
   openSettings();
+}
+
+function openContactInfoFromChat() {
+  closeDropdowns();
+  if (activePartner) {
+    openContactInfo(activePartner, 'chatScreen');
+  }
 }
 
 function toggleDarkModeQuick() {
@@ -483,7 +533,6 @@ async function submitAuth() {
         await auth.signInWithEmailAndPassword(fakeEmail, password);
       } catch (signInErr) {
         if (signInErr.code === 'auth/user-not-found' || signInErr.code === 'auth/invalid-credential' || signInErr.code === 'auth/wrong-password') {
-          // Fallback check or auto-register helper if user tries logging in with an unregistered account
           const cred = await auth.createUserWithEmailAndPassword(fakeEmail, password);
           await db.collection('users').doc(cred.user.uid).set({
             displayName: "User " + phone.slice(-4),
@@ -541,7 +590,6 @@ auth.onAuthStateChanged(async (user) => {
     const userDocRef = db.collection('users').doc(user.uid);
     let doc = await userDocRef.get();
     if (!doc.exists) {
-      // Create user profile doc if missing
       const defaultName = "User " + user.uid.slice(0, 4);
       await userDocRef.set({
         displayName: defaultName,
@@ -621,7 +669,7 @@ function renderContactList() {
           <div class="contact-name">${r.u.displayName}</div>
           <div class="contact-time">${r.timeLabel}</div>
         </div>
-        <div class="contact-phone">📱 ${r.u.phone || 'No phone'}</div>
+        <div class="contact-info-link" onclick='event.stopPropagation(); openContactInfo(${JSON.stringify(r.u)}, "contactsScreen")'>Click here for contact info</div>
         <div class="contact-bottom-row">
           <div class="contact-sub">${escapeHtml(r.previewPrefixed)}</div>
           ${r.unread > 0 ? `<div class="unread-badge">${r.unread}</div>` : ''}
@@ -653,13 +701,54 @@ function renderAllUsersList() {
         <div class="contact-top-row">
           <div class="contact-name">${u.displayName}</div>
         </div>
-        <div class="contact-phone">📱 ${u.phone || 'No phone'}</div>
+        <div class="contact-info-link" onclick='event.stopPropagation(); openContactInfo(${JSON.stringify(u)}, "userListScreen")'>Click here for contact info</div>
         <div class="contact-bottom-row">
           <div class="contact-sub">${u.online ? 'Online' : 'Offline'}</div>
         </div>
       </div>
     </div>
   `).join('');
+}
+
+function openContactInfo(userObj, fromScreen = 'contactsScreen') {
+  previousScreenBeforeInfo = fromScreen;
+  const container = document.getElementById('profileContainerEl');
+  
+  const formattedDate = userObj.createdAt && userObj.createdAt.toDate ? new Date(userObj.createdAt.toDate()).toLocaleDateString() : 'Recently';
+  const statusStr = userObj.online ? 'Online' : (userObj.lastSeen ? 'Last seen ' + timeAgoLabel(userObj.lastSeen) : 'Offline');
+
+  container.innerHTML = `
+    <div class="profile-hero">
+      <div class="profile-big-avatar" style="background:${avatarBg(userObj)}">${avatarHtml(userObj)}</div>
+      <div class="profile-name">${userObj.displayName}</div>
+      <div class="profile-status-text">📱 ${userObj.phone || 'No phone'}</div>
+    </div>
+
+    <div class="profile-section-card">
+      <div class="profile-section-label">Status</div>
+      <div class="profile-section-value">${statusStr}</div>
+    </div>
+
+    <div class="profile-section-card">
+      <div class="profile-section-label">Mobile Number</div>
+      <div class="profile-section-value">${userObj.phone || 'N/A'}</div>
+    </div>
+
+    <div class="profile-section-card">
+      <div class="profile-section-label">Account Created</div>
+      <div class="profile-section-value">${formattedDate}</div>
+    </div>
+
+    <div style="padding: 20px;">
+      <button class="btn-primary" onclick='openChat(${JSON.stringify(userObj)})'>Send Message</button>
+    </div>
+  `;
+
+  showScreen('contactInfoScreen');
+}
+
+function closeContactInfo() {
+  showScreen(previousScreenBeforeInfo || 'contactsScreen');
 }
 
 function conversationIdFor(uidA, uidB) { return [uidA, uidB].sort().join('_'); }
@@ -877,6 +966,7 @@ async function sendMessage() {
       seen: false
     });
 
+    input.value =`;`
     input.value = '';
     clearImagePreview();
     if (typingTimeout) clearTimeout(typingTimeout);
