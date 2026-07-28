@@ -66,13 +66,13 @@
   /* ---------- Auth screen ---------- */
   #authScreen { align-items: center; justify-content: center; background: linear-gradient(160deg, var(--teal) 0%, var(--teal-deep) 100%); padding: 24px; overflow-y: auto; }
   .auth-card { width: 100%; max-width: 360px; background: var(--panel); border-radius: 20px; padding: 32px 26px; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.5); margin: 20px 0; }
-  .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 32px; font-weight: 800; color: #25D366; text-align: center; margin-bottom: 4px; }
+  .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 32px; font-weight: 800; color: var(--marigold); text-align: center; margin-bottom: 4px; }
   .auth-sub { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 22px; }
   .field { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 14px; margin-bottom: 10px; background: var(--bg); color: var(--text); }
-  .btn-primary { width: 100%; padding: 12px 0; border-radius: 12px; border: none; background: #25D366; color: #fff; font-weight: 700; font-size: 15px; margin-top: 6px; }
-  .btn-primary:hover { background: #20bd5a; }
+  .btn-primary { width: 100%; padding: 12px 0; border-radius: 12px; border: none; background: var(--marigold); color: #fff; font-weight: 700; font-size: 15px; margin-top: 6px; }
+  .btn-primary:hover { opacity: 0.9; }
   .auth-switch { text-align: center; font-size: 13px; color: var(--muted); margin-top: 16px; }
-  .auth-switch a { color: #25D366; font-weight: 700; text-decoration: none; cursor: pointer; }
+  .auth-switch a { color: var(--marigold); font-weight: 700; text-decoration: none; cursor: pointer; }
   .auth-error { color: #E53935; font-size: 12px; text-align: center; min-height: 16px; margin-bottom: 6px; }
   .photo-picker-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
   .photo-picker-preview { width: 52px; height: 52px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; border: 1.5px solid var(--border); }
@@ -101,7 +101,7 @@
   .contact-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
   .contact-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 3px; }
   .contact-sub { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .unread-badge { background: #25D366; color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0; }
+  .unread-badge { background: var(--marigold); color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0; }
   .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 60px 24px; }
 
   /* ---------- Three Dot Menu Styles ---------- */
@@ -154,7 +154,7 @@
   .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: var(--bg); color: var(--text); }
   .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
   .round-btn.img { background: var(--border); color: var(--text); }
-  .round-btn.send { background: #00A884; color: #fff; }
+  .round-btn.send { background: var(--marigold); color: #fff; }
   #imageInput, #photoInput, #settingsPhotoInput { display: none; }
   .img-preview-bar { padding: 8px 14px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
   .img-preview-bar img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; }
@@ -165,7 +165,7 @@
 <!-- ================= AUTH SCREEN ================= -->
 <div class="screen active" id="authScreen">
   <div class="auth-card">
-    <div class="auth-logo">WhatsApp Chat</div>
+    <div class="auth-logo">N Chat</div>
     <div class="auth-sub" id="authSubLabel">মোবাইল নাম্বার দিয়ে চ্যাট শুরু করুন</div>
     <div class="auth-error" id="authError"></div>
     <input class="field" id="displayNameField" placeholder="আপনার নাম" style="display:none;" />
@@ -184,7 +184,7 @@
 <!-- ================= CONTACTS SCREEN ================= -->
 <div class="screen" id="contactsScreen">
   <header>
-    <div class="app-title">WhatsApp</div>
+    <div class="app-title">N Chat</div>
     <div class="header-actions">
       <button class="icon-btn" onclick="openSettings()">⚙️ সেটিংস</button>
       <button class="icon-btn" onclick="logout()">লগ আউট</button>
