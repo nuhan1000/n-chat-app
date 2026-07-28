@@ -295,6 +295,7 @@
   .three-dot-btn { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; padding: 8px 12px; border-radius: 50%; }
   .three-dot-btn:hover { background: rgba(255,255,255,0.1); }
   
+  /* Style for close conversation cross icon button */
   .close-conv-btn { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; padding: 8px 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
   .close-conv-btn:hover { background: rgba(255,255,255,0.1); }
 
@@ -435,8 +436,7 @@
 </head>
 <body onclick="closeDropdowns(event)">
 
-<!-- শুরুতে display:none করা হয়েছে যাতে লগইন করা থাকলে ফ্ল্যাশ না করে -->
-<div class="screen" id="authScreen" style="display:none;">
+<div class="screen active" id="authScreen" style="display:flex;">
   <div class="auth-card" style="margin: auto;">
     <div class="auth-logo">Talknu</div>
     <div class="auth-sub" id="authSubLabel">Sign in with your mobile number to start chatting</div>
@@ -511,7 +511,7 @@
     <div class="screen" id="userListScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
-        <div class="app-title" style="font-size:18px;">Select Contact</div>
+        <div class="app-title" style="font-size:18px; color: #fff;">Select Contact</div>
         <div style="width:24px;"></div>
       </header>
       <div class="all-users-list" id="allUsersListEl"></div>
@@ -520,7 +520,7 @@
     <div class="screen" id="contactInfoScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
-        <div class="app-title" style="font-size:18px;">Contact Info</div>
+        <div class="app-title" style="font-size:18px; color: #fff;">Contact Info</div>
         <div style="width:24px;"></div>
       </header>
       <div class="profile-container" id="profileContainerEl"></div>
@@ -529,7 +529,7 @@
     <div class="screen" id="settingsScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
-        <div class="app-title" style="font-size:18px;">Settings</div>
+        <div class="app-title" style="font-size:18px; color: #fff;">Settings</div>
         <div style="width:24px;"></div>
       </header>
       <div class="settings-content">
@@ -564,7 +564,7 @@
     <div class="screen" id="mediaViewerScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
-        <div class="app-title" style="font-size:18px;">Media, links and docs</div>
+        <div class="app-title" style="font-size:18px; color: #fff;">Media, links and docs</div>
         <div style="width:24px;"></div>
       </header>
       <div class="media-viewer-content" id="mediaViewerContentEl"></div>
@@ -603,6 +603,7 @@
             </div>
           </div>
 
+          <!-- Added Close Conversation Cross Icon Button -->
           <button class="close-conv-btn" onclick="closeCurrentConversation()" title="Close Conversation">✕</button>
         </div>
 
@@ -1018,18 +1019,13 @@ auth.onAuthStateChanged(async (user) => {
       doc = await userDocRef.get();
     }
     currentUser = { uid: user.uid, ...doc.data() };
-    
-    // ইউজার লগইন করা থাকলে authScreen হাইড থাকবে এবং মূল অ্যাপ কন্টেইনার শো করবে
     document.getElementById('authScreen').style.display = 'none';
     document.getElementById('appContainer').style.display = 'flex';
-    
     startHeartbeat();
     listenContacts();
   } else {
     currentUser = null;
     document.getElementById('appContainer').style.display = 'none';
-    
-    // ইউজার লগইন করা না থাকলে তবেই authScreen দেখাবে
     document.getElementById('authScreen').style.display = 'flex';
   }
 });
