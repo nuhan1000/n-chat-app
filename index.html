@@ -142,16 +142,16 @@
     background: var(--panel); border-bottom: 1px solid var(--border);
   }
   .app-title { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 22px; color: var(--text); }
-  .header-actions { display: flex; align-items: center; gap: 4px; }
+  .header-actions { display: flex; align-items: center; gap: 6px; }
   
-  /* Thin Minimalist Icons - Size Increased */
+  /* আইকনের সাইজ এখানে বড় করা হয়েছে (28px) */
   .thin-icon-btn {
-    background: none; border: none; color: var(--muted); cursor: pointer; padding: 8px; border-radius: 50%;
+    background: none; border: none; color: var(--muted); cursor: pointer; padding: 6px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center; transition: background 0.2s, color 0.2s;
   }
   .thin-icon-btn:hover { background: var(--bg); color: var(--text); }
   .thin-icon-btn:disabled { opacity: 0.3; cursor: default; }
-  .thin-icon-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .thin-icon-btn svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
   /* Premium Theme Toggle Switch */
   .theme-switch {
@@ -295,8 +295,11 @@
   .profile-section-value { font-size: 15px; color: var(--text); font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
 
   .menu-wrapper { position: relative; z-index: 100; }
-  .three-dot-btn { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; padding: 8px 12px; border-radius: 50%; }
-  .three-dot-btn:hover { background: rgba(255,255,255,0.1); }
+  
+  /* থ্রি-ডট বাটনের সাইজ এখানে বড় করা হয়েছে (26px) */
+  .three-dot-btn { background: none; border: none; color: var(--text); font-size: 26px; font-weight: bold; cursor: pointer; padding: 6px 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .three-dot-btn:hover { background: rgba(0,0,0,0.05); }
+  
   .dropdown-menu {
     display: none; position: absolute; right: 0; top: 100%; background: var(--panel);
     border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
@@ -345,7 +348,6 @@
   .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 4px 8px; cursor: pointer; display: none; z-index: 51; }
   @media(max-width: 768px) { .back-btn { display: flex; align-items: center; justify-content: center; } }
 
-  /* Back button in desktop and mobile chat header top-left corner - Size Increased */
   .chat-back-indicator {
     background: none;
     border: none;
@@ -383,7 +385,7 @@
   .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: var(--bg); color: var(--text); }
   .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; }
   
-  .round-btn.plus { background: var(--border); color: var(--text); font-weight: 400; font-size: 24px; transition: background 0.2s, color 0.2s; }
+  .round-btn.plus { background: var(--border); color: var(--text); font-weight: 400; font-size: 26px; transition: background 0.2s, color 0.2s; }
   .round-btn.plus:hover { background: var(--marigold); color: #fff; }
   .sidebar-bottom-fab {
     position: absolute;
@@ -459,18 +461,21 @@
     <div class="sidebar-header">
       <div class="app-title">Talknu</div>
       <div class="header-actions">
-        <!-- Thin Minimalist Back/Forward Navigation Buttons -->
+        <!-- Back Button -->
         <button class="thin-icon-btn" id="navBackBtn" onclick="historyBack()" title="Back" disabled>
           <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
         </button>
+        <!-- Forward Button -->
         <button class="thin-icon-btn" id="navForwardBtn" onclick="historyForward()" title="Forward" disabled>
           <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </button>
+        <!-- Plus (+) Button -->
         <button class="thin-icon-btn" onclick="openUserList()" title="Add Contact">
           <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         </button>
+        <!-- Three Dot Button -->
         <button class="thin-icon-btn" onclick="openSettings()" title="Settings">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"></circle><circle cx="12" cy="5" r="1.5"></circle><circle cx="12" cy="19" r="1.5"></circle></svg>
         </button>
       </div>
     </div>
@@ -1643,7 +1648,7 @@ async function clearChatMessages() {
         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
       });
       alert('Chat cleared successfully.');
-    } catch (e) {
+    } else {
       alert('Failed to clear chat.');
     }
   }
