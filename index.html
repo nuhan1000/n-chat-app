@@ -306,7 +306,8 @@
   .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: var(--bg); color: var(--text); }
   .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; }
   .round-btn.plus { background: var(--border); color: var(--text); font-weight: 700; font-size: 20px; }
-  .round-btn.mic { background: var(--border); color: var(--text); }
+  .round-btn.mic { background: var(--border); color: var(--muted); }
+  .round-btn.mic svg { width: 20px; height: 20px; fill: currentColor; }
   .round-btn.mic.recording { background: #E53935; color: #fff; animation: pulse 1.2s infinite; }
   .round-btn.send { background: var(--marigold); color: #fff; }
 
@@ -495,8 +496,13 @@
           </div>
         </div>
 
-        <!-- Audio Recording Button -->
-        <button class="round-btn mic" id="micBtn" onclick="toggleVoiceRecording()" title="Record Audio Message">🎤</button>
+        <!-- WhatsApp-style Audio Recording Button -->
+        <button class="round-btn mic" id="micBtn" onclick="toggleVoiceRecording()" title="Record Audio Message">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+          </svg>
+        </button>
 
         <input type="text" id="messageInput" placeholder="Type a message..." oninput="onTyping()" onkeydown="if(event.key==='Enter') sendMessage()" />
         <button class="round-btn send" id="sendBtn" onclick="sendMessage()" title="Send">➤</button>
