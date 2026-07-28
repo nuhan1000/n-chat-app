@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
+  /* ---------- Theme Variables ---------- */
   :root {
     --teal: #1F4E4A;
     --teal-deep: #163a37;
@@ -19,6 +20,46 @@
     --muted: #6B7A76;
     --online: #3FAE5C;
   }
+
+  [data-theme="dark"] {
+    --teal: #2A3B3C;
+    --teal-deep: #1B2627;
+    --marigold: #D4A373;
+    --rose: #B5838D;
+    --bg: #121817;
+    --panel: #1A2322;
+    --border: #2D3B39;
+    --text: #E3ECEA;
+    --muted: #8FA39E;
+    --online: #52B788;
+  }
+
+  [data-theme="purple"] {
+    --teal: #4A1F48;
+    --teal-deep: #321330;
+    --marigold: #F4A261;
+    --rose: #E7C1D3;
+    --bg: #F8F3F7;
+    --panel: #FFFFFF;
+    --border: #EBE0E8;
+    --text: #2A1E29;
+    --muted: #7A6B78;
+    --online: #2A9D8F;
+  }
+
+  [data-theme="rose"] {
+    --teal: #8A4F52;
+    --teal-deep: #613437;
+    --marigold: #E9C46A;
+    --rose: #F4ACB7;
+    --bg: #FAF4F5;
+    --panel: #FFFFFF;
+    --border: #EAD5D8;
+    --text: #331E20;
+    --muted: #82686A;
+    --online: #40916C;
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
   body {
@@ -27,6 +68,7 @@
     color: var(--text);
     -webkit-font-smoothing: antialiased;
     overflow: hidden;
+    transition: background 0.3s, color 0.3s;
   }
   input, button, textarea { font-family: 'Hind Siliguri', sans-serif; }
   input:focus, textarea:focus { outline: 2px solid var(--teal); outline-offset: 1px; }
@@ -40,14 +82,14 @@
   .auth-card { width: 100%; max-width: 360px; background: var(--panel); border-radius: 20px; padding: 32px 26px; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.5); margin: 20px 0; }
   .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 30px; font-weight: 800; color: var(--teal); text-align: center; margin-bottom: 4px; }
   .auth-sub { text-align: center; font-size: 12.5px; color: var(--muted); margin-bottom: 22px; }
-  .field { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 14px; margin-bottom: 10px; background: #FAFBFA; }
+  .field { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 14px; margin-bottom: 10px; background: var(--bg); color: var(--text); }
   .btn-primary { width: 100%; padding: 12px 0; border-radius: 12px; border: none; background: var(--teal); color: #fff; font-weight: 700; font-size: 14px; margin-top: 4px; }
   .btn-primary:hover { background: var(--teal-deep); }
   .auth-switch { text-align: center; font-size: 12.5px; color: var(--muted); margin-top: 16px; }
   .auth-switch a { color: var(--teal); font-weight: 700; text-decoration: none; cursor: pointer; }
   .auth-error { color: #B3423A; font-size: 12px; text-align: center; min-height: 16px; margin-bottom: 6px; }
   .photo-picker-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-  .photo-picker-preview { width: 52px; height: 52px; border-radius: 50%; background: #EFEFEF; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; border: 1.5px solid var(--border); }
+  .photo-picker-preview { width: 52px; height: 52px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; border: 1.5px solid var(--border); }
   .photo-picker-preview img { width: 100%; height: 100%; object-fit: cover; }
   .photo-picker-btn { font-size: 12px; color: var(--teal); font-weight: 700; background: none; border: 1.5px solid var(--teal); padding: 6px 12px; border-radius: 10px; }
 
@@ -57,17 +99,18 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
   }
   .app-title { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 19px; }
+  .header-actions { display: flex; align-items: center; gap: 8px; }
   .icon-btn { background: rgba(255,255,255,0.12); border: none; color: #fff; border-radius: 10px; padding: 8px 12px; font-size: 12px; font-weight: 600; }
   .contact-list { flex: 1; overflow-y: auto; padding: 8px 0; }
   .contact-row { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--border); background: var(--panel); cursor: pointer; }
-  .contact-row:hover { background: #F7FAF8; }
+  .contact-row:hover { opacity: 0.9; }
   .avatar-wrap { position: relative; flex-shrink: 0; }
   .avatar { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #fff; overflow: hidden; }
   .avatar img { width: 100%; height: 100%; object-fit: cover; }
   .online-dot { position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--online); border: 2px solid var(--panel); }
   .contact-main { flex: 1; min-width: 0; }
   .contact-top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-  .contact-name { font-weight: 600; font-size: 14.5px; }
+  .contact-name { font-weight: 600; font-size: 14.5px; color: var(--text); }
   .contact-time { font-size: 10.5px; color: var(--muted); white-space: nowrap; }
   .contact-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 2px; }
   .contact-sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -84,25 +127,25 @@
   .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 4px; background: var(--bg); }
   .msg-row { display: flex; align-items: center; gap: 6px; }
   .msg-row.mine { justify-content: flex-end; }
-  .delete-msg-btn { background: none; border: none; font-size: 12px; opacity: 0.45; padding: 2px 4px; order: -1; }
+  .delete-msg-btn { background: none; border: none; font-size: 12px; opacity: 0.45; padding: 2px 4px; order: -1; color: var(--text); }
   .delete-msg-btn:hover { opacity: 1; }
   .bubble { max-width: 72%; padding: 9px 13px; border-radius: 16px; font-size: 14px; line-height: 1.45; position: relative; }
-  .bubble.theirs { background: #fff; border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+  .bubble.theirs { background: var(--panel); color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
   .bubble.mine { background: var(--teal); color: #fff; border-bottom-right-radius: 4px; }
   .bubble img { max-width: 100%; border-radius: 10px; display: block; margin-top: 4px; }
   .bubble .meta-row { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 4px; }
   .bubble .time { font-size: 10px; opacity: 0.7; }
   .bubble .ticks { font-size: 11px; }
   .bubble .ticks.seen { color: #7FD8FF; }
-  .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; }
+  .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; background: var(--panel); }
   .composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px; padding-bottom: max(10px, env(safe-area-inset-bottom)); background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; }
-  .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: #FAFBFA; }
+  .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: var(--bg); color: var(--text); }
   .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
   .round-btn.img { background: var(--rose); color: var(--teal-deep); }
   .round-btn.send { background: var(--teal); color: #fff; }
   .round-btn.send:disabled { opacity: 0.5; }
   #imageInput, #photoInput { display: none; }
-  .img-preview-bar { padding: 8px 14px; background: #FAFBFA; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .img-preview-bar { padding: 8px 14px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
   .img-preview-bar img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; }
   .img-preview-bar span { font-size: 12px; color: var(--muted); flex: 1; }
   .img-preview-bar button { background: none; border: none; color: #B3423A; font-size: 12px; font-weight: 700; }
@@ -133,7 +176,15 @@
 <div class="screen" id="contactsScreen">
   <header>
     <div class="app-title">N Chat</div>
-    <button class="icon-btn" onclick="logout()">লগ আউট</button>
+    <div class="header-actions">
+      <select id="themeSelector" onchange="changeTheme(this.value)" style="background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.3); border-radius:8px; padding:6px; font-size:12px; font-weight:600;">
+        <option value="teal" style="color:#000;">🎨 টিল (Teal)</option>
+        <option value="dark" style="color:#000;">🌙 ডার্ক (Dark)</option>
+        <option value="purple" style="color:#000;">💜 পার্পল (Purple)</option>
+        <option value="rose" style="color:#000;">🌸 রোজ (Rose)</option>
+      </select>
+      <button class="icon-btn" onclick="logout()">লগ আউট</button>
+    </div>
   </header>
   <div class="contact-list" id="contactList"></div>
 </div>
@@ -197,6 +248,25 @@ let heartbeatInterval = null;
 let allUsers = [];
 let myConversations = {};
 
+// Theme Management
+function changeTheme(themeName) {
+  if (themeName === 'teal') {
+    document.documentElement.removeAttribute('data-theme');
+  } else {
+    document.documentElement.setAttribute('data-theme', themeName);
+  }
+  localStorage.setItem('n_chat_theme', themeName);
+}
+
+// Load saved theme on startup
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('n_chat_theme') || 'teal';
+  document.getElementById('themeSelector').value = savedTheme;
+  if (savedTheme !== 'teal') {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }
+});
+
 const AVATAR_COLORS = ['#1F4E4A', '#E0A458', '#8E5572', '#3B6E8F', '#B3423A', '#5B7B4B'];
 function colorForName(name) {
   let hash = 0;
@@ -205,7 +275,6 @@ function colorForName(name) {
 }
 function initialsFor(name) { return (name || '?').trim().charAt(0).toUpperCase(); }
 function avatarHtml(user, size) {
-  const s = size || 46;
   if (user.photoBase64) return `<img src="${user.photoBase64}" alt="" />`;
   return initialsFor(user.displayName);
 }
@@ -345,7 +414,7 @@ auth.onAuthStateChanged(async (user) => {
   }
 });
 
-/* ---------------- Contacts (real-time: users + conversations) ---------------- */
+/* ---------------- Contacts ---------------- */
 function listenContacts() {
   if (usersUnsub) usersUnsub();
   if (conversationsUnsub) conversationsUnsub();
@@ -425,8 +494,6 @@ function openChat(partner) {
   updatePartnerStatusLabel(partner);
   showScreen('chatScreen');
 
-  // reset my unread count for this conversation (always include participants so this
-  // write never creates a conversation doc missing the participants array)
   db.collection('conversations').doc(activeConversationId).set({
     participants: [currentUser.uid, partner.uid],
     unreadCount: { [currentUser.uid]: 0 }
