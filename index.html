@@ -4,19 +4,312 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>N Chat</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #10B981;
+            --accent: #34D399;
+            --bg-light: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Auth Screen */
+        .auth-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+        }
+
+        .auth-card {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-card h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .auth-card p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent);
+        }
+
+        /* Chat Layout */
+        .chat-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        #logout-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        #logout-btn:hover {
+            color: #ef4444;
+        }
+
+        .sidebar-search {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-search input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-light);
+            outline: none;
+        }
+
+        .sidebar-search input:focus {
+            border-color: var(--primary);
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .chat-item:hover, .chat-item.active {
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        .chat-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .chat-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Chat Main Area */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-light);
+        }
+
+        .chat-header {
+            padding: 20px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .room-status {
+            font-size: 0.8rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 60%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            position: relative;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .message.received {
+            background: var(--surface);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .message.sent {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .message .sender-name {
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .message.sent .sender-name {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Message Input Form */
+        .message-input-form {
+            padding: 20px;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 15px;
+        }
+
+        .message-input-form input {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            outline: none;
+            font-size: 0.95rem;
+            background: var(--bg-light);
+        }
+
+        .message-input-form input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-send {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .btn-send:hover {
+            background-color: var(--accent);
+        }
+    </style>
 </head>
 <body>
 
     <!-- Auth Screen -->
     <div id="auth-screen" class="auth-container">
         <div class="auth-card">
-            <h2><i class="fa-solid fa-comments"></i> N Chat</h2>
+            <h2>N Chat</h2>
             <p>Connect with your network seamlessly.</p>
             <button id="google-login-btn" class="btn-primary">
-                <i class="fa-brands fa-google"></i> Sign in with Google
+                Sign in with Google
             </button>
         </div>
     </div>
@@ -30,13 +323,12 @@
                     <img id="user-avatar" src="" alt="Avatar">
                     <span id="user-name">User</span>
                 </div>
-                <button id="logout-btn" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
+                <button id="logout-btn" title="Logout">⏏</button>
             </div>
             <div class="sidebar-search">
                 <input type="text" placeholder="Search chats...">
             </div>
             <div class="chat-list" id="chat-list">
-                <!-- Dynamically populated chat list / rooms -->
                 <div class="chat-item active">
                     <div class="chat-info">
                         <h4>Global Lounge</h4>
@@ -50,21 +342,124 @@
         <main class="chat-main">
             <header class="chat-header">
                 <h3 id="current-room-title">Global Lounge</h3>
-                <span class="room-status"><i class="fa-solid fa-circle"></i> Online</span>
+                <span class="room-status">● Online</span>
             </header>
             
-            <div class="messages-container" id="messages-container">
-                <!-- Messages will load here -->
-            </div>
+            <div class="messages-container" id="messages-container"></div>
 
             <form id="message-form" class="message-input-form">
                 <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" required>
-                <button type="submit" class="btn-send"><i class="fa-solid fa-paper-plane"></i></button>
+                <button type="submit" class="btn-send">Send</button>
             </form>
         </main>
     </div>
 
-    <!-- Firebase SDK Scripts (Modular Version) -->
-    <script type="module" src="app.js"></script>
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        const authScreen = document.getElementById('auth-screen');
+        const chatScreen = document.getElementById('chat-screen');
+        const googleLoginBtn = document.getElementById('google-login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userAvatar = document.getElementById('user-avatar');
+        const userName = document.getElementById('user-name');
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        const messagesContainer = document.getElementById('messages-container');
+
+        googleLoginBtn.addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch((error) => {
+                console.error("Login Error: ", error);
+            });
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth);
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                authScreen.classList.add('hidden');
+                chatScreen.classList.remove('hidden');
+                userAvatar.src = user.photoURL || 'https://via.placeholder.com/40';
+                userName.textContent = user.displayName;
+                loadMessages();
+            } else {
+                authScreen.classList.remove('hidden');
+                chatScreen.classList.add('hidden');
+            }
+        });
+
+        messageForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            try {
+                await addDoc(collection(db, "messages"), {
+                    text: text,
+                    createdAt: serverTimestamp(),
+                    uid: auth.currentUser.uid,
+                    displayName: auth.currentUser.displayName
+                });
+                messageInput.value = '';
+            } catch (error) {
+                console.error("Error sending message: ", error);
+            }
+        });
+
+        function loadMessages() {
+            const q = query(collection(db, "messages"), orderBy("createdAt", "asc"), limit(50));
+            
+            onSnapshot(q, (snapshot) => {
+                messagesContainer.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const messageDiv = document.createElement('div');
+                    
+                    const isSentByMe = data.uid === auth.currentUser.uid;
+                    messageDiv.classList.add('message', isSentByMe ? 'sent' : 'received');
+
+                    let contentHtml = '';
+                    if (!isSentByMe) {
+                        contentHtml += `<div class="sender-name">${escapeHtml(data.displayName || 'Anonymous')}</div>`;
+                    }
+                    contentHtml += `<span>${escapeHtml(data.text)}</span>`;
+                    
+                    messageDiv.innerHTML = contentHtml;
+                    messagesContainer.appendChild(messageDiv);
+                });
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+    </script>
 </body>
 </html>
