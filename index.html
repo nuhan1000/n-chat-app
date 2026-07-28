@@ -1301,7 +1301,6 @@ function openChat(partner) {
   avatarEl.innerHTML = avatarHtml(partner);
   document.getElementById('messagesEl').innerHTML = '';
   
-  // Real-time listener for partner user document to keep header status completely accurate
   if (partnerUserUnsub) partnerUserUnsub();
   partnerUserUnsub = db.collection('users').doc(partner.uid).onSnapshot(doc => {
     if (doc.exists) {
@@ -1699,7 +1698,7 @@ async function deleteChatConversation() {
   }
 }
 
-async:: reportChatPartner() {
+async function reportChatPartner() {
   closeDropdowns();
   if (!activePartner) return;
   if (confirm(`Do you want to report ${activePartner.displayName} for inappropriate behavior?`)) {
