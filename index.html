@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
-  /* ---------- Theme Variables ---------- */
+  /* ---------- Theme & Chat Background Variables ---------- */
   :root {
     --teal: #1F4E4A;
     --teal-deep: #163a37;
@@ -70,8 +70,8 @@
     overflow: hidden;
     transition: background 0.3s, color 0.3s;
   }
-  input, button, textarea { font-family: 'Hind Siliguri', sans-serif; }
-  input:focus, textarea:focus { outline: 2px solid var(--teal); outline-offset: 1px; }
+  input, button, textarea, select { font-family: 'Hind Siliguri', sans-serif; }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--teal); outline-offset: 1px; }
   button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
   .screen { display: none; height: 100vh; height: 100dvh; flex-direction: column; }
@@ -94,7 +94,7 @@
   .photo-picker-btn { font-size: 12px; color: var(--teal); font-weight: 700; background: none; border: 1.5px solid var(--teal); padding: 6px 12px; border-radius: 10px; }
 
   /* ---------- Contacts screen ---------- */
-  #contactsScreen header, #chatScreen header {
+  #contactsScreen header, #chatScreen header, #settingsScreen header {
     background: var(--teal); color: #fff; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
   }
@@ -116,6 +116,16 @@
   .contact-sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .unread-badge { background: var(--marigold); color: #3a2405; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0; }
   .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 60px 24px; }
+
+  /* ---------- Settings screen ---------- */
+  .settings-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .settings-card { width: 100%; max-width: 400px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .settings-card h3 { font-size: 15px; color: var(--teal); margin-bottom: 4px; font-family: 'Baloo Da 2', sans-serif; }
+  .settings-profile-center { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .settings-avatar-preview { width: 80px; height: 80px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 28px; overflow: hidden; border: 2px solid var(--teal); }
+  .settings-avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .settings-label { font-size: 12.5px; font-weight: 600; color: var(--muted); }
+  .settings-select, .settings-input { width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; }
 
   /* ---------- Chat screen ---------- */
   #chatScreen header { gap: 10px; }
@@ -144,7 +154,7 @@
   .round-btn.img { background: var(--rose); color: var(--teal-deep); }
   .round-btn.send { background: var(--teal); color: #fff; }
   .round-btn.send:disabled { opacity: 0.5; }
-  #imageInput, #photoInput { display: none; }
+  #imageInput, #photoInput, #settingsPhotoInput { display: none; }
   .img-preview-bar { padding: 8px 14px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
   .img-preview-bar img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; }
   .img-preview-bar span { font-size: 12px; color: var(--muted); flex: 1; }
@@ -177,16 +187,56 @@
   <header>
     <div class="app-title">N Chat</div>
     <div class="header-actions">
-      <select id="themeSelector" onchange="changeTheme(this.value)" style="background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.3); border-radius:8px; padding:6px; font-size:12px; font-weight:600;">
-        <option value="teal" style="color:#000;">🎨 টিল (Teal)</option>
-        <option value="dark" style="color:#000;">🌙 ডার্ক (Dark)</option>
-        <option value="purple" style="color:#000;">💜 পার্পল (Purple)</option>
-        <option value="rose" style="color:#000;">🌸 রোজ (Rose)</option>
-      </select>
+      <button class="icon-btn" onclick="openSettings()">⚙️ সেটিংস</button>
       <button class="icon-btn" onclick="logout()">লগ আউট</button>
     </div>
   </header>
   <div class="contact-list" id="contactList"></div>
+</div>
+
+<!-- ================= SETTINGS SCREEN ================= -->
+<div class="screen" id="settingsScreen">
+  <header>
+    <button class="back-btn" onclick="goToContactsFromSettings()">←</button>
+    <div class="app-title">অ্যাপ সেটিংস</div>
+    <div style="width:24px;"></div>
+  </header>
+  <div class="settings-content">
+    <div class="settings-card">
+      <h3>প্রোফাইল সেটিংস</h3>
+      <div class="settings-profile-center">
+        <div class="settings-avatar-preview" id="settingsAvatarPreview">👤</div>
+        <button type="button" class="photo-picker-btn" onclick="document.getElementById('settingsPhotoInput').click()">ছবি পরিবর্তন করুন</button>
+        <input type="file" id="settingsPhotoInput" accept="image/*" onchange="onSettingsPhotoSelected(event)" />
+      </div>
+      <div class="settings-label">আপনার নাম</div>
+      <input type="text" class="settings-input" id="settingsNameInput" placeholder="নাম লিখুন" />
+      <button class="btn-primary" onclick="saveProfileChanges()">প্রোফাইল আপডেট করুন</button>
+    </div>
+
+    <div class="settings-card">
+      <h3>অ্যাপ থিম</h3>
+      <div class="settings-label">অ্যাপের কালার স্টাইল বেছে নিন</div>
+      <select class="settings-select" id="themeSelector" onchange="changeTheme(this.value)">
+        <option value="teal">🎨 টিল (Teal - ডিফল্ট)</option>
+        <option value="dark">🌙 ডার্ক মোড (Dark)</option>
+        <option value="purple">💜 রয়্যাল পার্পল (Purple)</option>
+        <option value="rose">🌸 রোজ পিংক (Rose)</option>
+      </select>
+    </div>
+
+    <div class="settings-card">
+      <h3>চ্যাট ব্যাকগ্রাউন্ড (WhatsApp Style)</h3>
+      <div class="settings-label">চ্যাট স্ক্রিনের ব্যাকগ্রাউন্ড কালার</div>
+      <select class="settings-select" id="chatBgSelector" onchange="changeChatBg(this.value)">
+        <option value="default">ডিফল্ট ব্যাকগ্রাউন্ড</option>
+        <option value="whatsapp-light">WhatsApp লাইট (সাদাটে)</option>
+        <option value="whatsapp-dark">WhatsApp ডার্ক চ্যাট (গাড় সবুজ)</option>
+        <option value="soft-blue">সফট স্কাই ব্লু</option>
+        <option value="warm-beige">ওয়ার্ম বেজ (Warm Beige)</option>
+      </select>
+    </div>
+  </div>
 </div>
 
 <!-- ================= CHAT SCREEN ================= -->
@@ -243,12 +293,13 @@ let usersUnsub = null;
 let conversationsUnsub = null;
 let pendingImageDataUrl = null;
 let pendingSignupPhoto = null;
+let pendingSettingsPhoto = null;
 let typingTimeout = null;
 let heartbeatInterval = null;
 let allUsers = [];
 let myConversations = {};
 
-// Theme Management
+// Theme & Chat Background Management
 function changeTheme(themeName) {
   if (themeName === 'teal') {
     document.documentElement.removeAttribute('data-theme');
@@ -258,12 +309,40 @@ function changeTheme(themeName) {
   localStorage.setItem('n_chat_theme', themeName);
 }
 
-// Load saved theme on startup
+function changeChatBg(bgStyle) {
+  const messagesEl = document.getElementById('messagesEl');
+  messagesEl.className = 'messages';
+  if (bgStyle !== 'default') {
+    messagesEl.classList.add('bg-' + bgStyle);
+  }
+  localStorage.setItem('n_chat_bg', bgStyle);
+}
+
+// Custom CSS for WhatsApp Chat Backgrounds
+const styleSheet = document.createElement("style");
+styleSheet.innerHTML = `
+  .bg-whatsapp-light { background: #efeae2 !important; }
+  .bg-whatsapp-dark { background: #0b141a !important; }
+  .bg-soft-blue { background: #e7f3ff !important; }
+  .bg-warm-beige { background: #fdf6ec !important; }
+`;
+document.head.appendChild(styleSheet);
+
+// Load saved settings on startup
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('n_chat_theme') || 'teal';
-  document.getElementById('themeSelector').value = savedTheme;
+  const savedBg = localStorage.getItem('n_chat_bg') || 'default';
+  
+  const themeSelect = document.getElementById('themeSelector');
+  if (themeSelect) themeSelect.value = savedTheme;
   if (savedTheme !== 'teal') {
     document.documentElement.setAttribute('data-theme', savedTheme);
+  }
+
+  const bgSelect = document.getElementById('chatBgSelector');
+  if (bgSelect) bgSelect.value = savedBg;
+  if (savedBg !== 'default') {
+    document.getElementById('messagesEl').classList.add('bg-' + savedBg);
   }
 });
 
@@ -274,15 +353,17 @@ function colorForName(name) {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 function initialsFor(name) { return (name || '?').trim().charAt(0).toUpperCase(); }
-function avatarHtml(user, size) {
-  if (user.photoBase64) return `<img src="${user.photoBase64}" alt="" />`;
-  return initialsFor(user.displayName);
+function avatarHtml(user) {
+  if (user && user.photoBase64) return `<img src="${user.photoBase64}" alt="" />`;
+  return initialsFor(user ? user.displayName : '?');
 }
-function avatarBg(user) { return user.photoBase64 ? 'transparent' : colorForName(user.displayName || '?'); }
+function avatarBg(user) { return (user && user.photoBase64) ? 'transparent' : colorForName(user ? user.displayName || '?' : '?'); }
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
+
 function timeAgoLabel(ts) {
   if (!ts) return '';
   const diffMs = Date.now() - ts.toDate().getTime();
@@ -294,6 +375,7 @@ function timeAgoLabel(ts) {
   const days = Math.floor(hrs / 24);
   return days + ' দিন আগে';
 }
+
 function shortTime(ts) {
   if (!ts) return '';
   return new Date(ts.toDate()).toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
@@ -470,6 +552,62 @@ function renderContactList() {
 }
 
 function conversationIdFor(uidA, uidB) { return [uidA, uidB].sort().join('_'); }
+
+/* ---------------- Settings & Profile ---------------- */
+function openSettings() {
+  document.getElementById('settingsNameInput').value = currentUser.displayName || '';
+  const previewEl = document.getElementById('settingsAvatarPreview');
+  previewEl.style.background = avatarBg(currentUser);
+  previewEl.innerHTML = avatarHtml(currentUser);
+  pendingSettingsPhoto = currentUser.photoBase64 || null;
+  showScreen('settingsScreen');
+}
+
+function goToContactsFromSettings() {
+  showScreen('contactsScreen');
+}
+
+function onSettingsPhotoSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const SIZE = 120;
+      const canvas = document.createElement('canvas');
+      canvas.width = SIZE; canvas.height = SIZE;
+      const ctx = canvas.getContext('2d');
+      const scale = Math.max(SIZE / img.width, SIZE / img.height);
+      const w = img.width * scale, h = img.height * scale;
+      ctx.drawImage(img, (SIZE - w) / 2, (SIZE - h) / 2, w, h);
+      pendingSettingsPhoto = canvas.toDataURL('image/jpeg', 0.7);
+      const previewEl = document.getElementById('settingsAvatarPreview');
+      previewEl.style.background = 'transparent';
+      previewEl.innerHTML = `<img src="${pendingSettingsPhoto}" style="width:100%;height:100%;object-fit:cover;" />`;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveProfileChanges() {
+  const newName = document.getElementById('settingsNameInput').value.trim();
+  if (!newName) { alert('নাম খালি রাখা যাবে না'); return; }
+
+  try {
+    await db.collection('users').doc(currentUser.uid).update({
+      displayName: newName,
+      photoBase64: pendingSettingsPhoto
+    });
+    currentUser.displayName = newName;
+    currentUser.photoBase64 = pendingSettingsPhoto;
+    alert('প্রোফাইল সফলভাবে আপডেট করা হয়েছে!');
+    showScreen('contactsScreen');
+  } catch (e) {
+    alert('আপডেট করতে সমস্যা হয়েছে: ' + e.message);
+  }
+}
 
 /* ---------------- Chat ---------------- */
 function goToContacts() {
