@@ -425,8 +425,10 @@ function openChat(partner) {
   updatePartnerStatusLabel(partner);
   showScreen('chatScreen');
 
-  // reset my unread count for this conversation
+  // reset my unread count for this conversation (always include participants so this
+  // write never creates a conversation doc missing the participants array)
   db.collection('conversations').doc(activeConversationId).set({
+    participants: [currentUser.uid, partner.uid],
     unreadCount: { [currentUser.uid]: 0 }
   }, { merge: true }).catch(() => {});
 
@@ -509,9 +511,10 @@ function onTyping() {
   typingTimeout = setTimeout(() => setTyping(false), 3000);
 }
 async function setTyping(isTyping) {
-  if (!activeConversationId) return;
+  if (!activeConversationId || !activePartner) return;
   try {
     await db.collection('conversations').doc(activeConversationId).set({
+      participants: [currentUser.uid, activePartner.uid],
       typing: { [currentUser.uid]: isTyping }
     }, { merge: true });
   } catch (e) {}
