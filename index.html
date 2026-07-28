@@ -33,7 +33,6 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
-  /* Full screen view restored */
   html, body { height: 100%; width: 100%; }
   body {
     font-family: 'Inter', sans-serif;
@@ -48,7 +47,6 @@
   input:focus, select:focus { outline: 2px solid var(--teal); outline-offset: 1px; }
   button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
-  /* App Opening Animation */
   @keyframes appOpen {
     from {
       opacity: 0;
@@ -108,7 +106,7 @@
   .unread-badge { background: var(--marigold); color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0; }
   .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 60px 24px; }
 
-  /* Floating Action Button (+) like WhatsApp */
+  /* Floating Action Button (+) */
   .fab-btn {
     position: fixed;
     bottom: 24px;
@@ -208,7 +206,7 @@
   </div>
 </div>
 
-<!-- ================= CONTACTS SCREEN ================= -->
+<!-- ================= CONTACTS SCREEN (WhatsApp Style: Shows all users or active chats) ================= -->
 <div class="screen" id="contactsScreen">
   <header>
     <div class="app-title">N Chat</div>
@@ -218,7 +216,6 @@
     </div>
   </header>
   <div class="contact-list" id="contactList"></div>
-  <!-- WhatsApp style Floating Action Button (+) -->
   <button class="fab-btn" onclick="openUserList()" title="Start New Chat">+</button>
 </div>
 
@@ -274,7 +271,6 @@
         <div class="chat-partner-status" id="chatPartnerStatus"></div>
       </div>
     </div>
-    <!-- Three Dot Options Menu inside Chat -->
     <div class="menu-wrapper">
       <button class="three-dot-btn" onclick="toggleChatMenu(event)">⋮</button>
       <div class="dropdown-menu" id="chatDropdownMenu">
@@ -332,7 +328,6 @@ let heartbeatInterval = null;
 let allUsers = [];
 let myConversations = {};
 
-/* Screen Switcher with Animation Trigger */
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => {
     s.classList.remove('active');
@@ -341,7 +336,6 @@ function showScreen(id) {
   target.classList.add('active');
 }
 
-/* Three Dot Dropdown Logic */
 function toggleChatMenu(event) {
   event.stopPropagation();
   const menu = document.getElementById('chatDropdownMenu');
@@ -412,7 +406,6 @@ function shortTime(ts) {
   return new Date(ts.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-/* ---------------- Mobile Auth (Without OTP) ---------------- */
 function toggleAuthMode() {
   isSignupMode = !isSignupMode;
   document.getElementById('displayNameField').style.display = isSignupMode ? 'block' : 'none';
@@ -527,7 +520,6 @@ auth.onAuthStateChanged(async (user) => {
   }
 });
 
-/* ---------------- Contacts & User List ---------------- */
 function listenContacts() {
   if (usersUnsub) usersUnsub();
   if (conversationsUnsub) conversationsUnsub();
@@ -547,25 +539,36 @@ function listenContacts() {
     });
 }
 
+/* Updated to display ALL registered users on the main screen (like WhatsApp's main tab showing contacts/chats) */
 function renderContactList() {
   const listEl = document.getElementById('contactList');
-  const activeRows = allUsers.map(u => {
-    const convId = conversationIdFor(currentUser.uid, u.uid);
-    const conv = myConversations[convId];
-    if (!conv) return null; // Only show users with existing chats on main screen like WhatsApp
-    const preview = conv.lastMessageType === 'image' ? '📷 Photo' : (conv.lastMessageText || '');
-    const previewPrefixed = conv.lastMessageSenderId === currentUser.uid ? 'You: ' + preview : preview;
-    const unread = conv.unreadCount && conv.unreadCount[currentUser.uid] ? conv.unreadCount[currentUser.uid] : 0;
-    const sortKey = conv.lastUpdated ? conv.lastUpdated.toMillis() : 0;
-    return { u, convId, previewPrefixed, unread, timeLabel: timeAgoLabel(conv.lastUpdated), sortKey };
-  }).filter(Boolean).sort((a, b) => b.sortKey - a.sortKey);
-
-  if (activeRows.length === 0) {
-    listEl.innerHTML = '<div class="empty-state">No chats yet. Click the (+) button below to see available users and start chatting!</div>';
+  
+  if (allUsers.length === 0) {
+    listEl.innerHTML = '<div class="empty-state">No other users found. Click the (+) button below to explore.</div>';
     return;
   }
 
-  listEl.innerHTML = activeRows.map(r => `
+  // Map all users and attach conversation details if available, sorting active chats to the top
+  const rows = allUsers.map(u => {
+    const convId = conversationIdFor(currentUser.uid, u.uid);
+    const conv = myConversations[convId];
+    
+    let previewPrefixed = u.online ? 'Online' : (u.lastSeen ? 'Last seen ' + timeAgoLabel(u.lastSeen) : 'Offline');
+    let unread = 0;
+    let timeLabel = '';
+    let sortKey = conv && conv.lastUpdated ? conv.lastUpdated.toMillis() : 0;
+
+    if (conv) {
+      const preview = conv.lastMessageType === 'image' ? '📷 Photo' : (conv.lastMessageText || '');
+      previewPrefixed = conv.lastMessageSenderId === currentUser.uid ? 'You: ' + preview : preview;
+      unread = conv.unreadCount && conv.unreadCount[currentUser.uid] ? conv.unreadCount[currentUser.uid] : 0;
+      timeLabel = timeAgoLabel(conv.lastUpdated);
+    }
+
+    return { u, convId, previewPrefixed, unread, timeLabel, sortKey };
+  }).sort((a, b) => b.sortKey - a.sortKey);
+
+  listEl.innerHTML = rows.map(r => `
     <div class="contact-row" onclick='openChat(${JSON.stringify(r.u)})'>
       <div class="avatar-wrap">
         <div class="avatar" style="background:${avatarBg(r.u)}">${avatarHtml(r.u)}</div>
@@ -619,7 +622,6 @@ function renderAllUsersList() {
 
 function conversationIdFor(uidA, uidB) { return [uidA, uidB].sort().join('_'); }
 
-/* ---------------- Settings & Profile ---------------- */
 function openSettings() {
   document.getElementById('settingsNameInput').value = currentUser.displayName || '';
   const previewEl = document.getElementById('settingsAvatarPreview');
@@ -671,7 +673,6 @@ async function saveProfileChanges() {
   } catch (e) { alert('Failed to update profile'); }
 }
 
-/* ---------------- Chat Management ---------------- */
 function goToContacts() {
   if (messagesUnsub) messagesUnsub();
   if (convDocUnsub) convDocUnsub();
@@ -775,7 +776,6 @@ async function setTypo(isTyping) {
     }, { merge: true });
   } catch (e) {}
 }
-// Alias for helper function usage
 function setTyping(isTyping) { setTypo(isTyping); }
 
 function onImageSelected(event) {
@@ -835,7 +835,9 @@ async function sendMessage() {
       seen: false
     });
 
-    input.value = '';
+    input.value = andClearInput => {
+      input.value = '';
+    }();
     clearImagePreview();
     if (typingTimeout) clearTimeout(typingTimeout);
   } catch (e) {
