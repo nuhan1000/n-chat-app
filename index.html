@@ -295,7 +295,6 @@
   .three-dot-btn { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; padding: 8px 12px; border-radius: 50%; }
   .three-dot-btn:hover { background: rgba(255,255,255,0.1); }
   
-  /* Style for close conversation cross icon button */
   .close-conv-btn { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; padding: 8px 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
   .close-conv-btn:hover { background: rgba(255,255,255,0.1); }
 
@@ -436,7 +435,8 @@
 </head>
 <body onclick="closeDropdowns(event)">
 
-<div class="screen active" id="authScreen" style="display:flex;">
+<!-- শুরুতে উভয় স্ক্রিন ডিসপ্লে none করা হয়েছে যাতে ফ্লিকার না করে -->
+<div class="screen" id="authScreen" style="display:none;">
   <div class="auth-card" style="margin: auto;">
     <div class="auth-logo">Talknu</div>
     <div class="auth-sub" id="authSubLabel">Sign in with your mobile number to start chatting</div>
@@ -603,7 +603,6 @@
             </div>
           </div>
 
-          <!-- Added Close Conversation Cross Icon Button -->
           <button class="close-conv-btn" onclick="closeCurrentConversation()" title="Close Conversation">✕</button>
         </div>
 
@@ -1001,6 +1000,7 @@ function logout() {
   auth.signOut();
 }
 
+// ফায়ারবেসAuthStateChanged লজিক যেখানে অ্যাকাউন্ট থাকলে ডিরেক্ট অ্যাপ শো করবে এবং ফ্লিকার করবে না
 auth.onAuthStateChanged(async (user) => {
   if (user) {
     const userDocRef = db.collection('users').doc(user.uid);
@@ -1026,7 +1026,7 @@ auth.onAuthStateChanged(async (user) => {
   } else {
     currentUser = null;
     document.getElementById('appContainer').style.display = 'none';
-    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('authScreen').style.display = 'flex'; // শুধু ইউজার না থাকলে লগইন পেজ দেখাবে
   }
 });
 
