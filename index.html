@@ -59,6 +59,7 @@
     height: 100dvh;
     background: var(--bg);
     position: relative;
+    overflow: hidden;
   }
 
   .sidebar-pane {
@@ -84,8 +85,40 @@
     overflow: hidden;
   }
 
-  .screen { display: none; height: 100%; width: 100%; flex-direction: column; position: absolute; top: 0; left: 0; background: var(--bg); }
-  .screen.active { display: flex; animation: appOpen 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .screen { 
+    display: none; 
+    height: 100%; 
+    width: 100%; 
+    flex-direction: column; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    background: var(--bg); 
+    z-index: 1;
+  }
+  .screen.active { display: flex; z-index: 10; animation: appOpen 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+  /* Mobile Responsive Overrides */
+  @media(max-width: 768px) {
+    .sidebar-pane {
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+    }
+    .main-pane {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1;
+    }
+    /* When a screen inside main-pane is active on mobile, bring it over the sidebar */
+    .main-pane .screen.active {
+      z-index: 20;
+    }
+  }
 
   /* ---------- Auth screen ---------- */
   #authScreen { align-items: center; justify-content: center; background: linear-gradient(160deg, var(--teal) 0%, var(--teal-deep) 100%); padding: 24px; overflow-y: auto; position: fixed; z-index: 1000; }
@@ -196,13 +229,13 @@
   .profile-section-value { font-size: 15px; color: var(--text); font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
 
   /* ---------- Three Dot Menu Styles ---------- */
-  .menu-wrapper { position: relative; }
-  .three-dot-btn { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; padding: 4px 8px; border-radius: 50%; }
+  .menu-wrapper { position: relative; z-index: 100; }
+  .three-dot-btn { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; padding: 8px 12px; border-radius: 50%; }
   .three-dot-btn:hover { background: rgba(255,255,255,0.1); }
   .dropdown-menu {
     display: none; position: absolute; right: 0; top: 100%; background: var(--panel);
-    border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-    width: 220px; z-index: 100; overflow: hidden; margin-top: 4px;
+    border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    width: 220px; z-index: 1000; overflow: hidden; margin-top: 4px;
   }
   .dropdown-menu.show { display: block; animation: appOpen 0.2s ease-out; }
   .dropdown-item {
@@ -215,11 +248,11 @@
   .dropdown-item.danger { color: #E53935; }
 
   /* ---------- Attachment Popup Menu Styles ---------- */
-  .attach-wrapper { position: relative; }
+  .attach-wrapper { position: relative; z-index: 50; }
   .attach-menu {
     display: none; position: absolute; bottom: 120%; left: 0; background: var(--panel);
     border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-    width: 240px; z-index: 120; overflow: hidden; animation: appOpen 0.2s ease-out;
+    width: 240px; z-index: 500; overflow: hidden; animation: appOpen 0.2s ease-out;
   }
   .attach-menu.show { display: block; }
   .attach-item {
@@ -247,10 +280,10 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.12); position: relative; z-index: 10;
   }
   #chatScreen header { gap: 10px; }
-  .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 0 4px; cursor: pointer; display: none; }
-  @media(max-width: 768px) { .back-btn { display: block; } }
+  .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 4px 8px; cursor: pointer; display: none; }
+  @media(max-width: 768px) { .back-btn { display: flex; align-items: center; justify-content: center; } }
 
-  .chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer; }
+  .chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer; padding: 4px; }
   .chat-partner-name { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 16px; }
   .chat-partner-status { font-size: 11px; color: rgba(255,255,255,0.8); }
   
@@ -269,7 +302,7 @@
   .bubble .ticks.seen { color: #34B7F1; }
   .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; background: var(--panel); }
   
-  .composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; position: relative; }
+  .composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 20; }
   .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: var(--bg); color: var(--text); }
   .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; }
   .round-btn.plus { background: var(--border); color: var(--text); font-weight: 700; font-size: 20px; }
@@ -509,12 +542,10 @@ let allUsers = [];
 let myConversations = {};
 let favouritesList = JSON.parse(localStorage.getItem('n_chat_favourites') || '[]');
 
-// Voice recording state variables
 let mediaRecorder = null;
 let audioChunks = [];
 let isRecording = false;
 
-// Navigation History State Stack
 let navHistory = ['welcomeScreen'];
 let navIndex = 0;
 let isNavigatingHistory = false;
@@ -843,7 +874,6 @@ function renderContactList() {
     let unread = 0;
     let timeLabel = '';
     let sortKey = conv && conv.lastUpdated ? conv.lastUpdated.toMillis() : 0;
-    let hasChat = !!conv;
 
     if (conv) {
       let preview = conv.lastMessageText || '';
@@ -859,7 +889,7 @@ function renderContactList() {
 
     const isFavourite = favouritesList.includes(u.uid);
 
-    return { u, convId, previewPrefixed, unread, timeLabel, sortKey, hasChat, isFavourite };
+    return { u, convId, previewPrefixed, unread, timeLabel, sortKey, isFavourite };
   });
 
   if (searchVal) {
