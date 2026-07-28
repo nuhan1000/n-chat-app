@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>N Chat</title>
+<title>Nuvox</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
@@ -327,7 +327,7 @@
 <!-- ================= AUTH SCREEN ================= -->
 <div class="screen active" id="authScreen" style="display:flex;">
   <div class="auth-card" style="margin: auto;">
-    <div class="auth-logo">N Chat</div>
+    <div class="auth-logo">Nuvox</div>
     <div class="auth-sub" id="authSubLabel">Sign in with your mobile number to start chatting</div>
     <div class="auth-error" id="authError"></div>
     <input class="field" id="displayNameField" placeholder="Your Name" style="display:none;" />
@@ -349,7 +349,7 @@
   <!-- LEFT SIDEBAR PANE -->
   <div class="sidebar-pane">
     <div class="sidebar-header">
-      <div class="app-title">N Chat</div>
+      <div class="app-title">Nuvox</div>
       <div class="header-actions">
         <button class="icon-btn-ghost" id="navBackBtn" onclick="historyBack()" title="Back" disabled>◀</button>
         <button class="icon-btn-ghost" id="navForwardBtn" onclick="historyForward()" title="Forward" disabled>▶</button>
@@ -382,7 +382,7 @@
     <div class="screen active" id="welcomeScreen">
       <div class="welcome-screen-placeholder">
         <div style="font-size: 64px;">💬</div>
-        <h2 style="font-family:'Baloo Da 2',sans-serif; font-size:26px; color:var(--text);">N Chat for Web</h2>
+        <h2 style="font-family:'Baloo Da 2',sans-serif; font-size:26px; color:var(--text);">Nuvox for Web</h2>
         <p style="max-width:380px; font-size:14px;">Send and receive messages seamlessly across your devices. Select a chat from the left panel to begin.</p>
         <div class="welcome-placeholder-actions">
           <button class="welcome-action-btn" onclick="openUserList()"><span>➕</span> Add contact</button>
@@ -546,7 +546,7 @@ let typingTimeout = null;
 let heartbeatInterval = null;
 let allUsers = [];
 let myConversations = {};
-let favouritesList = JSON.parse(localStorage.getItem('n_chat_favourites') || '[]');
+let favouritesList = JSON.parse(localStorage.getItem('nuvox_favourites') || '[]');
 
 let mediaRecorder = null;
 let audioChunks = [];
@@ -637,11 +637,11 @@ function changeTheme(themeName) {
   } else {
     document.documentElement.removeAttribute('data-theme');
   }
-  localStorage.setItem('n_chat_theme_mode', themeName);
+  localStorage.setItem('nuvox_theme_mode', themeName);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  const savedTheme = localStorage.getItem('n_chat_theme_mode') || 'light';
+  const savedTheme = localStorage.getItem('nuvox_theme_mode') || 'light';
   document.getElementById('themeSelector').value = savedTheme;
   changeTheme(savedTheme);
 });
@@ -688,7 +688,7 @@ function toggleAuthMode() {
 
 function phoneToEmail(phone) {
   const cleanPhone = phone.replace(/[^0-9]/g, '');
-  return `user_${cleanPhone}@nchat.local`;
+  return `user_${cleanPhone}@nuvox.local`;
 }
 
 function onSignupPhotoSelected(event) {
@@ -812,7 +812,7 @@ auth.onAuthStateChanged(async (user) => {
       const defaultName = "User " + user.uid.slice(0, 4);
       await userDocRef.set({
         displayName: defaultName,
-        phone: user.email ? user.email.replace('user_', '').replace('@nchat.local', '') : '',
+        phone: user.email ? user.email.replace('user_', '').replace('@nuvox.local', '') : '',
         uid: user.uid,
         photoBase64: null,
         online: true,
@@ -1356,7 +1356,7 @@ async function toggleFavouriteChat() {
     favouritesList.push(activePartner.uid);
     alert(`${activePartner.displayName} has been added to favourites.`);
   }
-  localStorage.setItem('n_chat_favourites', JSON.stringify(favouritesList));
+  localStorage.setItem('nuvox_favourites', JSON.stringify(favouritesList));
   renderContactList();
 }
 
