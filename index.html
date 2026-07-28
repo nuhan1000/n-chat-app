@@ -8,27 +8,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --teal: #075E54;
-    --teal-deep: #054C44;
-    --marigold: #25D366;
-    --bg: #ECE5DD;
+    --teal: #4F46E5;
+    --teal-deep: #3730A3;
+    --marigold: #818CF8;
+    --bg: #F8FAFC;
     --panel: #FFFFFF;
-    --border: #E2E7E2;
-    --text: #1E2A28;
-    --muted: #6B7A76;
-    --online: #25D366;
+    --border: #E2E8F0;
+    --text: #1E293B;
+    --muted: #64748B;
+    --online: #818CF8;
   }
 
   [data-theme="dark"] {
-    --teal: #1F2C34;
-    --teal-deep: #111B21;
-    --marigold: #00A884;
-    --bg: #0B141A;
-    --panel: #111B21;
-    --border: #222D34;
-    --text: #E9EDEF;
-    --muted: #8696A0;
-    --online: #00A884;
+    --teal: #1E1B4B;
+    --teal-deep: #0F172A;
+    --marigold: #818CF8;
+    --bg: #0F172A;
+    --panel: #1E293B;
+    --border: #334155;
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --online: #818CF8;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -156,8 +156,8 @@
   
   .filter-chips { display: flex; align-items: center; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 2px; }
   .chip { padding: 6px 14px; border-radius: 16px; font-size: 13px; font-weight: 500; background: var(--bg); color: var(--muted); border: none; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-  .chip.active { background: #E1F3ED; color: var(--teal); font-weight: 600; }
-  [data-theme="dark"] .chip.active { background: #00372C; color: #00A884; }
+  .chip.active { background: #EEF2FF; color: var(--teal); font-weight: 600; }
+  [data-theme="dark"] .chip.active { background: #312E81; color: #818CF8; }
 
   .contact-list, .all-users-list { flex: 1; overflow-y: auto; padding: 0; background: var(--panel); }
   .contact-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--panel); cursor: pointer; transition: background 0.2s; }
@@ -293,13 +293,13 @@
   .delete-msg-btn { background: none; border: none; font-size: 12px; opacity: 0.45; padding: 2px 4px; color: var(--text); cursor: pointer; }
   .bubble { max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14px; line-height: 1.4; position: relative; }
   .bubble.theirs { background: var(--panel); color: var(--text); border-top-left-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-  .bubble.mine { background: #E7FCE3; color: #111; border-top-right-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-  [data-theme="dark"] .bubble.mine { background: #005C4B; color: #E9EDEF; }
+  .bubble.mine { background: #EEF2FF; color: #111; border-top-right-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+  [data-theme="dark"] .bubble.mine { background: #312E81; color: #F8FAFC; }
   .bubble img { max-width: 100%; border-radius: 8px; display: block; margin-top: 4px; }
   .bubble .meta-row { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 2px; }
   .bubble .time { font-size: 10px; opacity: 0.6; }
   .bubble .ticks { font-size: 11px; margin-left: 2px; }
-  .bubble .ticks.seen { color: #34B7F1; }
+  .bubble .ticks.seen { color: #818CF8; }
   .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; background: var(--panel); }
   
   .composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 50; }
@@ -646,7 +646,7 @@ window.addEventListener('DOMContentLoaded', () => {
   changeTheme(savedTheme);
 });
 
-const AVATAR_COLORS = ['#075E54', '#128C7E', '#25D366', '#34B7F1', '#E5423A', '#8E5572'];
+const AVATAR_COLORS = ['#4F46E5', '#6366F1', '#818CF8', '#3730A3', '#4338CA', '#312E81'];
 function colorForName(name) {
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
@@ -1184,7 +1184,7 @@ function onDocSelected(event) {
   const file = event.target.files[0];
   if (!file) return;
   pendingAttachmentData = { type: 'document', fileName: file.name };
-  document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23075E54"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>';
+  document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%234F46E5"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>';
   document.getElementById('imgPreviewText').textContent = 'Document: ' + file.name;
   document.getElementById('imgPreviewBar').style.display = 'flex';
 }
@@ -1195,7 +1195,7 @@ function onAudioSelected(event) {
   const reader = new FileReader();
   reader.onload = (e) => {
     pendingAttachmentData = { type: 'audio', fileName: file.name, audioUrl: e.target.result };
-    document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%2325D366"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
+    document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23818CF8"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
     document.getElementById('imgPreviewText').textContent = 'Audio: ' + file.name;
     document.getElementById('imgPreviewBar').style.display = 'flex';
   };
@@ -1237,7 +1237,7 @@ async function toggleVoiceRecording() {
         const reader = new FileReader();
         reader.onload = (e) => {
           pendingAttachmentData = { type: 'audio', fileName: 'Voice Note.webm', audioUrl: e.target.result };
-          document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%2325D366"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
+          document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23818CF8"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
           document.getElementById('imgPreviewText').textContent = 'Voice Note Ready to Send';
           document.getElementById('imgPreviewBar').style.display = 'flex';
         };
@@ -1418,4 +1418,3 @@ async function reportChatPartner() {
 </script>
 </body>
 </html>
-```[cite: 3]
