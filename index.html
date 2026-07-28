@@ -323,26 +323,25 @@
     background: var(--teal); color: #fff; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative; z-index: 50; border-bottom: 1px solid var(--border);
   }
-  #chatScreen header { gap: 10px; }
+  #chatScreen header { gap: 8px; }
   .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 4px 8px; cursor: pointer; display: none; z-index: 51; }
   @media(max-width: 768px) { .back-btn { display: flex; align-items: center; justify-content: center; } }
 
-  /* Thin navigation indicator style */
-  .chat-nav-indicator {
+  /* Back button in desktop and mobile chat header top-left corner */
+  .chat-back-indicator {
     background: none;
     border: none;
     color: #fff;
-    font-size: 16px;
+    font-size: 20px;
     cursor: pointer;
-    padding: 4px 6px;
+    padding: 4px 8px 4px 2px;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0.8;
-    transition: opacity 0.2s;
     z-index: 51;
+    transition: opacity 0.2s;
   }
-  .chat-nav-indicator:hover { opacity: 1; }
+  .chat-back-indicator:hover { opacity: 0.8; }
 
   .chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer; padding: 4px; z-index: 51; }
   .chat-partner-name { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 16px; color: #fff; }
@@ -366,7 +365,6 @@
   .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: var(--bg); color: var(--text); }
   .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; }
   
-  /* Improved Floating "+" Button Icon style */
   .round-btn.plus { background: var(--border); color: var(--text); font-weight: 400; font-size: 24px; transition: background 0.2s, color 0.2s; }
   .round-btn.plus:hover { background: var(--marigold); color: #fff; }
   .sidebar-bottom-fab {
@@ -391,7 +389,6 @@
   }
   .sidebar-bottom-fab:hover { transform: scale(1.06); background: var(--marigold-hover); }
 
-  /* Hover Effect for Audio Record Button */
   .round-btn.mic { background: var(--border); color: var(--muted); transition: background 0.2s, color 0.2s; }
   .round-btn.mic:hover { background: var(--marigold); color: #fff; }
   .round-btn.mic svg { width: 20px; height: 20px; fill: currentColor; }
@@ -409,7 +406,6 @@
   .img-preview-bar { padding: 8px 14px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; z-index: 45; position: relative; }
   .img-preview-bar img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; }
 
-  /* Media Viewer screen specific styles */
   .media-viewer-content { flex: 1; overflow-y: auto; background: var(--bg); padding: 16px; display: flex; flex-direction: column; gap: 16px; }
   .media-section-title { font-size: 14px; font-weight: 700; color: var(--marigold); text-transform: uppercase; margin-bottom: 8px; }
   .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; }
@@ -445,9 +441,10 @@
     <div class="sidebar-header">
       <div class="app-title">Talknu</div>
       <div class="header-actions">
+        <!-- ব্যাক/ফরওয়ার্ড এবং প্লাস (+) কন্টাক্ট যোগ করার বাটন -->
         <button class="icon-btn-ghost" id="navBackBtn" onclick="historyBack()" title="Back" disabled>◀</button>
         <button class="icon-btn-ghost" id="navForwardBtn" onclick="historyForward()" title="Forward" disabled>▶</button>
-        <button class="icon-btn-ghost" onclick="openUserList()" title="Start New Chat">?</button>
+        <button class="icon-btn-ghost" onclick="openUserList()" title="Add Contact">＋</button>
         <button class="icon-btn-ghost" onclick="openSettings()" title="Settings">⋮</button>
       </div>
     </div>
@@ -469,7 +466,7 @@
 
     <div class="contact-list" id="contactList"></div>
 
-    <button class="sidebar-bottom-fab" onclick="openUserList()" title="Add someone to chat">?</button>
+    <button class="sidebar-bottom-fab" onclick="openUserList()" title="Add someone to chat">＋</button>
   </div>
 
   <div class="main-pane" id="mainPane">
@@ -480,7 +477,7 @@
         <h2 style="font-family:'Baloo Da 2',sans-serif; font-size:26px; color:var(--text);">Talknu for Web</h2>
         <p style="max-width:380px; font-size:14px;">Send and receive messages seamlessly across your devices. Select a chat from the left panel to begin.</p>
         <div class="welcome-placeholder-actions">
-          <button class="welcome-action-btn" onclick="openUserList()"><span>?</span> Add contact</button>
+          <button class="welcome-action-btn" onclick="openUserList()"><span>＋</span> Add contact</button>
           <button class="welcome-action-btn" onclick="openSettings()"><span>⚙️</span> Settings</button>
         </div>
       </div>
@@ -551,8 +548,9 @@
 
     <div class="screen" id="chatScreen">
       <header>
-        <button class="back-btn" onclick="historyBack()">←</button>
-        <button class="chat-nav-indicator" onclick="closeCurrentConversation()" title="Back to Chats">?</button>
+        <!-- নাম ও অবতারের বাম পাশের কর্নারে ব্যাক ইন্ডিকেটর -->
+        <button class="chat-back-indicator" onclick="closeCurrentConversation()" title="Back">◀</button>
+        
         <div class="chat-header-info" onclick='openContactInfo(activePartner)'>
           <div class="avatar" id="chatAvatar" style="width:38px;height:38px;font-size:14px;"></div>
           <div>
@@ -562,10 +560,7 @@
         </div>
         
         <div style="display: flex; align-items: center; gap: 4px;">
-          <!-- Theme Toggle Icon replaced with brightness (sun) icon -->
           <button class="three-dot-btn" id="headerThemeToggleBtn" onclick="toggleThemeQuick()" title="Toggle Theme" style="font-size: 18px;">☀️</button>
-          
-          <!-- Close Chat Button (✕) next to the three-dot menu -->
           <button class="three-dot-btn" onclick="closeCurrentConversation()" title="Close Chat" style="font-size: 18px;">✕</button>
 
           <div class="menu-wrapper">
@@ -597,7 +592,7 @@
         <input type="file" id="audioInput" accept="audio/*" onchange="onAudioSelected(event)" />
 
         <div class="attach-wrapper">
-          <button class="round-btn plus" onclick="toggleAttachMenu(event)" title="Attach">?</button>
+          <button class="round-btn plus" onclick="toggleAttachMenu(event)" title="Attach">＋</button>
           <div class="attach-menu" id="attachMenu">
             <div class="attach-item" onclick="document.getElementById('docInput').click(); closeAttachMenu();"><span>📄</span> Documents</div>
             <div class="attach-item" onclick="document.getElementById('imageInput').click(); closeAttachMenu();"><span>🖼️</span> Photos & videos</div>
@@ -785,33 +780,19 @@ function avatarHtml(user) {
 }
 function avatarBg(user) { return (user && user.photoBase64) ? 'transparent' : colorForName(user ? user.displayName || '?' : '?'); }
 
-/* Accurate Online / Offline Status System */
 function formatLastActive(lastSeenTs) {
   if (!lastSeenTs) return "Offline";
-  
   const now = new Date();
   const lastActive = lastSeenTs.toDate ? lastSeenTs.toDate() : new Date(lastSeenTs);
   const diffInSeconds = Math.floor((now - lastActive) / 1000);
   const diffInDays = Math.floor(diffInSeconds / (60 * 60 * 24));
 
-  if (diffInDays >= 30) {
-    return "Offline";
-  }
-
-  if (diffInDays > 0) {
-    return `Active ${diffInDays} days ago`;
-  }
-
+  if (diffInDays >= 30) return "Offline";
+  if (diffInDays > 0) return `Active ${diffInDays} days ago`;
   const diffInHours = Math.floor(diffInSeconds / 3600);
-  if (diffInHours > 0) {
-    return `Active ${diffInHours} hours ago`;
-  }
-
+  if (diffInHours > 0) return `Active ${diffInHours} hours ago`;
   const diffInMinutes = Math.floor(diffInSeconds / 60);
-  if (diffInMinutes > 0) {
-    return `Active ${diffInMinutes} minutes ago`;
-  }
-
+  if (diffInMinutes > 0) return `Active ${diffInMinutes} minutes ago`;
   return "Online";
 }
 
@@ -1031,13 +1012,11 @@ function filterContactList() {
   renderContactList();
 }
 
-/* Recent Contacts Bubble Row Rendering */
 function renderRecentBubbles() {
   const rowEl = document.getElementById('recentBubblesRow');
   if (!rowEl) return;
 
   let mapUsers = {};
-  
   allUsers.filter(u => u.online).forEach(u => {
     mapUsers[u.uid] = { u, score: 2000000 };
   });
@@ -1670,4 +1649,3 @@ async function reportChatPartner() {
 </script>
 </body>
 </html>
-```[cite: 6]
