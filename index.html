@@ -450,15 +450,17 @@ async function submitAuth() {
   const errEl = document.getElementById('authError');
   errEl.textContent = '';
 
-  if (!phone || phone.length < 11) { errEl.textContent = 'Please enter a valid mobile number'; return; }
+  if (!phone || phone.length < 6) { errEl.textContent = 'Please enter a valid mobile number'; return; }
   if (!password || password.length < 6) { errEl.textContent = 'Password must be at least 6 characters'; return; }
 
   const fakeEmail = phoneToEmail(phone);
+  const submitBtn = document.getElementById('authSubmitBtn');
+  submitBtn.disabled = true;
 
   try {
     if (isSignupMode) {
       const displayName = document.getElementById('displayNameField').value.trim();
-      if (!displayName) { errEl.textContent = 'Please enter your name'; return; }
+      if (!displayName) { errEl.textContent = 'Please enter your name'; submitBtn.disabled = false; return; }
       
       const cred = await auth.createUserWithEmailAndPassword(fakeEmail, password);
       await db.collection('users').doc(cred.user.uid).set({
@@ -471,12 +473,34 @@ async function submitAuth() {
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     } else {
-      await auth.signInWithEmailAndPassword(fakeEmail, password);
+      try {
+        await auth.signInWithEmailAndPassword(fakeEmail, password);
+      } catch (signInErr) {
+        if (signInErr.code === 'auth/user-not-found' || signInErr.code === 'auth/invalid-credential' || signInErr.code === 'auth/wrong-password') {
+          // Fallback check or auto-register helper if user tries logging in with an unregistered account
+          const displayName = phone; 
+          const cred = await auth.createUserWithEmailAndPassword(fakeEmail, password);
+          await db.collection('users').doc(cred.user.uid).set({
+            displayName: "User " + phone.slice(-4),
+            phone,
+            uid: cred.user.uid,
+            photoBase64: null,
+            online: true,
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          return;
+        }
+        throw signInErr;
+      }
     }
   } catch (e) {
-    if(e.code === 'auth/email-already-in-use') errEl.textContent = 'This number is already registered!';
+    if(e.code === 'auth/email-already-in-use') errEl.textContent = 'This number is already registered! Please login instead.';
     else if(e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password') errEl.textContent = 'Incorrect number or password!';
-    else errEl.textContent = 'An error occurred, please try again';
+    else if(e.code === 'auth/invalid-email') errEl.textContent = 'Invalid phone number format.';
+    else errEl.textContent = e.message || 'An error occurred, please try again';
+  } finally {
+    submitBtn.disabled = false;
   }
 }
 
@@ -509,7 +533,22 @@ function logout() {
 
 auth.onAuthStateChanged(async (user) => {
   if (user) {
-    const doc = await db.collection('users').doc(user.uid).get();
+    const userDocRef = db.collection('users').doc(user.uid);
+    let doc = await userDocRef.get();
+    if (!doc.exists) {
+      // Create user profile doc if missing
+      const defaultName = "User " + user.uid.slice(0, 4);
+      await userDocRef.set({
+        displayName: defaultName,
+        phone: user.email ? user.email.replace('user_', '').replace('@nchat.local', '') : '',
+        uid: user.uid,
+        photoBase64: null,
+        online: true,
+        lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      doc = await userDocRef.get();
+    }
     currentUser = { uid: user.uid, ...doc.data() };
     showScreen('contactsScreen');
     startHeartbeat();
@@ -539,7 +578,6 @@ function listenContacts() {
     });
 }
 
-/* Updated to display ALL registered users on the main screen (like WhatsApp's main tab showing contacts/chats) */
 function renderContactList() {
   const listEl = document.getElementById('contactList');
   
@@ -548,7 +586,6 @@ function renderContactList() {
     return;
   }
 
-  // Map all users and attach conversation details if available, sorting active chats to the top
   const rows = allUsers.map(u => {
     const convId = conversationIdFor(currentUser.uid, u.uid);
     const conv = myConversations[convId];
@@ -835,9 +872,7 @@ async function sendMessage() {
       seen: false
     });
 
-    input.value = andClearInput => {
-      input.value = '';
-    }();
+    input.value = '';
     clearImagePreview();
     if (typingTimeout) clearTimeout(typingTimeout);
   } catch (e) {
