@@ -8,29 +8,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --teal: #008069;
-    --teal-deep: #005c4b;
-    --marigold: #f59e0b;
-    --marigold-hover: #d97706;
-    --bg: #f0f2f5;
-    --panel: #ffffff;
-    --border: #e9edef;
-    --text: #111b21;
-    --muted: #667781;
-    --online: #00a884;
+    /* Updated to Light Yellow Theme Variables */
+    --teal: #FEF08A;        
+    --teal-deep: #EAB308;   
+    --marigold: #EAB308;
+    --marigold-hover: #CA8A04;
+    --bg: #F8FAFC;
+    --panel: #FFFFFF;
+    --border: #FEF9C3;
+    --text: #1E293B;
+    --muted: #64748B;
+    --online: #EAB308;
   }
 
   [data-theme="dark"] {
-    --teal: #111b21;
-    --teal-deep: #0b141a;
-    --marigold: #f59e0b;
-    --marigold-hover: #d97706;
-    --bg: #0b141a;
-    --panel: #111b21;
-    --border: #222d34;
-    --text: #e9edef;
-    --muted: #8696a0;
-    --online: #00a884;
+    --teal: #1E293B;
+    --teal-deep: #0F172A;
+    --marigold: #EAB308;
+    --marigold-hover: #CA8A04;
+    --bg: #0F172A;
+    --panel: #1E293B;
+    --border: #334155;
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --online: #EAB308;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -123,9 +124,9 @@
   }
 
   /* ---------- Auth screen ---------- */
-  #authScreen { align-items: center; justify-content: center; background: linear-gradient(135deg, var(--teal) 0%, var(--teal-deep) 100%); padding: 24px; overflow-y: auto; position: fixed; z-index: 1000; }
-  .auth-card { width: 100%; max-width: 360px; background: var(--panel); border-radius: 20px; padding: 32px 26px; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.5); margin: 20px 0; border: 1px solid var(--border); }
-  .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 34px; font-weight: 800; color: var(--marigold); text-align: center; margin-bottom: 4px; }
+  #authScreen { align-items: center; justify-content: center; background: linear-gradient(135deg, #FEF08A 0%, #EAB308 100%); padding: 24px; overflow-y: auto; position: fixed; z-index: 1000; }
+  .auth-card { width: 100%; max-width: 360px; background: var(--panel); border-radius: 20px; padding: 32px 26px; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.15); margin: 20px 0; border: 1px solid var(--border); }
+  .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 34px; font-weight: 800; color: #CA8A04; text-align: center; margin-bottom: 4px; }
   .auth-sub { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 22px; }
   .field { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 14px; margin-bottom: 10px; background: var(--bg); color: var(--text); }
   .btn-primary { width: 100%; padding: 12px 0; border-radius: 12px; border: none; background: var(--marigold); color: #111b21; font-weight: 700; font-size: 15px; margin-top: 6px; cursor: pointer; transition: background 0.2s; }
@@ -133,7 +134,7 @@
   .btn-danger { width: 100%; padding: 12px 0; border-radius: 12px; border: none; background: #ea4335; color: #fff; font-weight: 700; font-size: 15px; margin-top: 6px; cursor: pointer; }
   .btn-danger:hover { opacity: 0.9; }
   .auth-switch { text-align: center; font-size: 13px; color: var(--muted); margin-top: 16px; }
-  .auth-switch a { color: var(--marigold); font-weight: 700; text-decoration: none; cursor: pointer; }
+  .auth-switch a { color: #CA8A04; font-weight: 700; text-decoration: none; cursor: pointer; }
   .auth-error { color: #ea4335; font-size: 12px; text-align: center; min-height: 16px; margin-bottom: 6px; }
   .photo-picker-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
   .photo-picker-preview { width: 52px; height: 52px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; border: 1.5px solid var(--border); }
@@ -193,7 +194,7 @@
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
     border: none;
     cursor: pointer;
     z-index: 20;
@@ -219,7 +220,7 @@
   /* ---------- Contact Info Profile Screen ---------- */
   .profile-container { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 10px; padding-bottom: 30px; }
   .profile-hero { background: var(--panel); padding: 28px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; border-bottom: 1px solid var(--border); }
-  .profile-big-avatar { width: 130px; height: 130px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 700; color: #fff; overflow: hidden; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 3px solid var(--panel); }
+  .profile-big-avatar { width: 130px; height: 130px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 700; color: #fff; overflow: hidden; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 3px solid var(--panel); }
   .profile-big-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .profile-name { font-family: 'Baloo Da 2', sans-serif; font-size: 24px; font-weight: 700; color: var(--text); }
   .profile-status-text { font-size: 13px; color: var(--muted); margin-top: 4px; }
@@ -230,11 +231,11 @@
 
   /* ---------- Three Dot Menu Styles ---------- */
   .menu-wrapper { position: relative; z-index: 100; }
-  .three-dot-btn { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; padding: 8px 12px; border-radius: 50%; }
-  .three-dot-btn:hover { background: rgba(255,255,255,0.1); }
+  .three-dot-btn { background: none; border: none; color: var(--text); font-size: 22px; cursor: pointer; padding: 8px 12px; border-radius: 50%; }
+  .three-dot-btn:hover { background: rgba(0,0,0,0.05); }
   .dropdown-menu {
     display: none; position: absolute; right: 0; top: 100%; background: var(--panel);
-    border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+    border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     width: 230px; z-index: 9999; overflow: hidden; margin-top: 4px;
   }
   .dropdown-menu.show { display: block; animation: appOpen 0.2s ease-out; }
@@ -251,7 +252,7 @@
   .attach-wrapper { position: relative; z-index: 100; }
   .attach-menu {
     display: none; position: absolute; bottom: 120%; left: 0; background: var(--panel);
-    border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     width: 240px; z-index: 9999; overflow: hidden; animation: appOpen 0.2s ease-out;
   }
   .attach-menu.show { display: block; }
@@ -267,7 +268,7 @@
   /* ---------- Settings screen ---------- */
   .settings-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
   .settings-card { width: 100%; max-width: 420px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-  .settings-card h3 { font-size: 16px; color: var(--marigold); font-family: 'Baloo Da 2', sans-serif; }
+  .settings-card h3 { font-size: 16px; color: #CA8A04; font-family: 'Baloo Da 2', sans-serif; }
   .settings-profile-center { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 6px; }
   .settings-avatar-preview { width: 84px; height: 84px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 28px; overflow: hidden; border: 2.5px solid var(--marigold); }
   .settings-avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
@@ -276,30 +277,30 @@
 
   /* ---------- Chat screen & Headers ---------- */
   #chatScreen header, #userListScreen header, #contactInfoScreen header, #settingsScreen header {
-    background: var(--teal); color: #fff; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12); position: relative; z-index: 50;
+    background: var(--teal); color: var(--text); padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative; z-index: 50; border-bottom: 1px solid var(--border);
   }
   #chatScreen header { gap: 10px; }
-  .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 4px 8px; cursor: pointer; display: none; z-index: 51; }
+  .back-btn { background: none; border: none; color: var(--text); font-size: 22px; padding: 4px 8px; cursor: pointer; display: none; z-index: 51; }
   @media(max-width: 768px) { .back-btn { display: flex; align-items: center; justify-content: center; } }
 
   .chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer; padding: 4px; z-index: 51; }
-  .chat-partner-name { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 16px; }
-  .chat-partner-status { font-size: 11px; color: rgba(255,255,255,0.8); }
+  .chat-partner-name { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 16px; color: var(--text); }
+  .chat-partner-status { font-size: 11px; color: var(--muted); }
   
   .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 6px; background: var(--bg); }
   .msg-row { display: flex; align-items: center; gap: 6px; }
   .msg-row.mine { justify-content: flex-end; }
   .delete-msg-btn { background: none; border: none; font-size: 12px; opacity: 0.45; padding: 2px 4px; color: var(--text); cursor: pointer; }
   .bubble { max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14px; line-height: 1.4; position: relative; }
-  .bubble.theirs { background: var(--panel); color: var(--text); border-top-left-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
-  .bubble.mine { background: #d9fdd3; color: #111b21; border-top-right-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
-  [data-theme="dark"] .bubble.mine { background: #005c4b; color: #e9edef; }
+  .bubble.theirs { background: var(--panel); color: var(--text); border-top-left-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+  .bubble.mine { background: #FEF08A; color: #1E293B; border-top-right-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  [data-theme="dark"] .bubble.mine { background: #EAB308; color: #0F172A; }
   .bubble img { max-width: 100%; border-radius: 8px; display: block; margin-top: 4px; }
   .bubble .meta-row { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 2px; }
   .bubble .time { font-size: 10px; opacity: 0.6; }
   .bubble .ticks { font-size: 11px; margin-left: 2px; }
-  .bubble .ticks.seen { color: #53bdeb; }
+  .bubble .ticks.seen { color: #CA8A04; }
   .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; background: var(--panel); }
   
   .composer { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 50; }
@@ -397,7 +398,7 @@
     <div class="screen" id="userListScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
-        <div class="app-title" style="color:#fff; font-size:18px;">Select Contact</div>
+        <div class="app-title" style="font-size:18px;">Select Contact</div>
         <div style="width:24px;"></div>
       </header>
       <div class="all-users-list" id="allUsersListEl"></div>
@@ -407,7 +408,7 @@
     <div class="screen" id="contactInfoScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
-        <div class="app-title" style="color:#fff; font-size:18px;">Contact Info</div>
+        <div class="app-title" style="font-size:18px;">Contact Info</div>
         <div style="width:24px;"></div>
       </header>
       <div class="profile-container" id="profileContainerEl"></div>
@@ -417,7 +418,7 @@
     <div class="screen" id="settingsScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
-        <div class="app-title" style="color:#fff; font-size:18px;">Settings</div>
+        <div class="app-title" style="font-size:18px;">Settings</div>
         <div style="width:24px;"></div>
       </header>
       <div class="settings-content">
@@ -648,7 +649,7 @@ window.addEventListener('DOMContentLoaded', () => {
   changeTheme(savedTheme);
 });
 
-const AVATAR_COLORS = ['#008069', '#128c7e', '#f59e0b', '#34b7f1', '#ea4335', '#8e5572'];
+const AVATAR_COLORS = ['#EAB308', '#CA8A04', '#D97706', '#F59E0B', '#FBBF24', '#FCD34D'];
 function colorForName(name) {
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
@@ -1186,7 +1187,7 @@ function onDocSelected(event) {
   const file = event.target.files[0];
   if (!file) return;
   pendingAttachmentData = { type: 'document', fileName: file.name };
-  document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23008069"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>';
+  document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23EAB308"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>';
   document.getElementById('imgPreviewText').textContent = 'Document: ' + file.name;
   document.getElementById('imgPreviewBar').style.display = 'flex';
 }
@@ -1197,7 +1198,7 @@ function onAudioSelected(event) {
   const reader = new FileReader();
   reader.onload = (e) => {
     pendingAttachmentData = { type: 'audio', fileName: file.name, audioUrl: e.target.result };
-    document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23f59e0b"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
+    document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23EAB308"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
     document.getElementById('imgPreviewText').textContent = 'Audio: ' + file.name;
     document.getElementById('imgPreviewBar').style.display = 'flex';
   };
@@ -1239,7 +1240,7 @@ async function toggleVoiceRecording() {
         const reader = new FileReader();
         reader.onload = (e) => {
           pendingAttachmentData = { type: 'audio', fileName: 'Voice Note.webm', audioUrl: e.target.result };
-          document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23f59e0b"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
+          document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23EAB308"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
           document.getElementById('imgPreviewText').textContent = 'Voice Note Ready to Send';
           document.getElementById('imgPreviewBar').style.display = 'flex';
         };
