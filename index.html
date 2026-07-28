@@ -101,11 +101,24 @@
   .contact-name { font-weight: 600; font-size: 15px; color: var(--text); }
   .contact-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
   
-  /* WhatsApp Style Info Text Animation (Fade & Slide Subtle Effect) */
-  @keyframes whatsappFadeSlide {
-    0% { opacity: 0.5; transform: translateY(2px); }
-    50% { opacity: 1; transform: translateY(0); color: var(--teal); }
-    100% { opacity: 0.5; transform: translateY(2px); }
+  /* Smooth & Lag-free WhatsApp Style Info Text Animation (Fade & Slide Loop) */
+  @keyframes whatsappSmoothSlide {
+    0% {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    20% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    80% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(6px);
+    }
   }
   .contact-info-link {
     font-size: 11.5px;
@@ -115,10 +128,12 @@
     margin: 2px 0 4px 0;
     text-decoration: none;
     cursor: pointer;
-    animation: whatsappFadeSlide 2.5s infinite ease-in-out;
+    will-change: transform, opacity;
+    animation: whatsappSmoothSlide 3.5s infinite ease-in-out;
   }
   .contact-info-link:hover {
     color: var(--marigold);
+    animation-play-state: paused;
   }
   [data-theme="dark"] .contact-info-link { color: var(--muted); }
 
