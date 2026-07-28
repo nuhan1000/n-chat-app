@@ -954,7 +954,6 @@ function stopHeartbeat() {
 
 window.addEventListener('beforeunload', () => {
   if (currentUser) {
-    // Synchronously or via navigator.sendBeacon if needed, but best effort:
     db.collection('users').doc(currentUser.uid).update({
       online: false,
       lastSeen: firebase.firestore.FieldValue.serverTimestamp()
@@ -1037,15 +1036,12 @@ function renderRecentBubbles() {
   const rowEl = document.getElementById('recentBubblesRow');
   if (!rowEl) return;
 
-  // Combine recently contacted users and currently online users
   let mapUsers = {};
   
-  // First add online users
   allUsers.filter(u => u.online).forEach(u => {
     mapUsers[u.uid] = { u, score: 2000000 };
   });
 
-  // Then add/update with recently messaged users
   allUsers.forEach(u => {
     const convId = [currentUser.uid, u.uid].sort().join('_');
     const conv = myConversations[convId];
@@ -1674,3 +1670,4 @@ async function reportChatPartner() {
 </script>
 </body>
 </html>
+```[cite: 6]
