@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root {
-    /* Updated to Deep Navy Blue & White Professional Theme Variables */
     --teal: #1E3A8A;        
     --teal-deep: #172554;   
     --marigold: #2563EB;
@@ -54,7 +53,6 @@
     to { opacity: 1; transform: scale(1) translateY(0); }
   }
 
-  /* Desktop Master-Detail Split Screen Layout */
   .app-container {
     display: flex;
     width: 100vw;
@@ -101,7 +99,6 @@
   }
   .screen.active { display: flex; z-index: 10; animation: appOpen 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-  /* Mobile Responsive Overrides */
   @media(max-width: 768px) {
     .sidebar-pane {
       width: 100%;
@@ -123,7 +120,6 @@
     }
   }
 
-  /* ---------- Auth screen ---------- */
   #authScreen { align-items: center; justify-content: center; background: linear-gradient(135deg, #1E3A8A 0%, #172554 100%); padding: 24px; overflow-y: auto; position: fixed; z-index: 1000; }
   .auth-card { width: 100%; max-width: 360px; background: var(--panel); border-radius: 20px; padding: 32px 26px; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.15); margin: 20px 0; border: 1px solid var(--border); }
   .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 34px; font-weight: 800; color: #1E3A8A; text-align: center; margin-bottom: 4px; }
@@ -141,7 +137,6 @@
   .photo-picker-preview img { width: 100%; height: 100%; object-fit: cover; }
   .photo-picker-btn { font-size: 12px; color: var(--text); font-weight: 700; background: var(--bg); border: 1.5px solid var(--border); padding: 8px 12px; border-radius: 10px; cursor: pointer; }
 
-  /* ---------- Sidebar Header & Search & Filters ---------- */
   .sidebar-header {
     padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     background: var(--panel); border-bottom: 1px solid var(--border);
@@ -202,7 +197,6 @@
   }
   .sidebar-bottom-fab:hover { transform: scale(1.06); background: var(--marigold-hover); }
 
-  /* ---------- Welcome / Empty Main Screen ---------- */
   .welcome-screen-placeholder {
     flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
     background: var(--bg); color: var(--muted); gap: 16px; text-align: center; padding: 24px;
@@ -217,7 +211,6 @@
   .welcome-action-btn:hover { transform: translateY(-2px); border-color: var(--marigold); }
   .welcome-action-btn span { font-size: 24px; }
 
-  /* ---------- Contact Info Profile Screen ---------- */
   .profile-container { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 10px; padding-bottom: 30px; }
   .profile-hero { background: var(--panel); padding: 28px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; border-bottom: 1px solid var(--border); }
   .profile-big-avatar { width: 130px; height: 130px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 700; color: #fff; overflow: hidden; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 3px solid var(--panel); }
@@ -229,7 +222,6 @@
   .profile-section-label { font-size: 12px; font-weight: 700; color: var(--marigold); text-transform: uppercase; letter-spacing: 0.5px; }
   .profile-section-value { font-size: 15px; color: var(--text); font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
 
-  /* ---------- Three Dot Menu Styles ---------- */
   .menu-wrapper { position: relative; z-index: 100; }
   .three-dot-btn { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; padding: 8px 12px; border-radius: 50%; }
   .three-dot-btn:hover { background: rgba(255,255,255,0.1); }
@@ -248,7 +240,6 @@
   .dropdown-item:hover { background: var(--bg); }
   .dropdown-item.danger { color: #ef4444; }
 
-  /* ---------- Attachment Popup Menu Styles ---------- */
   .attach-wrapper { position: relative; z-index: 100; }
   .attach-menu {
     display: none; position: absolute; bottom: 120%; left: 0; background: var(--panel);
@@ -265,7 +256,6 @@
   .attach-item:hover { background: var(--bg); }
   .attach-item span { font-size: 18px; }
 
-  /* ---------- Settings screen ---------- */
   .settings-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
   .settings-card { width: 100%; max-width: 420px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
   .settings-card h3 { font-size: 16px; color: #2563EB; font-family: 'Baloo Da 2', sans-serif; }
@@ -275,7 +265,6 @@
   .settings-label { font-size: 12.5px; font-weight: 600; color: var(--muted); }
   .settings-select, .settings-input { width: 100%; padding: 11px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; }
 
-  /* ---------- Chat screen & Headers ---------- */
   #chatScreen header, #userListScreen header, #contactInfoScreen header, #settingsScreen header {
     background: var(--teal); color: #fff; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative; z-index: 50; border-bottom: 1px solid var(--border);
@@ -326,7 +315,6 @@
 </head>
 <body onclick="closeDropdowns(event)">
 
-<!-- ================= AUTH SCREEN ================= -->
 <div class="screen active" id="authScreen" style="display:flex;">
   <div class="auth-card" style="margin: auto;">
     <div class="auth-logo">Talknu</div>
@@ -345,10 +333,8 @@
   </div>
 </div>
 
-<!-- ================= MAIN APP LAYOUT (DESKTOP SPLIT) ================= -->
 <div class="app-container" id="appContainer" style="display:none;">
   
-  <!-- LEFT SIDEBAR PANE -->
   <div class="sidebar-pane">
     <div class="sidebar-header">
       <div class="app-title">Talknu</div>
@@ -377,10 +363,8 @@
     <button class="sidebar-bottom-fab" onclick="openUserList()" title="Add someone to chat">➕</button>
   </div>
 
-  <!-- RIGHT MAIN PANE -->
   <div class="main-pane" id="mainPane">
     
-    <!-- WELCOME PLACEHOLDER SCREEN -->
     <div class="screen active" id="welcomeScreen">
       <div class="welcome-screen-placeholder">
         <div style="font-size: 64px;">💬</div>
@@ -393,7 +377,6 @@
       </div>
     </div>
 
-    <!-- USER LIST SCREEN (+) -->
     <div class="screen" id="userListScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
@@ -403,7 +386,6 @@
       <div class="all-users-list" id="allUsersListEl"></div>
     </div>
 
-    <!-- CONTACT INFO SCREEN -->
     <div class="screen" id="contactInfoScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
@@ -413,7 +395,6 @@
       <div class="profile-container" id="profileContainerEl"></div>
     </div>
 
-    <!-- SETTINGS SCREEN -->
     <div class="screen" id="settingsScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
@@ -449,7 +430,6 @@
       </div>
     </div>
 
-    <!-- CHAT SCREEN -->
     <div class="screen" id="chatScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
@@ -460,19 +440,25 @@
             <div class="chat-partner-status" id="chatPartnerStatus"></div>
           </div>
         </div>
-        <div class="menu-wrapper">
-          <button class="three-dot-btn" onclick="toggleChatMenu(event)">⋮</button>
-          <div class="dropdown-menu" id="chatDropdownMenu">
-            <div class="dropdown-item" onclick="openContactInfoFromChat()">ℹ️ View Contact Info</div>
-            <div class="dropdown-item" onclick="openMediaLinksDocs()">🖼️ Media, link and docs</div>
-            <div class="dropdown-item" onclick="toggleNotificationSettings()">🔔 Notification settings</div>
-            <div class="dropdown-item" onclick="toggleFavouriteChat()">⭐ Add to favourites</div>
-            <div class="dropdown-item danger" onclick="blockChatPartner()">🚫 Block User</div>
-            <div class="dropdown-item" onclick="clearChatMessages()">🧹 Clear Chat</div>
-            <div class="dropdown-item danger" onclick="deleteChatConversation()">🗑️ Delete Chat</div>
-            <div class="dropdown-item" onclick="reportChatPartner()">⚠️ Report User</div>
+        
+        <!-- Three-dot menu-er thik agee Dark/Light mode toggle button -->
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <button class="three-dot-btn" id="headerThemeToggleBtn" onclick="toggleThemeQuick()" title="Toggle Theme" style="font-size: 18px;">🌙</button>
+          <div class="menu-wrapper">
+            <button class="three-dot-btn" onclick="toggleChatMenu(event)">⋮</button>
+            <div class="dropdown-menu" id="chatDropdownMenu">
+              <div class="dropdown-item" onclick="openContactInfoFromChat()">ℹ️ View Contact Info</div>
+              <div class="dropdown-item" onclick="openMediaLinksDocs()">🖼️ Media, link and docs</div>
+              <div class="dropdown-item" onclick="toggleNotificationSettings()">🔔 Notification settings</div>
+              <div class="dropdown-item" onclick="toggleFavouriteChat()">⭐ Add to favourites</div>
+              <div class="dropdown-item danger" onclick="blockChatPartner()">🚫 Block User</div>
+              <div class="dropdown-item" onclick="clearChatMessages()">🧹 Clear Chat</div>
+              <div class="dropdown-item danger" onclick="deleteChatConversation()">🗑️ Delete Chat</div>
+              <div class="dropdown-item" onclick="reportChatPartner()">⚠️ Report User</div>
+            </div>
           </div>
         </div>
+
       </header>
       <div class="messages" id="messagesEl"></div>
       <div class="typing-indicator" id="typingIndicator" style="display:none;">typing...</div>
@@ -482,12 +468,10 @@
         <button onclick="clearImagePreview()" style="background:none;border:none;color:red;font-size:12px;cursor:pointer;">Cancel</button>
       </div>
       <div class="composer">
-        <!-- Hidden Inputs for Attachments -->
         <input type="file" id="imageInput" accept="image/*" onchange="onImageSelected(event)" />
         <input type="file" id="docInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" onchange="onDocSelected(event)" />
         <input type="file" id="audioInput" accept="audio/*" onchange="onAudioSelected(event)" />
 
-        <!-- Plus Attachment Button & Popup Menu -->
         <div class="attach-wrapper">
           <button class="round-btn plus" onclick="toggleAttachMenu(event)" title="Attach">＋</button>
           <div class="attach-menu" id="attachMenu">
@@ -498,7 +482,6 @@
           </div>
         </div>
 
-        <!-- Audio Recording Button -->
         <button class="round-btn mic" id="micBtn" onclick="toggleVoiceRecording()" title="Record Audio Message">
           <svg viewBox="0 0 24 24">
             <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
@@ -636,15 +619,23 @@ function closeDropdowns(event) {
 function changeTheme(themeName) {
   if (themeName === 'dark') {
     document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('headerThemeToggleBtn').innerText = '☀️';
   } else {
     document.documentElement.removeAttribute('data-theme');
+    document.getElementById('headerThemeToggleBtn').innerText = '🌙';
   }
   localStorage.setItem('talknu_theme_mode', themeName);
+  const selector = document.getElementById('themeSelector');
+  if (selector) selector.value = themeName;
+}
+
+function toggleThemeQuick() {
+  const current = localStorage.getItem('talknu_theme_mode') || 'light';
+  changeTheme(current === 'light' ? 'dark' : 'light');
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('talknu_theme_mode') || 'light';
-  document.getElementById('themeSelector').value = savedTheme;
   changeTheme(savedTheme);
 });
 
@@ -660,6 +651,36 @@ function avatarHtml(user) {
   return initialsFor(user ? user.displayName : '?');
 }
 function avatarBg(user) { return (user && user.photoBase64) ? 'transparent' : colorForName(user ? user.displayName || '?' : '?'); }
+
+// Updated Last Active format logic: 6 mash (180 din) ba tar beshi hole shudhu "Offline" dekhabe
+function formatLastActive(lastSeenTs) {
+  if (!lastSeenTs) return "Offline";
+  
+  const now = new Date();
+  const lastActive = lastSeenTs.toDate ? lastSeenTs.toDate() : new Date(lastSeenTs);
+  const diffInSeconds = Math.floor((now - lastActive) / 1000);
+  const diffInDays = Math.floor(diffInSeconds / (60 * 60 * 24));
+
+  if (diffInDays >= 180) {
+    return "Offline";
+  }
+
+  if (diffInDays > 0) {
+    return `${diffInDays} din agee active chhilo`;
+  }
+
+  const diffInHours = Math.floor(diffInSeconds / 3600);
+  if (diffInHours > 0) {
+    return `${diffInHours} ghonta agee active chhilo`;
+  }
+
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes > 0) {
+    return `${diffInMinutes} minute agee active chhilo`;
+  }
+
+  return "Ekhuni active chhilo";
+}
 
 function timeAgoLabel(ts) {
   if (!ts) return '';
@@ -878,7 +899,7 @@ function renderContactList() {
     const convId = [currentUser.uid, u.uid].sort().join('_');
     const conv = myConversations[convId];
     
-    let previewPrefixed = u.online ? 'Online' : (u.lastSeen ? 'Last seen ' + timeAgoLabel(u.lastSeen) : 'Offline');
+    let previewPrefixed = u.online ? 'Online' : formatLastActive(u.lastSeen);
     let unread = 0;
     let timeLabel = '';
     let sortKey = conv && conv.lastUpdated ? conv.lastUpdated.toMillis() : 0;
@@ -960,7 +981,7 @@ function renderAllUsersList() {
           <div class="contact-name">${u.displayName}</div>
         </div>
         <div class="contact-bottom-row">
-          <div class="contact-sub">${u.online ? 'Online' : 'Offline'}</div>
+          <div class="contact-sub">${u.online ? 'Online' : formatLastActive(u.lastSeen)}</div>
         </div>
       </div>
     </div>
@@ -972,7 +993,7 @@ function openContactInfo(userObj) {
   const container = document.getElementById('profileContainerEl');
   
   const formattedDate = userObj.createdAt && userObj.createdAt.toDate ? new Date(userObj.createdAt.toDate()).toLocaleDateString() : 'Recently';
-  const statusStr = userObj.online ? 'Online' : (userObj.lastSeen ? 'Last seen ' + timeAgoLabel(userObj.lastSeen) : 'Offline');
+  const statusStr = userObj.online ? 'Online' : formatLastActive(userObj.lastSeen);
 
   container.innerHTML = `
     <div class="profile-hero">
@@ -1061,7 +1082,7 @@ function openChat(partner) {
   avatarEl.style.background = avatarBg(partner);
   avatarEl.innerHTML = avatarHtml(partner);
   document.getElementById('messagesEl').innerHTML = '';
-  document.getElementById('chatPartnerStatus').textContent = partner.online ? 'Online' : (partner.lastSeen ? 'Last seen: ' + timeAgoLabel(partner.lastSeen) : '');
+  document.getElementById('chatPartnerStatus').textContent = partner.online ? 'Online' : formatLastActive(partner.lastSeen);
   navigateToScreen('chatScreen');
   renderContactList();
 
