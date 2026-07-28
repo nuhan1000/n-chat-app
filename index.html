@@ -17,6 +17,7 @@
     --border: #E2E7E2;
     --text: #1E2A28;
     --muted: #6B7A76;
+    --online: #3FAE5C;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -35,8 +36,8 @@
   .screen.active { display: flex; }
 
   /* ---------- Auth screen ---------- */
-  #authScreen { align-items: center; justify-content: center; background: linear-gradient(160deg, var(--teal) 0%, var(--teal-deep) 100%); padding: 24px; }
-  .auth-card { width: 100%; max-width: 360px; background: var(--panel); border-radius: 20px; padding: 32px 26px; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.5); }
+  #authScreen { align-items: center; justify-content: center; background: linear-gradient(160deg, var(--teal) 0%, var(--teal-deep) 100%); padding: 24px; overflow-y: auto; }
+  .auth-card { width: 100%; max-width: 360px; background: var(--panel); border-radius: 20px; padding: 32px 26px; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.5); margin: 20px 0; }
   .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 30px; font-weight: 800; color: var(--teal); text-align: center; margin-bottom: 4px; }
   .auth-sub { text-align: center; font-size: 12.5px; color: var(--muted); margin-bottom: 22px; }
   .field { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 14px; margin-bottom: 10px; background: #FAFBFA; }
@@ -45,6 +46,10 @@
   .auth-switch { text-align: center; font-size: 12.5px; color: var(--muted); margin-top: 16px; }
   .auth-switch a { color: var(--teal); font-weight: 700; text-decoration: none; cursor: pointer; }
   .auth-error { color: #B3423A; font-size: 12px; text-align: center; min-height: 16px; margin-bottom: 6px; }
+  .photo-picker-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .photo-picker-preview { width: 52px; height: 52px; border-radius: 50%; background: #EFEFEF; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; border: 1.5px solid var(--border); }
+  .photo-picker-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-picker-btn { font-size: 12px; color: var(--teal); font-weight: 700; background: none; border: 1.5px solid var(--teal); padding: 6px 12px; border-radius: 10px; }
 
   /* ---------- Contacts screen ---------- */
   #contactsScreen header, #chatScreen header {
@@ -56,33 +61,47 @@
   .contact-list { flex: 1; overflow-y: auto; padding: 8px 0; }
   .contact-row { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--border); background: var(--panel); cursor: pointer; }
   .contact-row:hover { background: #F7FAF8; }
-  .avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; color: #fff; flex-shrink: 0; }
+  .avatar-wrap { position: relative; flex-shrink: 0; }
+  .avatar { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #fff; overflow: hidden; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .online-dot { position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--online); border: 2px solid var(--panel); }
+  .contact-main { flex: 1; min-width: 0; }
+  .contact-top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
   .contact-name { font-weight: 600; font-size: 14.5px; }
-  .contact-sub { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+  .contact-time { font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+  .contact-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 2px; }
+  .contact-sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .unread-badge { background: var(--marigold); color: #3a2405; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0; }
   .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 60px 24px; }
 
   /* ---------- Chat screen ---------- */
   #chatScreen header { gap: 10px; }
   .back-btn { background: none; border: none; color: #fff; font-size: 20px; padding: 0 4px; }
-  .chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; }
-  .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; background: var(--bg); }
-  .msg-row { display: flex; }
+  .chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+  .chat-header-text { min-width: 0; }
+  .chat-partner-name { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 16px; }
+  .chat-partner-status { font-size: 11px; color: rgba(255,255,255,0.75); }
+  .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 4px; background: var(--bg); }
+  .msg-row { display: flex; align-items: center; gap: 6px; }
   .msg-row.mine { justify-content: flex-end; }
-  .msg-row { align-items: center; gap: 6px; }
-  .delete-msg-btn { background: none; border: none; font-size: 12px; opacity: 0.5; padding: 2px 4px; order: -1; }
+  .delete-msg-btn { background: none; border: none; font-size: 12px; opacity: 0.45; padding: 2px 4px; order: -1; }
   .delete-msg-btn:hover { opacity: 1; }
   .bubble { max-width: 72%; padding: 9px 13px; border-radius: 16px; font-size: 14px; line-height: 1.45; position: relative; }
   .bubble.theirs { background: #fff; border: 1px solid var(--border); border-bottom-left-radius: 4px; }
   .bubble.mine { background: var(--teal); color: #fff; border-bottom-right-radius: 4px; }
   .bubble img { max-width: 100%; border-radius: 10px; display: block; margin-top: 4px; }
-  .bubble .time { font-size: 10px; opacity: 0.6; margin-top: 4px; display: block; text-align: right; }
+  .bubble .meta-row { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 4px; }
+  .bubble .time { font-size: 10px; opacity: 0.7; }
+  .bubble .ticks { font-size: 11px; }
+  .bubble .ticks.seen { color: #7FD8FF; }
+  .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; }
   .composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; }
   .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: #FAFBFA; }
   .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
   .round-btn.img { background: var(--rose); color: var(--teal-deep); }
   .round-btn.send { background: var(--teal); color: #fff; }
   .round-btn.send:disabled { opacity: 0.5; }
-  #imageInput { display: none; }
+  #imageInput, #photoInput { display: none; }
   .img-preview-bar { padding: 8px 14px; background: #FAFBFA; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
   .img-preview-bar img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; }
   .img-preview-bar span { font-size: 12px; color: var(--muted); flex: 1; }
@@ -98,6 +117,11 @@
     <div class="auth-sub" id="authSubLabel">পরিবার ও কাছের মানুষের জন্য</div>
     <div class="auth-error" id="authError"></div>
     <input class="field" id="displayNameField" placeholder="আপনার নাম" style="display:none;" />
+    <div class="photo-picker-row" id="photoPickerRow" style="display:none;">
+      <div class="photo-picker-preview" id="signupPhotoPreview">📷</div>
+      <button type="button" class="photo-picker-btn" onclick="document.getElementById('photoInput').click()">প্রোফাইল ছবি (ঐচ্ছিক)</button>
+      <input type="file" id="photoInput" accept="image/*" onchange="onSignupPhotoSelected(event)" />
+    </div>
     <input class="field" id="emailField" type="email" placeholder="ইমেইল" />
     <input class="field" id="passwordField" type="password" placeholder="পাসওয়ার্ড" />
     <button class="btn-primary" id="authSubmitBtn" onclick="submitAuth()">লগইন করুন</button>
@@ -119,11 +143,15 @@
   <header>
     <button class="back-btn" onclick="goToContacts()">←</button>
     <div class="chat-header-info">
-      <div class="avatar" id="chatAvatar" style="width:34px;height:34px;font-size:13px;"></div>
-      <div class="app-title" style="font-size:16px;" id="chatPartnerName"></div>
+      <div class="avatar" id="chatAvatar" style="width:36px;height:36px;font-size:13px;"></div>
+      <div class="chat-header-text">
+        <div class="chat-partner-name" id="chatPartnerName"></div>
+        <div class="chat-partner-status" id="chatPartnerStatus"></div>
+      </div>
     </div>
   </header>
   <div class="messages" id="messagesEl"></div>
+  <div class="typing-indicator" id="typingIndicator" style="display:none;">টাইপ করছে...</div>
   <div class="img-preview-bar" id="imgPreviewBar" style="display:none;">
     <img id="imgPreviewThumb" />
     <span>ছবি পাঠানোর জন্য প্রস্তুত</span>
@@ -132,12 +160,11 @@
   <div class="composer">
     <input type="file" id="imageInput" accept="image/*" onchange="onImageSelected(event)" />
     <button class="round-btn img" onclick="document.getElementById('imageInput').click()">📷</button>
-    <input type="text" id="messageInput" placeholder="মেসেজ লিখুন..." onkeydown="if(event.key==='Enter') sendMessage()" />
+    <input type="text" id="messageInput" placeholder="মেসেজ লিখুন..." oninput="onTyping()" onkeydown="if(event.key==='Enter') sendMessage()" />
     <button class="round-btn send" id="sendBtn" onclick="sendMessage()">➤</button>
   </div>
 </div>
 
-<!-- Firebase SDK (compat build — simplest for a single plain <script>, no bundler needed) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -160,7 +187,15 @@ let currentUser = null;
 let activeConversationId = null;
 let activePartner = null;
 let messagesUnsub = null;
+let convDocUnsub = null;
+let usersUnsub = null;
+let conversationsUnsub = null;
 let pendingImageDataUrl = null;
+let pendingSignupPhoto = null;
+let typingTimeout = null;
+let heartbeatInterval = null;
+let allUsers = [];
+let myConversations = {};
 
 const AVATAR_COLORS = ['#1F4E4A', '#E0A458', '#8E5572', '#3B6E8F', '#B3423A', '#5B7B4B'];
 function colorForName(name) {
@@ -168,23 +203,65 @@ function colorForName(name) {
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
-function initialsFor(name) {
-  return (name || '?').trim().charAt(0).toUpperCase();
+function initialsFor(name) { return (name || '?').trim().charAt(0).toUpperCase(); }
+function avatarHtml(user, size) {
+  const s = size || 46;
+  if (user.photoBase64) return `<img src="${user.photoBase64}" alt="" />`;
+  return initialsFor(user.displayName);
 }
+function avatarBg(user) { return user.photoBase64 ? 'transparent' : colorForName(user.displayName || '?'); }
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+}
+function timeAgoLabel(ts) {
+  if (!ts) return '';
+  const diffMs = Date.now() - ts.toDate().getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return 'এইমাত্র';
+  if (mins < 60) return mins + ' মিনিট আগে';
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + ' ঘণ্টা আগে';
+  const days = Math.floor(hrs / 24);
+  return days + ' দিন আগে';
+}
+function shortTime(ts) {
+  if (!ts) return '';
+  return new Date(ts.toDate()).toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
 }
 
 /* ---------------- Auth ---------------- */
 function toggleAuthMode() {
   isSignupMode = !isSignupMode;
   document.getElementById('displayNameField').style.display = isSignupMode ? 'block' : 'none';
+  document.getElementById('photoPickerRow').style.display = isSignupMode ? 'flex' : 'none';
   document.getElementById('authSubmitBtn').textContent = isSignupMode ? 'সাইন আপ করুন' : 'লগইন করুন';
   document.getElementById('authSwitchLabel').innerHTML = isSignupMode
     ? 'আগে থেকেই অ্যাকাউন্ট আছে? <a onclick="toggleAuthMode()">লগইন করুন</a>'
     : 'অ্যাকাউন্ট নেই? <a onclick="toggleAuthMode()">সাইন আপ করুন</a>';
   document.getElementById('authError').textContent = '';
+}
+
+function onSignupPhotoSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const SIZE = 120;
+      const canvas = document.createElement('canvas');
+      canvas.width = SIZE; canvas.height = SIZE;
+      const ctx = canvas.getContext('2d');
+      const scale = Math.max(SIZE / img.width, SIZE / img.height);
+      const w = img.width * scale, h = img.height * scale;
+      ctx.drawImage(img, (SIZE - w) / 2, (SIZE - h) / 2, w, h);
+      pendingSignupPhoto = canvas.toDataURL('image/jpeg', 0.7);
+      document.getElementById('signupPhotoPreview').innerHTML = `<img src="${pendingSignupPhoto}" style="width:100%;height:100%;object-fit:cover;" />`;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 
 async function submitAuth() {
@@ -200,7 +277,11 @@ async function submitAuth() {
       if (!displayName) { errEl.textContent = 'আপনার নাম দিন'; return; }
       const cred = await auth.createUserWithEmailAndPassword(email, password);
       await db.collection('users').doc(cred.user.uid).set({
-        displayName, email, uid: cred.user.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        displayName, email, uid: cred.user.uid,
+        photoBase64: pendingSignupPhoto || null,
+        online: true,
+        lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     } else {
       await auth.signInWithEmailAndPassword(email, password);
@@ -222,8 +303,32 @@ function friendlyAuthError(code) {
   return map[code] || 'কিছু একটা ভুল হয়েছে, আবার চেষ্টা করুন';
 }
 
+async function setPresence(online) {
+  if (!currentUser) return;
+  try {
+    await db.collection('users').doc(currentUser.uid).update({
+      online, lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  } catch (e) {}
+}
+
+function startHeartbeat() {
+  setPresence(true);
+  heartbeatInterval = setInterval(() => setPresence(true), 20000);
+  window.addEventListener('beforeunload', () => setPresence(false));
+  document.addEventListener('visibilitychange', () => setPresence(document.visibilityState === 'visible'));
+}
+function stopHeartbeat() {
+  if (heartbeatInterval) clearInterval(heartbeatInterval);
+}
+
 function logout() {
   if (messagesUnsub) messagesUnsub();
+  if (convDocUnsub) convDocUnsub();
+  if (usersUnsub) usersUnsub();
+  if (conversationsUnsub) conversationsUnsub();
+  setPresence(false);
+  stopHeartbeat();
   auth.signOut();
 }
 
@@ -232,46 +337,81 @@ auth.onAuthStateChanged(async (user) => {
     const doc = await db.collection('users').doc(user.uid).get();
     currentUser = { uid: user.uid, ...doc.data() };
     showScreen('contactsScreen');
-    loadContacts();
+    startHeartbeat();
+    listenContacts();
   } else {
     currentUser = null;
     showScreen('authScreen');
   }
 });
 
-/* ---------------- Contacts ---------------- */
-async function loadContacts() {
+/* ---------------- Contacts (real-time: users + conversations) ---------------- */
+function listenContacts() {
+  if (usersUnsub) usersUnsub();
+  if (conversationsUnsub) conversationsUnsub();
+
+  usersUnsub = db.collection('users').onSnapshot(snap => {
+    allUsers = snap.docs.map(d => d.data()).filter(u => u.uid !== currentUser.uid);
+    renderContactList();
+  });
+
+  conversationsUnsub = db.collection('conversations')
+    .where('participants', 'array-contains', currentUser.uid)
+    .onSnapshot(snap => {
+      myConversations = {};
+      snap.docs.forEach(d => { myConversations[d.id] = d.data(); });
+      renderContactList();
+    });
+}
+
+function renderContactList() {
   const listEl = document.getElementById('contactList');
-  listEl.innerHTML = '<div class="empty-state">লোড হচ্ছে...</div>';
-  const snap = await db.collection('users').get();
-  const others = snap.docs.map(d => d.data()).filter(u => u.uid !== currentUser.uid);
-  if (others.length === 0) {
+  if (allUsers.length === 0) {
     listEl.innerHTML = '<div class="empty-state">এখনো অন্য কেউ সাইন আপ করেননি। পরিবারের অন্যদের এই অ্যাপে অ্যাকাউন্ট বানাতে বলুন।</div>';
     return;
   }
-  listEl.innerHTML = others.map(u => `
-    <div class="contact-row" onclick='openChat(${JSON.stringify(u)})'>
-      <div class="avatar" style="background:${colorForName(u.displayName)}">${initialsFor(u.displayName)}</div>
-      <div>
-        <div class="contact-name">${u.displayName}</div>
-        <div class="contact-sub">${u.email}</div>
+  const rows = allUsers.map(u => {
+    const convId = conversationIdFor(currentUser.uid, u.uid);
+    const conv = myConversations[convId];
+    const preview = conv ? (conv.lastMessageType === 'image' ? '📷 ছবি' : (conv.lastMessageText || '')) : 'চ্যাট শুরু করুন';
+    const previewPrefixed = conv && conv.lastMessageSenderId === currentUser.uid ? 'আপনি: ' + preview : preview;
+    const unread = conv && conv.unreadCount && conv.unreadCount[currentUser.uid] ? conv.unreadCount[currentUser.uid] : 0;
+    const sortKey = conv && conv.lastUpdated ? conv.lastUpdated.toMillis() : 0;
+    return { u, convId, previewPrefixed, unread, timeLabel: conv ? timeAgoLabel(conv.lastUpdated) : '', sortKey };
+  }).sort((a, b) => b.sortKey - a.sortKey);
+
+  listEl.innerHTML = rows.map(r => `
+    <div class="contact-row" onclick='openChat(${JSON.stringify(r.u)})'>
+      <div class="avatar-wrap">
+        <div class="avatar" style="background:${avatarBg(r.u)}">${avatarHtml(r.u)}</div>
+        ${r.u.online ? '<div class="online-dot"></div>' : ''}
+      </div>
+      <div class="contact-main">
+        <div class="contact-top-row">
+          <div class="contact-name">${r.u.displayName}</div>
+          <div class="contact-time">${r.timeLabel}</div>
+        </div>
+        <div class="contact-bottom-row">
+          <div class="contact-sub">${escapeHtml(r.previewPrefixed)}</div>
+          ${r.unread > 0 ? `<div class="unread-badge">${r.unread}</div>` : ''}
+        </div>
       </div>
     </div>
   `).join('');
 }
 
-function conversationIdFor(uidA, uidB) {
-  return [uidA, uidB].sort().join('_');
-}
+function conversationIdFor(uidA, uidB) { return [uidA, uidB].sort().join('_'); }
 
 /* ---------------- Chat ---------------- */
 function goToContacts() {
   if (messagesUnsub) { messagesUnsub(); messagesUnsub = null; }
+  if (convDocUnsub) { convDocUnsub(); convDocUnsub = null; }
+  if (typingTimeout) clearTimeout(typingTimeout);
+  if (activeConversationId) setTyping(false);
   activeConversationId = null;
   activePartner = null;
   clearImagePreview();
   showScreen('contactsScreen');
-  loadContacts();
 }
 
 function openChat(partner) {
@@ -279,10 +419,16 @@ function openChat(partner) {
   activeConversationId = conversationIdFor(currentUser.uid, partner.uid);
   document.getElementById('chatPartnerName').textContent = partner.displayName;
   const avatarEl = document.getElementById('chatAvatar');
-  avatarEl.style.background = colorForName(partner.displayName);
-  avatarEl.textContent = initialsFor(partner.displayName);
+  avatarEl.style.background = avatarBg(partner);
+  avatarEl.innerHTML = avatarHtml(partner);
   document.getElementById('messagesEl').innerHTML = '';
+  updatePartnerStatusLabel(partner);
   showScreen('chatScreen');
+
+  // reset my unread count for this conversation
+  db.collection('conversations').doc(activeConversationId).set({
+    unreadCount: { [currentUser.uid]: 0 }
+  }, { merge: true }).catch(() => {});
 
   if (messagesUnsub) messagesUnsub();
   messagesUnsub = db.collection('conversations').doc(activeConversationId)
@@ -291,12 +437,43 @@ function openChat(partner) {
       const el = document.getElementById('messagesEl');
       el.innerHTML = snap.docs.map(d => renderMessage(d.data(), d.id)).join('');
       el.scrollTop = el.scrollHeight;
+      markIncomingAsSeen(snap.docs);
     });
+
+  if (convDocUnsub) convDocUnsub();
+  convDocUnsub = db.collection('conversations').doc(activeConversationId).onSnapshot(doc => {
+    const data = doc.data();
+    const typingEl = document.getElementById('typingIndicator');
+    if (data && data.typing && data.typing[partner.uid]) {
+      typingEl.style.display = 'block';
+    } else {
+      typingEl.style.display = 'none';
+    }
+  });
+}
+
+function updatePartnerStatusLabel(partner) {
+  const statusEl = document.getElementById('chatPartnerStatus');
+  const live = allUsers.find(u => u.uid === partner.uid) || partner;
+  statusEl.textContent = live.online ? 'অনলাইন' : (live.lastSeen ? 'শেষ সক্রিয়: ' + timeAgoLabel(live.lastSeen) : '');
+}
+
+async function markIncomingAsSeen(docs) {
+  const batch = db.batch();
+  let any = false;
+  docs.forEach(d => {
+    const m = d.data();
+    if (m.senderId !== currentUser.uid && !m.seen) {
+      batch.update(d.ref, { seen: true });
+      any = true;
+    }
+  });
+  if (any) { try { await batch.commit(); } catch (e) {} }
 }
 
 function renderMessage(m, docId) {
   const mine = m.senderId === currentUser.uid;
-  const time = m.timestamp ? new Date(m.timestamp.toDate()).toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }) : '';
+  const time = shortTime(m.timestamp);
   let inner = '';
   if (m.deleted) {
     inner += `<div style="font-style:italic;opacity:0.7;">এই মেসেজটি মুছে ফেলা হয়েছে</div>`;
@@ -304,10 +481,11 @@ function renderMessage(m, docId) {
     if (m.text) inner += `<div>${escapeHtml(m.text)}</div>`;
     if (m.imageUrl) inner += `<img src="${m.imageUrl}" alt="photo" />`;
   }
+  const ticks = mine ? `<span class="ticks ${m.seen ? 'seen' : ''}">${m.seen ? '✓✓' : '✓'}</span>` : '';
   const deleteBtn = (mine && !m.deleted) ? `<button class="delete-msg-btn" onclick="deleteMessage('${docId}')" title="মুছুন">🗑</button>` : '';
   return `<div class="msg-row ${mine ? 'mine' : ''}">
             ${deleteBtn}
-            <div class="bubble ${mine ? 'mine' : 'theirs'}">${inner}<span class="time">${time}</span></div>
+            <div class="bubble ${mine ? 'mine' : 'theirs'}">${inner}<div class="meta-row"><span class="time">${time}</span>${ticks}</div></div>
           </div>`;
 }
 
@@ -319,10 +497,27 @@ async function deleteMessage(docId) {
 
 function escapeHtml(str) {
   const d = document.createElement('div');
-  d.textContent = str;
+  d.textContent = str || '';
   return d.innerHTML;
 }
 
+/* ---------------- Typing indicator ---------------- */
+function onTyping() {
+  if (!activeConversationId) return;
+  setTyping(true);
+  if (typingTimeout) clearTimeout(typingTimeout);
+  typingTimeout = setTimeout(() => setTyping(false), 3000);
+}
+async function setTyping(isTyping) {
+  if (!activeConversationId) return;
+  try {
+    await db.collection('conversations').doc(activeConversationId).set({
+      typing: { [currentUser.uid]: isTyping }
+    }, { merge: true });
+  } catch (e) {}
+}
+
+/* ---------------- Images ---------------- */
 function onImageSelected(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -345,13 +540,13 @@ function onImageSelected(event) {
   };
   reader.readAsDataURL(file);
 }
-
 function clearImagePreview() {
   pendingImageDataUrl = null;
   document.getElementById('imageInput').value = '';
   document.getElementById('imgPreviewBar').style.display = 'none';
 }
 
+/* ---------------- Send ---------------- */
 async function sendMessage() {
   const input = document.getElementById('messageInput');
   const text = input.value.trim();
@@ -367,20 +562,28 @@ async function sendMessage() {
       return;
     }
 
+    const isImage = !!pendingImageDataUrl;
     await db.collection('conversations').doc(activeConversationId).set({
       participants: [currentUser.uid, activePartner.uid],
-      lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+      lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+      lastMessageText: text || null,
+      lastMessageType: isImage ? 'image' : 'text',
+      lastMessageSenderId: currentUser.uid,
+      typing: { [currentUser.uid]: false },
+      [`unreadCount.${activePartner.uid}`]: firebase.firestore.FieldValue.increment(1)
     }, { merge: true });
 
     await db.collection('conversations').doc(activeConversationId).collection('messages').add({
       senderId: currentUser.uid,
       text: text || null,
       imageUrl: pendingImageDataUrl || null,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      seen: false
     });
 
     input.value = '';
     clearImagePreview();
+    if (typingTimeout) clearTimeout(typingTimeout);
   } catch (e) {
     alert('মেসেজ পাঠাতে সমস্যা হয়েছে, আবার চেষ্টা করুন');
   } finally {
