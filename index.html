@@ -33,13 +33,12 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
-  html, body { height: 100%; width: 100%; }
+  html, body { height: 100%; width: 100%; overflow: hidden; }
   body {
     font-family: 'Inter', sans-serif;
     background: var(--bg);
     color: var(--text);
     -webkit-font-smoothing: antialiased;
-    overflow: hidden;
     transition: background 0.3s, color 0.3s;
   }
 
@@ -48,24 +47,47 @@
   button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
   @keyframes appOpen {
-    from {
-      opacity: 0;
-      transform: scale(0.96) translateY(12px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
+    from { opacity: 0; transform: scale(0.96) translateY(12px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
   }
 
-  .screen { display: none; height: 100vh; height: 100dvh; width: 100vw; flex-direction: column; position: absolute; top: 0; left: 0; background: var(--bg); }
-  .screen.active { 
-    display: flex; 
-    animation: appOpen 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+  /* Desktop Master-Detail Split Screen Layout */
+  .app-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: var(--bg);
+    position: relative;
   }
+
+  .sidebar-pane {
+    width: 420px;
+    max-width: 100%;
+    height: 100%;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    z-index: 5;
+  }
+
+  .main-pane {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .screen { display: none; height: 100%; width: 100%; flex-direction: column; position: absolute; top: 0; left: 0; background: var(--bg); }
+  .screen.active { display: flex; animation: appOpen 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
   /* ---------- Auth screen ---------- */
-  #authScreen { align-items: center; justify-content: center; background: linear-gradient(160deg, var(--teal) 0%, var(--teal-deep) 100%); padding: 24px; overflow-y: auto; }
+  #authScreen { align-items: center; justify-content: center; background: linear-gradient(160deg, var(--teal) 0%, var(--teal-deep) 100%); padding: 24px; overflow-y: auto; position: fixed; z-index: 1000; }
   .auth-card { width: 100%; max-width: 360px; background: var(--panel); border-radius: 20px; padding: 32px 26px; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.5); margin: 20px 0; }
   .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 32px; font-weight: 800; color: var(--marigold); text-align: center; margin-bottom: 4px; }
   .auth-sub { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 22px; }
@@ -82,76 +104,60 @@
   .photo-picker-preview img { width: 100%; height: 100%; object-fit: cover; }
   .photo-picker-btn { font-size: 12px; color: var(--teal); font-weight: 700; background: none; border: 1.5px solid var(--teal); padding: 6px 12px; border-radius: 10px; }
 
-  /* ---------- Headers & Panels ---------- */
-  #contactsScreen header, #chatScreen header, #settingsScreen header, #userListScreen header, #contactInfoScreen header {
-    background: var(--teal); color: #fff; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12); position: relative; z-index: 10;
+  /* ---------- Sidebar Header & Search & Filters ---------- */
+  .sidebar-header {
+    padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    background: var(--panel); border-bottom: 1px solid var(--border);
   }
-  .app-title { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 20px; color: #fff; }
-  .header-actions { display: flex; align-items: center; gap: 8px; }
-  .icon-btn { background: rgba(255,255,255,0.15); border: none; color: #fff; border-radius: 10px; padding: 8px 12px; font-size: 12px; font-weight: 600; }
+  .app-title { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 22px; color: var(--text); }
+  .header-actions { display: flex; align-items: center; gap: 12px; }
+  .icon-btn-ghost { background: none; border: none; color: var(--text); font-size: 20px; cursor: pointer; padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .icon-btn-ghost:hover { background: var(--bg); }
+
+  .search-filter-container { padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .search-box { display: flex; align-items: center; background: var(--bg); border-radius: 20px; padding: 8px 14px; gap: 10px; border: 1px solid transparent; }
+  .search-box:focus-within { border-color: var(--teal); background: var(--panel); }
+  .search-box input { border: none; background: none; width: 100%; font-size: 14px; color: var(--text); outline: none; }
   
-  .contact-list, .all-users-list { flex: 1; overflow-y: auto; padding: 0; background: var(--panel); position: relative; }
-  .contact-row { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--border); background: var(--panel); cursor: pointer; transition: background 0.2s; }
+  .filter-chips { display: flex; align-items: center; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 2px; }
+  .chip { padding: 6px 14px; border-radius: 16px; font-size: 13px; font-weight: 500; background: var(--bg); color: var(--muted); border: none; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+  .chip.active { background: #E1F3ED; color: var(--teal); font-weight: 600; }
+  [data-theme="dark"] .chip.active { background: #00372C; color: #00A884; }
+
+  .contact-list, .all-users-list { flex: 1; overflow-y: auto; padding: 0; background: var(--panel); }
+  .contact-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--panel); cursor: pointer; transition: background 0.2s; }
   .contact-row:hover { background: var(--bg); }
+  .contact-row.selected { background: var(--bg); }
+  
   .avatar-wrap { position: relative; flex-shrink: 0; }
   .avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #fff; overflow: hidden; }
   .avatar img { width: 100%; height: 100%; object-fit: cover; }
   .online-dot { position: absolute; bottom: 0; right: 0; width: 13px; height: 13px; border-radius: 50%; background: var(--online); border: 2px solid var(--panel); }
+  
   .contact-main { flex: 1; min-width: 0; }
   .contact-top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-  .contact-name { font-weight: 600; font-size: 15px; color: var(--text); }
+  .contact-name { font-weight: 600; font-size: 15px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .contact-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
   
-  @keyframes whatsappFastSlide {
-    0% { opacity: 0; transform: translateY(-8px); }
-    15% { opacity: 1; transform: translateY(0); }
-    85% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(8px); }
-  }
-  .contact-info-link {
-    font-size: 11.5px;
-    font-weight: 500;
-    color: var(--muted);
-    display: inline-block;
-    margin: 2px 0 4px 0;
-    text-decoration: none;
-    cursor: pointer;
-    will-change: transform, opacity;
-    animation: whatsappFastSlide 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .contact-info-link:hover {
-    color: var(--marigold);
-    animation-play-state: paused;
-  }
-  [data-theme="dark"] .contact-info-link { color: var(--muted); }
-
-  .contact-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 1px; }
+  .contact-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 4px; }
   .contact-sub { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .unread-badge { background: var(--marigold); color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0; }
   .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 60px 24px; }
 
-  .fab-btn {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 56px;
-    height: 56px;
-    background: var(--marigold);
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    font-weight: bold;
-    border: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    cursor: pointer;
-    z-index: 100;
-    transition: transform 0.2s;
+  /* ---------- Welcome / Empty Main Screen ---------- -->
+  .welcome-screen-placeholder {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: var(--bg); color: var(--muted); gap: 16px; text-align: center; padding: 24px;
+    border-bottom: 6px solid var(--marigold);
   }
-  .fab-btn:hover { transform: scale(1.05); }
+  .welcome-placeholder-actions { display: flex; gap: 16px; margin-top: 10px; }
+  .welcome-action-btn {
+    background: var(--panel); border: 1px solid var(--border); padding: 14px 20px; border-radius: 12px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; color: var(--text);
+    font-size: 13px; font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: transform 0.2s;
+  }
+  .welcome-action-btn:hover { transform: translateY(-2px); border-color: var(--marigold); }
+  .welcome-action-btn span { font-size: 24px; }
 
   /* ---------- Contact Info Profile Screen ---------- */
   .profile-container { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 10px; padding-bottom: 30px; }
@@ -195,16 +201,23 @@
   .settings-label { font-size: 12.5px; font-weight: 600; color: var(--muted); }
   .settings-select, .settings-input { width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; }
 
-  /* ---------- Chat screen ---------- */
+  /* ---------- Chat screen & Headers ---------- */
+  #chatScreen header, #userListScreen header, #contactInfoScreen header, #settingsScreen header {
+    background: var(--teal); color: #fff; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12); position: relative; z-index: 10;
+  }
   #chatScreen header { gap: 10px; }
-  .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 0 4px; }
+  .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 0 4px; cursor: pointer; display: none; }
+  @media(max-width: 768px) { .back-btn { display: block; } }
+
   .chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer; }
   .chat-partner-name { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 16px; }
   .chat-partner-status { font-size: 11px; color: rgba(255,255,255,0.8); }
+  
   .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 6px; background: var(--bg); }
   .msg-row { display: flex; align-items: center; gap: 6px; }
   .msg-row.mine { justify-content: flex-end; }
-  .delete-msg-btn { background: none; border: none; font-size: 12px; opacity: 0.45; padding: 2px 4px; color: var(--text); }
+  .delete-msg-btn { background: none; border: none; font-size: 12px; opacity: 0.45; padding: 2px 4px; color: var(--text); cursor: pointer; }
   .bubble { max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14px; line-height: 1.4; position: relative; }
   .bubble.theirs { background: var(--panel); color: var(--text); border-top-left-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
   .bubble.mine { background: #E7FCE3; color: #111; border-top-right-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
@@ -215,9 +228,10 @@
   .bubble .ticks { font-size: 11px; margin-left: 2px; }
   .bubble .ticks.seen { color: #34B7F1; }
   .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; background: var(--panel); }
+  
   .composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; }
   .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: var(--bg); color: var(--text); }
-  .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
+  .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; }
   .round-btn.img { background: var(--border); color: var(--text); }
   .round-btn.send { background: var(--marigold); color: #fff; }
   #imageInput, #photoInput, #settingsPhotoInput { display: none; }
@@ -228,7 +242,7 @@
 <body onclick="closeDropdowns(event)">
 
 <!-- ================= AUTH SCREEN ================= -->
-<div class="screen active" id="authScreen">
+<div class="screen active" id="authScreen" style="display:flex;">
   <div class="auth-card" style="margin: auto;">
     <div class="auth-logo">N Chat</div>
     <div class="auth-sub" id="authSubLabel">Sign in with your mobile number to start chatting</div>
@@ -246,111 +260,146 @@
   </div>
 </div>
 
-<!-- ================= CONTACTS SCREEN ================= -->
-<div class="screen" id="contactsScreen">
-  <header>
-    <div class="app-title">N Chat</div>
-    <div class="header-actions">
-      <button class="icon-btn" onclick="openSettings()">⚙️ Settings</button>
-    </div>
-  </header>
-  <div class="contact-list" id="contactList"></div>
-  <button class="fab-btn" onclick="openUserList()" title="Start New Chat">+</button>
-</div>
-
-<!-- ================= USER LIST SCREEN (+) ================= -->
-<div class="screen" id="userListScreen">
-  <header>
-    <button class="back-btn" onclick="goToContacts()">←</button>
-    <div class="app-title">Select Contact</div>
-    <div style="width:24px;"></div>
-  </header>
-  <div class="all-users-list" id="allUsersListEl"></div>
-</div>
-
-<!-- ================= CONTACT INFO SCREEN ================= -->
-<div class="screen" id="contactInfoScreen">
-  <header>
-    <button class="back-btn" onclick="closeContactInfo()">←</button>
-    <div class="app-title">Contact Info</div>
-    <div style="width:24px;"></div>
-  </header>
-  <div class="profile-container" id="profileContainerEl"></div>
-</div>
-
-<!-- ================= SETTINGS SCREEN ================= -->
-<div class="screen" id="settingsScreen">
-  <header>
-    <button class="back-btn" onclick="goToContactsFromSettings()">←</button>
-    <div class="app-title">Settings</div>
-    <div style="width:24px;"></div>
-  </header>
-  <div class="settings-content">
-    <div class="settings-card">
-      <h3>Profile Customization</h3>
-      <div class="settings-profile-center">
-        <div class="settings-avatar-preview" id="settingsAvatarPreview">👤</div>
-        <button type="button" class="photo-picker-btn" onclick="document.getElementById('settingsPhotoInput').click()">Change Photo</button>
-        <input type="file" id="settingsPhotoInput" accept="image/*" onchange="onSettingsPhotoSelected(event)" />
+<!-- ================= MAIN APP LAYOUT (DESKTOP SPLIT) ================= -->
+<div class="app-container" id="appContainer" style="display:none;">
+  
+  <!-- LEFT SIDEBAR PANE -->
+  <div class="sidebar-pane">
+    <div class="sidebar-header">
+      <div class="app-title">Chats</div>
+      <div class="header-actions">
+        <button class="icon-btn-ghost" onclick="openUserList()" title="Start New Chat">➕</button>
+        <button class="icon-btn-ghost" onclick="openSettings()" title="Settings">⋮</button>
       </div>
-      <div class="settings-label">Your Name</div>
-      <input type="text" class="settings-input" id="settingsNameInput" placeholder="Enter name" />
-      <button class="btn-primary" onclick="saveProfileChanges()">Update Profile</button>
     </div>
 
-    <div class="settings-card">
-      <h3>Theme Preferences</h3>
-      <div class="settings-label">Select App Theme</div>
-      <select class="settings-select" id="themeSelector" onchange="changeTheme(this.value)">
-        <option value="light">☀️ Light Mode</option>
-        <option value="dark">🌙 Dark Mode</option>
-      </select>
+    <div class="search-filter-container">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="Search or start a new chat" oninput="filterContactList()" />
+      </div>
+      <div class="filter-chips">
+        <button class="chip active" onclick="setFilter('all', this)">All</button>
+        <button class="chip" onclick="setFilter('unread', this)">Unread</button>
+        <button class="chip" onclick="setFilter('favourites', this)">Favourites</button>
+      </div>
     </div>
 
-    <div class="settings-card">
-      <h3>Account Session</h3>
-      <button class="btn-danger" onclick="logout()">🚪 Logout</button>
-    </div>
+    <div class="contact-list" id="contactList"></div>
   </div>
-</div>
 
-<!-- ================= CHAT SCREEN ================= -->
-<div class="screen" id="chatScreen">
-  <header>
-    <button class="back-btn" onclick="goToContacts()">←</button>
-    <div class="chat-header-info" onclick='openContactInfo(activePartner)'>
-      <div class="avatar" id="chatAvatar" style="width:38px;height:38px;font-size:14px;"></div>
-      <div>
-        <div class="chat-partner-name" id="chatPartnerName"></div>
-        <div class="chat-partner-status" id="chatPartnerStatus"></div>
+  <!-- RIGHT MAIN PANE -->
+  <div class="main-pane" id="mainPane">
+    
+    <!-- WELCOME PLACEHOLDER SCREEN -->
+    <div class="screen active" id="welcomeScreen">
+      <div class="welcome-screen-placeholder">
+        <div style="font-size: 64px;">💬</div>
+        <h2 style="font-family:'Baloo Da 2',sans-serif; font-size:26px; color:var(--text);">N Chat for Web</h2>
+        <p style="max-width:380px; font-size:14px;">Send and receive messages seamlessly across your devices. Select a chat from the left panel to begin.</p>
+        <div class="welcome-placeholder-actions">
+          <button class="welcome-action-btn" onclick="openUserList()"><span>➕</span> Add contact</button>
+          <button class="welcome-action-btn" onclick="openSettings()"><span>⚙️</span> Settings</button>
+        </div>
       </div>
     </div>
-    <div class="menu-wrapper">
-      <button class="three-dot-btn" onclick="toggleChatMenu(event)">⋮</button>
-      <div class="dropdown-menu" id="chatDropdownMenu">
-        <div class="dropdown-item" onclick="openContactInfoFromChat()">ℹ️ View Contact Info</div>
-        <div class="dropdown-item" onclick="openMediaLinksDocs()">🖼️ Media, link and docs</div>
-        <div class="dropdown-item" onclick="toggleNotificationSettings()">🔔 Notification settings</div>
-        <div class="dropdown-item" onclick="toggleFavouriteChat()">⭐ Add to favourites</div>
-        <div class="dropdown-item danger" onclick="blockChatPartner()">🚫 Block User</div>
-        <div class="dropdown-item" onclick="clearChatMessages()">🧹 Clear Chat</div>
-        <div class="dropdown-item danger" onclick="deleteChatConversation()">🗑️ Delete Chat</div>
-        <div class="dropdown-item" onclick="reportChatPartner()">⚠️ Report User</div>
+
+    <!-- USER LIST SCREEN (+) -->
+    <div class="screen" id="userListScreen">
+      <header>
+        <button class="back-btn" onclick="closeSubScreen()">←</button>
+        <div class="app-title" style="color:#fff; font-size:18px;">Select Contact</div>
+        <div style="width:24px;"></div>
+      </header>
+      <div class="all-users-list" id="allUsersListEl"></div>
+    </div>
+
+    <!-- CONTACT INFO SCREEN -->
+    <div class="screen" id="contactInfoScreen">
+      <header>
+        <button class="back-btn" onclick="closeSubScreen()">←</button>
+        <div class="app-title" style="color:#fff; font-size:18px;">Contact Info</div>
+        <div style="width:24px;"></div>
+      </header>
+      <div class="profile-container" id="profileContainerEl"></div>
+    </div>
+
+    <!-- SETTINGS SCREEN -->
+    <div class="screen" id="settingsScreen">
+      <header>
+        <button class="back-btn" onclick="closeSubScreen()">←</button>
+        <div class="app-title" style="color:#fff; font-size:18px;">Settings</div>
+        <div style="width:24px;"></div>
+      </header>
+      <div class="settings-content">
+        <div class="settings-card">
+          <h3>Profile Customization</h3>
+          <div class="settings-profile-center">
+            <div class="settings-avatar-preview" id="settingsAvatarPreview">👤</div>
+            <button type="button" class="photo-picker-btn" onclick="document.getElementById('settingsPhotoInput').click()">Change Photo</button>
+            <input type="file" id="settingsPhotoInput" accept="image/*" onchange="onSettingsPhotoSelected(event)" />
+          </div>
+          <div class="settings-label">Your Name</div>
+          <input type="text" class="settings-input" id="settingsNameInput" placeholder="Enter name" />
+          <button class="btn-primary" onclick="saveProfileChanges()">Update Profile</button>
+        </div>
+
+        <div class="settings-card">
+          <h3>Theme Preferences</h3>
+          <div class="settings-label">Select App Theme</div>
+          <select class="settings-select" id="themeSelector" onchange="changeTheme(this.value)">
+            <option value="light">☀️ Light Mode</option>
+            <option value="dark">🌙 Dark Mode</option>
+          </select>
+        </div>
+
+        <div class="settings-card">
+          <h3>Account Session</h3>
+          <button class="btn-danger" onclick="logout()">🚪 Logout</button>
+        </div>
       </div>
     </div>
-  </header>
-  <div class="messages" id="messagesEl"></div>
-  <div class="typing-indicator" id="typingIndicator" style="display:none;">typing...</div>
-  <div class="img-preview-bar" id="imgPreviewBar" style="display:none;">
-    <img id="imgPreviewThumb" />
-    <span style="flex:1;font-size:12px;">Image ready to send</span>
-    <button onclick="clearImagePreview()" style="background:none;border:none;color:red;font-size:12px;">Cancel</button>
-  </div>
-  <div class="composer">
-    <input type="file" id="imageInput" accept="image/*" onchange="onImageSelected(event)" />
-    <button class="round-btn img" onclick="document.getElementById('imageInput').click()">📷</button>
-    <input type="text" id="messageInput" placeholder="Type a message..." oninput="onTyping()" onkeydown="if(event.key==='Enter') sendMessage()" />
-    <button class="round-btn send" id="sendBtn" onclick="sendMessage()">➤</button>
+
+    <!-- CHAT SCREEN -->
+    <div class="screen" id="chatScreen">
+      <header>
+        <button class="back-btn" onclick="closeChatPane()">←</button>
+        <div class="chat-header-info" onclick='openContactInfo(activePartner)'>
+          <div class="avatar" id="chatAvatar" style="width:38px;height:38px;font-size:14px;"></div>
+          <div>
+            <div class="chat-partner-name" id="chatPartnerName"></div>
+            <div class="chat-partner-status" id="chatPartnerStatus"></div>
+          </div>
+        </div>
+        <div class="menu-wrapper">
+          <button class="three-dot-btn" onclick="toggleChatMenu(event)">⋮</button>
+          <div class="dropdown-menu" id="chatDropdownMenu">
+            <div class="dropdown-item" onclick="openContactInfoFromChat()">ℹ️ View Contact Info</div>
+            <div class="dropdown-item" onclick="openMediaLinksDocs()">🖼️ Media, link and docs</div>
+            <div class="dropdown-item" onclick="toggleNotificationSettings()">🔔 Notification settings</div>
+            <div class="dropdown-item" onclick="toggleFavouriteChat()">⭐ Add to favourites</div>
+            <div class="dropdown-item danger" onclick="blockChatPartner()">🚫 Block User</div>
+            <div class="dropdown-item" onclick="clearChatMessages()">🧹 Clear Chat</div>
+            <div class="dropdown-item danger" onclick="deleteChatConversation()">🗑️ Delete Chat</div>
+            <div class="dropdown-item" onclick="reportChatPartner()">⚠️ Report User</div>
+          </div>
+        </div>
+      </header>
+      <div class="messages" id="messagesEl"></div>
+      <div class="typing-indicator" id="typingIndicator" style="display:none;">typing...</div>
+      <div class="img-preview-bar" id="imgPreviewBar" style="display:none;">
+        <img id="imgPreviewThumb" />
+        <span style="flex:1;font-size:12px;">Image ready to send</span>
+        <button onclick="clearImagePreview()" style="background:none;border:none;color:red;font-size:12px;cursor:pointer;">Cancel</button>
+      </div>
+      <div class="composer">
+        <input type="file" id="imageInput" accept="image/*" onchange="onImageSelected(event)" />
+        <button class="round-btn img" onclick="document.getElementById('imageInput').click()" title="Send Image">📷</button>
+        <input type="text" id="messageInput" placeholder="Type a message..." oninput="onTyping()" onkeydown="if(event.key==='Enter') sendMessage()" />
+        <button class="round-btn send" id="sendBtn" onclick="sendMessage()" title="Send">➤</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -375,7 +424,8 @@ let isSignupMode = false;
 let currentUser = null;
 let activeConversationId = null;
 let activePartner = null;
-let previousScreenBeforeInfo = 'contactsScreen';
+let activeFilter = 'all';
+let currentSubScreen = 'welcomeScreen';
 let messagesUnsub = null;
 let convDocUnsub = null;
 let usersUnsub = null;
@@ -387,13 +437,17 @@ let typingTimeout = null;
 let heartbeatInterval = null;
 let allUsers = [];
 let myConversations = {};
+let favouritesList = JSON.parse(localStorage.getItem('n_chat_favourites') || '[]');
 
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => {
+function showMainScreen(id) {
+  document.querySelectorAll('#mainPane .screen').forEach(s => {
     s.classList.remove('active');
   });
   const target = document.getElementById(id);
-  target.classList.add('active');
+  if (target) {
+    target.classList.add('active');
+    currentSubScreen = id;
+  }
 }
 
 function toggleChatMenu(event) {
@@ -406,13 +460,6 @@ function closeDropdowns(event) {
   const menu = document.getElementById('chatDropdownMenu');
   if (menu && menu.classList.contains('show')) {
     menu.classList.remove('show');
-  }
-}
-
-function openContactInfoFromChat() {
-  closeDropdowns();
-  if (activePartner) {
-    openContactInfo(activePartner, 'chatScreen');
   }
 }
 
@@ -607,12 +654,14 @@ auth.onAuthStateChanged(async (user) => {
       doc = await userDocRef.get();
     }
     currentUser = { uid: user.uid, ...doc.data() };
-    showScreen('contactsScreen');
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('appContainer').style.display = 'flex';
     startHeartbeat();
     listenContacts();
   } else {
     currentUser = null;
-    showScreen('authScreen');
+    document.getElementById('appContainer').style.display = 'none';
+    document.getElementById('authScreen').style.display = 'flex';
   }
 });
 
@@ -635,22 +684,35 @@ function listenContacts() {
     });
 }
 
+function setFilter(filterType, btnEl) {
+  activeFilter = filterType;
+  document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
+  btnEl.classList.add('active');
+  renderContactList();
+}
+
+function filterContactList() {
+  renderContactList();
+}
+
 function renderContactList() {
   const listEl = document.getElementById('contactList');
+  const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
   
   if (allUsers.length === 0) {
-    listEl.innerHTML = '<div class="empty-state">No other users found. Click the (+) button below to explore.</div>';
+    listEl.innerHTML = '<div class="empty-state">No other users found. Click the (+) button above to explore.</div>';
     return;
   }
 
-  const rows = allUsers.map(u => {
-    const convId = conversationIdFor(currentUser.uid, u.uid);
+  let rows = allUsers.map(u => {
+    const convId = [currentUser.uid, u.uid].sort().join('_');
     const conv = myConversations[convId];
     
     let previewPrefixed = u.online ? 'Online' : (u.lastSeen ? 'Last seen ' + timeAgoLabel(u.lastSeen) : 'Offline');
     let unread = 0;
     let timeLabel = '';
     let sortKey = conv && conv.lastUpdated ? conv.lastUpdated.toMillis() : 0;
+    let hasChat = !!conv;
 
     if (conv) {
       const preview = conv.lastMessageType === 'image' ? '📷 Photo' : (conv.lastMessageText || '');
@@ -659,11 +721,32 @@ function renderContactList() {
       timeLabel = timeAgoLabel(conv.lastUpdated);
     }
 
-    return { u, convId, previewPrefixed, unread, timeLabel, sortKey };
-  }).sort((a, b) => b.sortKey - a.sortKey);
+    const isFavourite = favouritesList.includes(u.uid);
+
+    return { u, convId, previewPrefixed, unread, timeLabel, sortKey, hasChat, isFavourite };
+  });
+
+  // Apply search filtering
+  if (searchVal) {
+    rows = rows.filter(r => r.u.displayName.toLowerCase().includes(searchVal) || (r.u.phone && r.u.phone.includes(searchVal)));
+  }
+
+  // Apply filter tabs (All, Unread, Favourites)
+  if (activeFilter === 'unread') {
+    rows = rows.filter(r => r.unread > 0);
+  } else if (activeFilter === 'favourites') {
+    rows = rows.filter(r => r.isFavourite);
+  }
+
+  rows.sort((a, b) => b.sortKey - a.sortKey);
+
+  if (rows.length === 0) {
+    listEl.innerHTML = '<div class="empty-state">No chats match the current filter.</div>';
+    return;
+  }
 
   listEl.innerHTML = rows.map(r => `
-    <div class="contact-row" onclick='openChat(${JSON.stringify(r.u)})'>
+    <div class="contact-row ${activePartner && activePartner.uid === r.u.uid ? 'selected' : ''}" onclick='openChat(${JSON.stringify(r.u)})'>
       <div class="avatar-wrap">
         <div class="avatar" style="background:${avatarBg(r.u)}">${avatarHtml(r.u)}</div>
         ${r.u.online ? '<div class="online-dot"></div>' : ''}
@@ -673,7 +756,6 @@ function renderContactList() {
           <div class="contact-name">${r.u.displayName}</div>
           <div class="contact-time">${r.timeLabel}</div>
         </div>
-        <div class="contact-info-link" onclick='event.stopPropagation(); openContactInfo(${JSON.stringify(r.u)}, "contactsScreen")'>Click here for contact info</div>
         <div class="contact-bottom-row">
           <div class="contact-sub">${escapeHtml(r.previewPrefixed)}</div>
           ${r.unread > 0 ? `<div class="unread-badge">${r.unread}</div>` : ''}
@@ -685,7 +767,7 @@ function renderContactList() {
 
 function openUserList() {
   renderAllUsersList();
-  showScreen('userListScreen');
+  showMainScreen('userListScreen');
 }
 
 function renderAllUsersList() {
@@ -705,7 +787,6 @@ function renderAllUsersList() {
         <div class="contact-top-row">
           <div class="contact-name">${u.displayName}</div>
         </div>
-        <div class="contact-info-link" onclick='event.stopPropagation(); openContactInfo(${JSON.stringify(u)}, "userListScreen")'>Click here for contact info</div>
         <div class="contact-bottom-row">
           <div class="contact-sub">${u.online ? 'Online' : 'Offline'}</div>
         </div>
@@ -714,8 +795,8 @@ function renderAllUsersList() {
   `).join('');
 }
 
-function openContactInfo(userObj, fromScreen = 'contactsScreen') {
-  previousScreenBeforeInfo = fromScreen;
+function openContactInfo(userObj) {
+  if (!userObj) return;
   const container = document.getElementById('profileContainerEl');
   
   const formattedDate = userObj.createdAt && userObj.createdAt.toDate ? new Date(userObj.createdAt.toDate()).toLocaleDateString() : 'Recently';
@@ -748,14 +829,16 @@ function openContactInfo(userObj, fromScreen = 'contactsScreen') {
     </div>
   `;
 
-  showScreen('contactInfoScreen');
+  showMainScreen('contactInfoScreen');
 }
 
-function closeContactInfo() {
-  showScreen(previousScreenBeforeInfo || 'contactsScreen');
+function closeSubScreen() {
+  if (activePartner) {
+    showMainScreen('chatScreen');
+  } else {
+    showMainScreen('welcomeScreen');
+  }
 }
-
-function conversationIdFor(uidA, uidB) { return [uidA, uidB].sort().join('_'); }
 
 function openSettings() {
   document.getElementById('settingsNameInput').value = currentUser.displayName || '';
@@ -763,10 +846,8 @@ function openSettings() {
   previewEl.style.background = avatarBg(currentUser);
   previewEl.innerHTML = avatarHtml(currentUser);
   pendingSettingsPhoto = currentUser.photoBase64 || null;
-  showScreen('settingsScreen');
+  showMainScreen('settingsScreen');
 }
-
-function goToContactsFromSettings() { showScreen('contactsScreen'); }
 
 function onSettingsPhotoSelected(event) {
   const file = event.target.files[0];
@@ -804,11 +885,11 @@ async function saveProfileChanges() {
     currentUser.displayName = newName;
     currentUser.photoBase64 = pendingSettingsPhoto;
     alert('Profile updated successfully!');
-    showScreen('contactsScreen');
+    closeSubScreen();
   } catch (e) { alert('Failed to update profile'); }
 }
 
-function goToContacts() {
+function closeChatPane() {
   if (messagesUnsub) messagesUnsub();
   if (convDocUnsub) convDocUnsub();
   if (typingTimeout) clearTimeout(typingTimeout);
@@ -816,19 +897,21 @@ function goToContacts() {
   activeConversationId = null;
   activePartner = null;
   clearImagePreview();
-  showScreen('contactsScreen');
+  renderContactList();
+  showMainScreen('welcomeScreen');
 }
 
 function openChat(partner) {
   activePartner = partner;
-  activeConversationId = conversationIdFor(currentUser.uid, partner.uid);
+  activeConversationId = [currentUser.uid, partner.uid].sort().join('_');
   document.getElementById('chatPartnerName').textContent = partner.displayName;
   const avatarEl = document.getElementById('chatAvatar');
   avatarEl.style.background = avatarBg(partner);
   avatarEl.innerHTML = avatarHtml(partner);
   document.getElementById('messagesEl').innerHTML = '';
   document.getElementById('chatPartnerStatus').textContent = partner.online ? 'Online' : (partner.lastSeen ? 'Last seen: ' + timeAgoLabel(partner.lastSeen) : '');
-  showScreen('chatScreen');
+  showMainScreen('chatScreen');
+  renderContactList();
 
   db.collection('conversations').doc(activeConversationId).set({
     participants: [currentUser.uid, partner.uid],
@@ -980,6 +1063,13 @@ async function sendMessage() {
   }
 }
 
+async function openContactInfoFromChat() {
+  closeDropdowns();
+  if (activePartner) {
+    openContactInfo(activePartner);
+  }
+}
+
 async function openMediaLinksDocs() {
   closeDropdowns();
   alert('Media, link and docs feature coming soon!');
@@ -992,7 +1082,17 @@ async function toggleNotificationSettings() {
 
 async function toggleFavouriteChat() {
   closeDropdowns();
-  alert(activePartner ? `${activePartner.displayName} has been added to favourites.` : 'Added to favourites.');
+  if (!activePartner) return;
+  const idx = favouritesList.indexOf(activePartner.uid);
+  if (idx > -1) {
+    favouritesList.splice(idx, 1);
+    alert(`${activePartner.displayName} has been removed from favourites.`);
+  } else {
+    favouritesList.push(activePartner.uid);
+    alert(`${activePartner.displayName} has been added to favourites.`);
+  }
+  localStorage.setItem('n_chat_favourites', JSON.stringify(favouritesList));
+  renderContactList();
 }
 
 async function blockChatPartner() {
@@ -1000,7 +1100,7 @@ async function blockChatPartner() {
   if (!activePartner) return;
   if (confirm(`Are you sure you want to block ${activePartner.displayName}?`)) {
     alert(`${activePartner.displayName} has been blocked.`);
-    goToContacts();
+    closeChatPane();
   }
 }
 
@@ -1036,11 +1136,20 @@ async function deleteChatConversation() {
       batch.delete(db.collection('conversations').doc(activeConversationId));
       await batch.commit();
       alert('Conversation deleted.');
-      goToContacts();
+EmptyChat();
     } catch (e) {
       alert('Failed to delete conversation.');
     }
   }
+}
+
+function EmptyChat() {
+  if (messagesUnsub) messagesUnsub();
+  if (convDocUnsub) convDocUnsub();
+  activeConversationId = null;
+  activePartner = null;
+  renderContactList();
+  showMainScreen('welcomeScreen');
 }
 
 async function reportChatPartner() {
