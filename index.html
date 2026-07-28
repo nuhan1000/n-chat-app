@@ -146,7 +146,6 @@
   .unread-badge { background: var(--marigold); color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0; }
   .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 60px 24px; }
 
-  /* Floating Add Chat Button at Bottom of Sidebar */
   .sidebar-bottom-fab {
     position: absolute;
     bottom: 20px;
@@ -215,6 +214,23 @@
   .dropdown-item:hover { background: var(--bg); }
   .dropdown-item.danger { color: #E53935; }
 
+  /* ---------- Attachment Popup Menu Styles ---------- */
+  .attach-wrapper { position: relative; }
+  .attach-menu {
+    display: none; position: absolute; bottom: 120%; left: 0; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    width: 240px; z-index: 120; overflow: hidden; animation: appOpen 0.2s ease-out;
+  }
+  .attach-menu.show { display: block; }
+  .attach-item {
+    padding: 12px 16px; font-size: 14px; color: var(--text); cursor: pointer;
+    display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border);
+    transition: background 0.2s; font-weight: 500;
+  }
+  .attach-item:last-child { border-bottom: none; }
+  .attach-item:hover { background: var(--bg); }
+  .attach-item span { font-size: 18px; }
+
   /* ---------- Settings screen ---------- */
   .settings-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
   .settings-card { width: 100%; max-width: 400px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
@@ -253,12 +269,21 @@
   .bubble .ticks.seen { color: #34B7F1; }
   .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; background: var(--panel); }
   
-  .composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; }
+  .composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; position: relative; }
   .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: var(--bg); color: var(--text); }
   .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; }
-  .round-btn.img { background: var(--border); color: var(--text); }
+  .round-btn.plus { background: var(--border); color: var(--text); font-weight: 700; font-size: 20px; }
+  .round-btn.mic { background: var(--border); color: var(--text); }
+  .round-btn.mic.recording { background: #E53935; color: #fff; animation: pulse 1.2s infinite; }
   .round-btn.send { background: var(--marigold); color: #fff; }
-  #imageInput, #photoInput, #settingsPhotoInput { display: none; }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  #imageInput, #photoInput, #settingsPhotoInput, #docInput, #audioInput { display: none; }
   .img-preview-bar { padding: 8px 14px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
   .img-preview-bar img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; }
 </style>
@@ -313,7 +338,6 @@
 
     <div class="contact-list" id="contactList"></div>
 
-    <!-- Floating Add Chat Button in bottom right of sidebar -->
     <button class="sidebar-bottom-fab" onclick="openUserList()" title="Add someone to chat">➕</button>
   </div>
 
@@ -418,12 +442,29 @@
       <div class="typing-indicator" id="typingIndicator" style="display:none;">typing...</div>
       <div class="img-preview-bar" id="imgPreviewBar" style="display:none;">
         <img id="imgPreviewThumb" />
-        <span style="flex:1;font-size:12px;">Image ready to send</span>
+        <span style="flex:1;font-size:12px;" id="imgPreviewText">Ready to send</span>
         <button onclick="clearImagePreview()" style="background:none;border:none;color:red;font-size:12px;cursor:pointer;">Cancel</button>
       </div>
       <div class="composer">
+        <!-- Hidden Inputs for Attachments -->
         <input type="file" id="imageInput" accept="image/*" onchange="onImageSelected(event)" />
-        <button class="round-btn img" onclick="document.getElementById('imageInput').click()" title="Send Image">📷</button>
+        <input type="file" id="docInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" onchange="onDocSelected(event)" />
+        <input type="file" id="audioInput" accept="audio/*" onchange="onAudioSelected(event)" />
+
+        <!-- Plus Attachment Button & Popup Menu -->
+        <div class="attach-wrapper">
+          <button class="round-btn plus" onclick="toggleAttachMenu(event)" title="Attach">＋</button>
+          <div class="attach-menu" id="attachMenu">
+            <div class="attach-item" onclick="document.getElementById('docInput').click(); closeAttachMenu();"><span>📄</span> Documents</div>
+            <div class="attach-item" onclick="document.getElementById('imageInput').click(); closeAttachMenu();"><span>🖼️</span> Photos & videos</div>
+            <div class="attach-item" onclick="document.getElementById('audioInput').click(); closeAttachMenu();"><span>🎵</span> Audio</div>
+            <div class="attach-item" onclick="shareLocation(); closeAttachMenu();"><span>📍</span> Share google map location</div>
+          </div>
+        </div>
+
+        <!-- Audio Recording Button -->
+        <button class="round-btn mic" id="micBtn" onclick="toggleVoiceRecording()" title="Record Audio Message">🎤</button>
+
         <input type="text" id="messageInput" placeholder="Type a message..." oninput="onTyping()" onkeydown="if(event.key==='Enter') sendMessage()" />
         <button class="round-btn send" id="sendBtn" onclick="sendMessage()" title="Send">➤</button>
       </div>
@@ -459,6 +500,7 @@ let convDocUnsub = null;
 let usersUnsub = null;
 let conversationsUnsub = null;
 let pendingImageDataUrl = null;
+let pendingAttachmentData = null;
 let pendingSignupPhoto = null;
 let pendingSettingsPhoto = null;
 let typingTimeout = null;
@@ -466,6 +508,11 @@ let heartbeatInterval = null;
 let allUsers = [];
 let myConversations = {};
 let favouritesList = JSON.parse(localStorage.getItem('n_chat_favourites') || '[]');
+
+// Voice recording state variables
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
 
 // Navigation History State Stack
 let navHistory = ['welcomeScreen'];
@@ -494,9 +541,7 @@ function historyBack() {
     navIndex--;
     isNavigatingHistory = true;
     navigateToScreen(navHistory[navIndex], false);
-    if (navHistory[navIndex] === 'chatScreen' && activePartner) {
-      // Keep chat state sync if returning via history
-    } else if (navHistory[navIndex] === 'welcomeScreen') {
+    if (navHistory[navIndex] === 'welcomeScreen') {
       activePartner = null;
       activeConversationId = null;
       renderContactList();
@@ -527,10 +572,25 @@ function toggleChatMenu(event) {
   menu.classList.toggle('show');
 }
 
+function toggleAttachMenu(event) {
+  event.stopPropagation();
+  const menu = document.getElementById('attachMenu');
+  menu.classList.toggle('show');
+}
+
+function closeAttachMenu() {
+  const menu = document.getElementById('attachMenu');
+  if (menu) menu.classList.remove('show');
+}
+
 function closeDropdowns(event) {
   const menu = document.getElementById('chatDropdownMenu');
   if (menu && menu.classList.contains('show')) {
     menu.classList.remove('show');
+  }
+  const attachMenu = document.getElementById('attachMenu');
+  if (attachMenu && attachMenu.classList.contains('show')) {
+    attachMenu.classList.remove('show');
   }
 }
 
@@ -786,7 +846,12 @@ function renderContactList() {
     let hasChat = !!conv;
 
     if (conv) {
-      const preview = conv.lastMessageType === 'image' ? '📷 Photo' : (conv.lastMessageText || '');
+      let preview = conv.lastMessageText || '';
+      if (conv.lastMessageType === 'image') preview = '📷 Photo';
+      else if (conv.lastMessageType === 'document') preview = '📄 Document';
+      else if (conv.lastMessageType === 'audio') preview = '🎵 Audio';
+      else if (conv.lastMessageType === 'location') preview = '📍 Location';
+
       previewPrefixed = conv.lastMessageSenderId === currentUser.uid ? 'You: ' + preview : preview;
       unread = conv.unreadCount && conv.unreadCount[currentUser.uid] ? conv.unreadCount[currentUser.uid] : 0;
       timeLabel = timeAgoLabel(conv.lastUpdated);
@@ -1005,8 +1070,17 @@ function renderMessage(m, docId) {
   if (m.deleted) {
     inner += `<div style="font-style:italic;opacity:0.7;">This message was deleted</div>`;
   } else {
-    if (m.text) inner += `<div>${escapeHtml(m.text)}</div>`;
-    if (m.imageUrl) inner += `<img src="${m.imageUrl}" />`;
+    if (m.type === 'image' && m.imageUrl) {
+      inner += `<img src="${m.imageUrl}" />`;
+    } else if (m.type === 'document') {
+      inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">📄</span><div><strong style="display:block;">${escapeHtml(m.fileName || 'Document')}</strong><span style="font-size:11px;opacity:0.8;">Shared Document</span></div></div>`;
+    } else if (m.type === 'audio') {
+      inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">🎵</span><div><strong style="display:block;">${escapeHtml(m.fileName || 'Audio Message')}</strong><audio controls style="height:32px;margin-top:4px;max-width:200px;"><source src="${m.audioUrl || ''}" type="audio/webm"></audio></div></div>`;
+    } else if (m.type === 'location') {
+      inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">📍</span><div><strong style="display:block;">Google Map Location</strong><a href="${m.locationUrl}" target="_blank" style="font-size:12px;color:var(--teal);text-decoration:underline;">View on Google Maps</a></div></div>`;
+    } else {
+      inner += `<div>${escapeHtml(m.text)}</div>`;
+    }
   }
   const ticks = mine ? `<span class="ticks ${m.seen ? 'seen' : ''}">${m.seen ? '✓✓' : '✓'}</span>` : '';
   const deleteBtn = (mine && !m.deleted) ? `<button class="delete-msg-btn" onclick="deleteMessage('${docId}')">🗑</button>` : '';
@@ -1060,7 +1134,9 @@ function onImageSelected(event) {
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       pendingImageDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+      pendingAttachmentData = { type: 'image' };
       document.getElementById('imgPreviewThumb').src = pendingImageDataUrl;
+      document.getElementById('imgPreviewText').textContent = 'Image ready to send';
       document.getElementById('imgPreviewBar').style.display = 'flex';
     };
     img.src = e.target.result;
@@ -1068,27 +1144,130 @@ function onImageSelected(event) {
   reader.readAsDataURL(file);
 }
 
+function onDocSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  pendingAttachmentData = { type: 'document', fileName: file.name };
+  document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23075E54"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>';
+  document.getElementById('imgPreviewText').textContent = 'Document: ' + file.name;
+  document.getElementById('imgPreviewBar').style.display = 'flex';
+}
+
+function onAudioSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    pendingAttachmentData = { type: 'audio', fileName: file.name, audioUrl: e.target.result };
+    document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%2325D366"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
+    document.getElementById('imgPreviewText').textContent = 'Audio: ' + file.name;
+    document.getElementById('imgPreviewBar').style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+}
+
+function shareLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      const mapUrl = `https://www.google.com/maps?q=${lat},${lon}`;
+      pendingAttachmentData = { type: 'location', locationUrl: mapUrl };
+      document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23E53935"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>';
+      document.getElementById('imgPreviewText').textContent = 'Google Map Location Ready to Share';
+      document.getElementById('imgPreviewBar').style.display = 'flex';
+    }, () => {
+      alert('Unable to retrieve your location. Please check browser permissions.');
+    });
+  } else {
+    alert('Geolocation is not supported by your browser');
+  }
+}
+
+async function toggleVoiceRecording() {
+  const micBtn = document.getElementById('micBtn');
+  if (!isRecording) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+      
+      mediaRecorder.ondataavailable = event => {
+        audioChunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          pendingAttachmentData = { type: 'audio', fileName: 'Voice Note.webm', audioUrl: e.target.result };
+          document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%2325D366"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
+          document.getElementById('imgPreviewText').textContent = 'Voice Note Ready to Send';
+          document.getElementById('imgPreviewBar').style.display = 'flex';
+        };
+        reader.readAsDataURL(audioBlob);
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+      isRecording = true;
+      micBtn.classList.add('recording');
+      micBtn.title = "Stop Recording";
+    } catch (e) {
+      alert('Microphone access denied or not supported.');
+    }
+  } else {
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+    }
+    isRecording = false;
+    micBtn.classList.remove('recording');
+    micBtn.title = "Record Audio Message";
+  }
+}
+
 function clearImagePreview() {
   pendingImageDataUrl = null;
+  pendingAttachmentData = null;
   document.getElementById('imageInput').value = '';
+  document.getElementById('docInput').value = '';
+  document.getElementById('audioInput').value = '';
   document.getElementById('imgPreviewBar').style.display = 'none';
 }
 
 async function sendMessage() {
   const input = document.getElementById('messageInput');
   const text = input.value.trim();
-  if (!text && !pendingImageDataUrl) return;
+  if (!text && !pendingAttachmentData) return;
 
   const sendBtn = document.getElementById('sendBtn');
   sendBtn.disabled = true;
 
   try {
-    const isImage = !!pendingImageDataUrl;
+    let msgType = 'text';
+    let extraData = {};
+
+    if (pendingAttachmentData) {
+      msgType = pendingAttachmentData.type;
+      if (msgType === 'image') {
+        extraData.imageUrl = pendingImageDataUrl;
+      } else if (msgType === 'document') {
+        extraData.fileName = pendingAttachmentData.fileName;
+      } else if (msgType === 'audio') {
+        extraData.fileName = pendingAttachmentData.fileName;
+        extraData.audioUrl = pendingAttachmentData.audioUrl;
+      } else if (msgType === 'location') {
+        extraData.locationUrl = pendingAttachmentData.locationUrl;
+      }
+    }
+
+    let summaryLabel = text || (msgType === 'image' ? '📷 Photo' : (msgType === 'document' ? '📄 Document' : (msgType === 'audio' ? '🎵 Audio' : '📍 Location')));
+
     await db.collection('conversations').doc(activeConversationId).set({
       participants: [currentUser.uid, activePartner.uid],
       lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-      lastMessageText: text || null,
-      lastMessageType: isImage ? 'image' : 'text',
+      lastMessageText: summaryLabel,
+      lastMessageType: msgType,
       lastMessageSenderId: currentUser.uid,
       typing: { [currentUser.uid]: false },
       unreadCount: { [activePartner.uid]: firebase.firestore.FieldValue.increment(1) }
@@ -1097,7 +1276,8 @@ async function sendMessage() {
     await db.collection('conversations').doc(activeConversationId).collection('messages').add({
       senderId: currentUser.uid,
       text: text || null,
-      imageUrl: pendingImageDataUrl || null,
+      type: msgType,
+      ...extraData,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       seen: false
     });
