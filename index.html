@@ -3,73 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N Chat Collapse Example</title>
+    <title>N Chat - Private Messaging</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
             background-color: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
         }
 
-        .chat-container {
-            width: 350px;
+        /* মোবাইল ফ্রেম উইন্ডো */
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            max-height: 800px;
             background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             overflow: hidden;
+            position: relative;
         }
 
-        /* কোলাপ্স ট্রিগার হেডার */
-        .collapse-header {
-            padding: 15px;
-            background: #0084ff;
+        @media (min-width: 401px) {
+            .app-container {
+                border-radius: 12px;
+            }
+        }
+
+        /* হেডার সেকশন */
+        .app-header {
+            background-color: #075e54;
             color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-header h2 {
+            font-size: 18px;
+        }
+
+        /* কোলাপ্সিবল কনটাক্ট ইনফো হেডার */
+        .collapse-header {
+            background: #128c7e;
+            color: white;
+            padding: 12px 15px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 14px;
             user-select: none;
-            /* কোনো আন্ডারলাইন নেই */
-            text-decoration: none; 
+            text-decoration: none; /* আন্ডারলাইন বাদ দেওয়া হয়েছে */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .collapse-header:hover {
-            background: #006dd9;
+            background: #0e7468;
         }
 
-        /* কোলাপ্স কন্টেন্ট সেকশন - কোনো ফেড এফেক্ট নেই, সরাসরি খুলবে/বন্ধ হবে */
+        /* কোলাপ্স কন্টেন্ট - কোনো ফেড বা অপাসিটি এফেক্ট ছাড়াই স্লাইড করবে */
         .collapse-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-out;
-            background: #f9f9f9;
+            background: #f7f8f9;
         }
 
         .collapse-content .inner-content {
-            padding: 15px;
+            padding: 12px 15px;
             color: #333;
+            font-size: 13px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .collapse-content .inner-content p {
+            margin-bottom: 6px;
+        }
+
+        /* চ্যাট লিস্ট এবং মেসেজ এরিয়া */
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            background: #e5ddd5;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 10px 12px;
+            border-radius: 8px;
             font-size: 14px;
-            border-top: 1px solid #eee;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .message.incoming {
+            background: #ffffff;
+            align-self: flex-start;
+            border-top-left-radius: 0;
+        }
+
+        .message.outgoing {
+            background: #dcf8c6;
+            align-self: flex-end;
+            border-top-right-radius: 0;
+        }
+
+        /* চ্যাট ফুটার / ইনপুট বক্স */
+        .chat-footer {
+            padding: 10px 15px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .chat-footer button {
+            background-color: #075e54;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-footer button:hover {
+            background-color: #128c7e;
         }
     </style>
 </head>
 <body>
 
-<div class="chat-container">
-    <!-- Click here for contact info (আন্ডারলাইন ও ফেড ছাড়া কোলাপ্স বাটন) -->
+<div class="app-container">
+    <!-- অ্যাপ হেডার -->
+    <div class="app-header">
+        <h2>N Chat</h2>
+        <span>⚙️</span>
+    </div>
+
+    <!-- কোলাপ্সিবল কনটাক্ট ইনফো ট্রিগার -->
     <div class="collapse-header" onclick="toggleCollapse()">
-        Click here for contact info
+        <span>Click here for contact info</span>
+        <span>▼</span>
     </div>
     
-    <!-- কোলাপ্স হওয়া অংশ -->
+    <!-- কোলাপ্স হওয়া অংশ (কোনো ফেড অ্যানিমেশন বা আন্ডারলাইন নেই) -->
     <div class="collapse-content" id="contactInfo">
         <div class="inner-content">
             <p><strong>Name:</strong> Nuhan Nuhu</p>
             <p><strong>Phone:</strong> +880XXXXXXXXXX</p>
-            <p><strong>Email:</strong> example@email.com</p>
+            <p><strong>Status:</strong> Available</p>
         </div>
+    </div>
+
+    <!-- মেসেজ চ্যাট বডি -->
+    <div class="chat-body">
+        <div class="message incoming">
+            Hello! Welcome to N Chat. How can I help you today?
+        </div>
+        <div class="message outgoing">
+            Hi, setting up the UI just like we discussed!
+        </div>
+    </div>
+
+    <!-- চ্যাট ফুটার ইনপুট -->
+    <div class="chat-footer">
+        <input type="text" placeholder="Type a message...">
+        <button>➤</button>
     </div>
 </div>
 
