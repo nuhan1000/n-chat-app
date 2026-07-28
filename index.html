@@ -804,7 +804,7 @@ function checkIfOnline(user) {
   const lastActiveTime = user.lastSeen.toDate ? user.lastSeen.toDate().getTime() : new Date(user.lastSeen).getTime();
   const now = Date.now();
   const diffSeconds = (now - lastActiveTime) / 1000;
-  return user.online === true && diffSeconds < 45;
+  return user.online === true && diffSeconds < 75;
 }
 
 function formatLastActive(lastSeenTs) {
@@ -813,6 +813,10 @@ function formatLastActive(lastSeenTs) {
   const lastActive = lastSeenTs.toDate ? lastSeenTs.toDate() : new Date(lastSeenTs);
   const diffInSeconds = Math.floor((now - lastActive) / 1000);
   
+  if (diffInSeconds < 75) {
+    return "Online";
+  }
+
   const fifteenDaysInSeconds = 15 * 24 * 60 * 60;
   if (diffInSeconds > fifteenDaysInSeconds || diffInSeconds < 0) {
     return "Offline";
