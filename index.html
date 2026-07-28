@@ -103,7 +103,6 @@
   .contact-name { font-weight: 600; font-size: 15px; color: var(--text); }
   .contact-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
   
-  /* Fast & Catchy Scrolling Info Text Animation */
   @keyframes whatsappFastSlide {
     0% { opacity: 0; transform: translateY(-8px); }
     15% { opacity: 1; transform: translateY(0); }
@@ -132,7 +131,6 @@
   .unread-badge { background: var(--marigold); color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0; }
   .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 60px 24px; }
 
-  /* Floating Action Button (+) */
   .fab-btn {
     position: fixed;
     bottom: 24px;
@@ -155,7 +153,7 @@
   }
   .fab-btn:hover { transform: scale(1.05); }
 
-  /* ---------- Contact Info Profile Screen (WhatsApp Style) ---------- */
+  /* ---------- Contact Info Profile Screen ---------- */
   .profile-container { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 10px; padding-bottom: 30px; }
   .profile-hero { background: var(--panel); padding: 24px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; border-bottom: 1px solid var(--border); }
   .profile-big-avatar { width: 130px; height: 130px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 700; color: #fff; overflow: hidden; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 3px solid var(--panel); }
@@ -175,13 +173,15 @@
   .dropdown-menu {
     display: none; position: absolute; right: 0; top: 100%; background: var(--panel);
     border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-    width: 185px; z-index: 100; overflow: hidden; margin-top: 4px;
+    width: 220px; z-index: 100; overflow: hidden; margin-top: 4px;
   }
   .dropdown-menu.show { display: block; animation: appOpen 0.2s ease-out; }
   .dropdown-item {
-    padding: 12px 16px; font-size: 14px; color: var(--text); cursor: pointer;
-    display: flex; align-items: center; gap: 8px; transition: background 0.2s;
+    padding: 11px 16px; font-size: 13.5px; color: var(--text); cursor: pointer;
+    display: flex; align-items: center; gap: 10px; transition: background 0.2s;
+    border-bottom: 1px solid var(--border);
   }
+  .dropdown-item:last-child { border-bottom: none; }
   .dropdown-item:hover { background: var(--bg); }
   .dropdown-item.danger { color: #E53935; }
 
@@ -268,7 +268,7 @@
   <div class="all-users-list" id="allUsersListEl"></div>
 </div>
 
-<!-- ================= CONTACT INFO SCREEN (WhatsApp Style Details View) ================= -->
+<!-- ================= CONTACT INFO SCREEN ================= -->
 <div class="screen" id="contactInfoScreen">
   <header>
     <button class="back-btn" onclick="closeContactInfo()">←</button>
@@ -329,6 +329,9 @@
       <button class="three-dot-btn" onclick="toggleChatMenu(event)">⋮</button>
       <div class="dropdown-menu" id="chatDropdownMenu">
         <div class="dropdown-item" onclick="openContactInfoFromChat()">ℹ️ View Contact Info</div>
+        <div class="dropdown-item" onclick="openMediaLinksDocs()">🖼️ Media, link and docs</div>
+        <div class="dropdown-item" onclick="toggleNotificationSettings()">🔔 Notification settings</div>
+        <div class="dropdown-item" onclick="toggleFavouriteChat()">⭐ Add to favourites</div>
         <div class="dropdown-item danger" onclick="blockChatPartner()">🚫 Block User</div>
         <div class="dropdown-item" onclick="clearChatMessages()">🧹 Clear Chat</div>
         <div class="dropdown-item danger" onclick="deleteChatConversation()">🗑️ Delete Chat</div>
@@ -975,6 +978,21 @@ async function sendMessage() {
   } finally {
     sendBtn.disabled = false;
   }
+}
+
+async function openMediaLinksDocs() {
+  closeDropdowns();
+  alert('Media, link and docs feature coming soon!');
+}
+
+async function toggleNotificationSettings() {
+  closeDropdowns();
+  alert('Notification settings updated for this chat.');
+}
+
+async function toggleFavouriteChat() {
+  closeDropdowns();
+  alert(activePartner ? `${activePartner.displayName} has been added to favourites.` : 'Added to favourites.');
 }
 
 async function blockChatPartner() {
