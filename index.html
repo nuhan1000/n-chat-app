@@ -661,6 +661,7 @@ let activePartner = null;
 let activeFilter = 'all';
 let messagesUnsub = null;
 let convDocUnsub = null;
+let partnerUserUnsub = null;
 let usersUnsub = null;
 let conversationsUnsub = null;
 let pendingImageDataUrl = null;
@@ -706,6 +707,7 @@ function historyBack() {
     if (navHistory[navIndex] === 'welcomeScreen') {
       activePartner = null;
       activeConversationId = null;
+      if (partnerUserUnsub) { partnerUserUnsub(); partnerUserUnsub = null; }
       renderContactList();
     }
     isNavigatingHistory = false;
@@ -733,6 +735,7 @@ function closeCurrentConversation() {
   activeConversationId = null;
   if (messagesUnsub) { messagesUnsub(); messagesUnsub = null; }
   if (convDocUnsub) { convDocUnsub(); convDocUnsub = null; }
+  if (partnerUserUnsub) { partnerUserUnsub(); partnerUserUnsub = null; }
   navigateToScreen('welcomeScreen');
   renderContactList();
 }
@@ -804,7 +807,7 @@ function checkIfOnline(user) {
   const lastActiveTime = user.lastSeen.toDate ? user.lastSeen.toDate().getTime() : new Date(user.lastSeen).getTime();
   const now = Date.now();
   const diffSeconds = (now - lastActiveTime) / 1000;
-  return user.online === true && diffSeconds < 75;
+  return user.online === true && diffSeconds < 45;
 }
 
 function formatLastActive(lastSeenTs) {
@@ -813,7 +816,7 @@ function formatLastActive(lastSeenTs) {
   const lastActive = lastSeenTs.toDate ? lastSeenTs.toDate() : new Date(lastSeenTs);
   const diffInSeconds = Math.floor((now - lastActive) / 1000);
   
-  if (diffInSeconds < 75) {
+  if (diffInSeconds < 45) {
     return "Online";
   }
 
@@ -964,7 +967,7 @@ async function setPresence(online) {
 
 function startHeartbeat() {
   setPresence(true);
-  heartbeatInterval = setInterval(() => setPresence(true), 20000);
+  heartbeatInterval = setInterval(() => setPresence(true), 15000);
 }
 function stopHeartbeat() {
   if (heartbeatInterval) clearInterval(heartbeatInterval);
@@ -983,6 +986,7 @@ window.addEventListener('beforeunload', () => {
 function logout() {
   if (messagesUnsub) messagesUnsub();
   if (convDocUnsub) convDocUnsub();
+  if (partnerUserUnsub) partnerUserUnsub();
   if (usersUnsub) usersUnsub();
   if (conversationsUnsub) conversationsUnsub();
   stopHeartbeat();
@@ -1297,9 +1301,16 @@ function openChat(partner) {
   avatarEl.innerHTML = avatarHtml(partner);
   document.getElementById('messagesEl').innerHTML = '';
   
-  const isOnline = checkIfOnline(partner);
-  document.getElementById('chatPartnerStatus').textContent = isOnline ? 'Online' : formatLastActive(partner.lastSeen);
-  
+  // Real-time listener for partner user document to keep header status completely accurate
+  if (partnerUserUnsub) partnerUserUnsub();
+  partnerUserUnsub = db.collection('users').doc(partner.uid).onSnapshot(doc => {
+    if (doc.exists) {
+      activePartner = { uid: doc.id, ...doc.data() };
+      const isOnline = checkIfOnline(activePartner);
+      document.getElementById('chatPartnerStatus').textContent = isOnline ? 'Online' : formatLastActive(activePartner.lastSeen);
+    }
+  });
+
   navigateToScreen('chatScreen');
   renderContactList();
 
@@ -1688,7 +1699,7 @@ async function deleteChatConversation() {
   }
 }
 
-async function reportChatPartner() {
+async:: reportChatPartner() {
   closeDropdowns();
   if (!activePartner) return;
   if (confirm(`Do you want to report ${activePartner.displayName} for inappropriate behavior?`)) {
