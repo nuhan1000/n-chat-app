@@ -799,7 +799,6 @@ function avatarHtml(user) {
 }
 function avatarBg(user) { return (user && user.photoBase64) ? 'transparent' : colorForName(user ? user.displayName || '?' : '?'); }
 
-// Updated Presence & Time Calculation Logic
 function checkIfOnline(user) {
   if (!user || !user.lastSeen) return false;
   const lastActiveTime = user.lastSeen.toDate ? user.lastSeen.toDate().getTime() : new Date(user.lastSeen).getTime();
