@@ -174,9 +174,9 @@
         <div class="chat-header">
             <div class="chat-title">Talknu</div>
             <div class="header-actions">
-                <!-- ডার্ক/লাইট থিম টগল বাটন (থ্রি-ডট এর পাশে) -->
+                <!-- ব্রাইটনেস থিম টগল বাটন (থ্রি-ডট এর পাশে) -->
                 <button id="theme-toggle-btn" class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme">
-                    🌙
+                    🔆
                 </button>
                 <!-- থ্রি-ডট মেনু -->
                 <div class="three-dot-menu" title="Menu">⋮</div>
@@ -206,10 +206,10 @@
             
             if (body.classList.contains('dark-mode')) {
                 localStorage.setItem('theme', 'dark');
-                btn.innerHTML = '☀️';
+                btn.innerHTML = '☀️'; // ডার্ক মোডে থাকলে সূর্য বা উজ্জ্বল ব্রাইটনেস আইকন দেখাবে
             } else {
                 localStorage.setItem('theme', 'light');
-                btn.innerHTML = '🌙';
+                btn.innerHTML = '🔆'; // লাইট মোডে থাকলে ব্রাইটনেস ডিকন দেখাবে
             }
         }
 
@@ -223,7 +223,7 @@
                 btn.innerHTML = '☀️';
             } else {
                 document.body.classList.remove('dark-mode');
-                btn.innerHTML = '🌙';
+                btn.innerHTML = '🔆';
             }
         };
 
