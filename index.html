@@ -308,7 +308,10 @@
   .round-btn.plus { background: var(--border); color: var(--text); font-weight: 700; font-size: 20px; }
   .round-btn.mic { background: var(--border); color: var(--muted); }
   .round-btn.mic svg { width: 20px; height: 20px; fill: currentColor; }
-  .round-btn.mic.recording { background: #E53935; color: #fff; animation: pulse 1.2s infinite; }
+  
+  /* UPDATED: Voice recording button uses accent color (--marigold) instead of red */
+  .round-btn.mic.recording { background: var(--marigold); color: #fff; animation: pulse 1.2s infinite; }
+  
   .round-btn.send { background: var(--marigold); color: #fff; }
 
   @keyframes pulse {
