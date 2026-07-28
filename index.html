@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mocha Chat</title>
+    <title>Custom Palette Chat</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js for interactivity -->
@@ -13,19 +13,18 @@
             theme: {
                 extend: {
                     colors: {
-                        mochaPrimary: '#5C4033',
-                        mochaBackground: '#FAF6F0',
-                        mochaIncoming: '#EFEADF',
-                        mochaOutgoing: '#A38A79',
-                        mochaAccent: '#D4A373',
-                        mochaHover: '#E5DEC9'
+                        brandPrimary: '#FF385C',
+                        brandSecondary: '#008489',
+                        brandBackground: '#F8F9FA',
+                        brandIncoming: '#E6F4F4',
+                        brandOutgoing: '#FF385C'
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-mochaBackground text-zinc-800 h-screen flex flex-col overflow-hidden" x-data="chatApp()">
+<body class="bg-brandBackground text-zinc-800 h-screen flex flex-col overflow-hidden" x-data="chatApp()">
 
     <!-- App Container -->
     <div class="flex h-full w-full max-w-7xl mx-auto shadow-xl my-auto rounded-none md:rounded-2xl overflow-hidden border border-zinc-200">
@@ -33,7 +32,7 @@
         <!-- Sidebar: Chat List -->
         <div :class="{'hidden md:flex': activeChat, 'flex': !activeChat}" class="w-full md:w-80 bg-white border-r border-zinc-200 flex-col">
             <!-- Sidebar Header -->
-            <div class="p-4 bg-mochaPrimary text-white flex justify-between items-center">
+            <div class="p-4 bg-brandSecondary text-white flex justify-between items-center">
                 <h1 class="font-bold text-lg tracking-wide">Chats</h1>
                 <div class="flex space-x-3 text-sm opacity-90">
                     <span>Settings</span>
@@ -42,16 +41,16 @@
 
             <!-- Search Bar -->
             <div class="p-3 bg-white border-b border-zinc-100">
-                <input type="text" placeholder="Search or start new chat" class="w-full px-3 py-2 bg-mochaBackground rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-mochaPrimary">
+                <input type="text" placeholder="Search or start new chat" class="w-full px-3 py-2 bg-brandBackground rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-brandSecondary">
             </div>
 
             <!-- Chat Contacts List -->
             <div class="flex-1 overflow-y-auto divide-y divide-zinc-100">
                 <template x-for="chat in chats" :key="chat.id">
                     <div @click="selectChat(chat)" 
-                         :class="{'bg-mochaBackground': activeChat && activeChat.id === chat.id}"
-                         class="flex items-center px-4 py-3 cursor-pointer hover:bg-mochaBackground transition-colors">
-                        <div class="w-12 h-12 rounded-full bg-mochaPrimary text-white flex items-center justify-center font-bold text-lg mr-3 shadow-sm" x-text="chat.avatar"></div>
+                         :class="{'bg-brandBackground': activeChat && activeChat.id === chat.id}"
+                         class="flex items-center px-4 py-3 cursor-pointer hover:bg-brandBackground transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-brandSecondary text-white flex items-center justify-center font-bold text-lg mr-3 shadow-sm" x-text="chat.avatar"></div>
                         <div class="flex-1 min-w-0">
                             <div class="flex justify-between items-baseline">
                                 <h3 class="font-semibold text-zinc-900 truncate" x-text="chat.name"></h3>
@@ -65,19 +64,19 @@
         </div>
 
         <!-- Main Chat Area -->
-        <div :class="{'flex': activeChat, 'hidden md:flex': !activeChat}" class="flex-1 flex-col bg-[#F9F6F0]">
+        <div :class="{'flex': activeChat, 'hidden md:flex': !activeChat}" class="flex-1 flex-col bg-[#F4F7F6]">
             
             <template x-if="activeChat">
                 <div class="flex flex-col h-full">
                     <!-- Chat Header -->
-                    <div class="p-4 bg-mochaPrimary text-white flex items-center justify-between shadow-sm">
+                    <div class="p-4 bg-brandSecondary text-white flex items-center justify-between shadow-sm">
                         <div class="flex items-center">
                             <button @click="activeChat = null" class="md:hidden mr-3 text-white focus:outline-none">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                                 </svg>
                             </button>
-                            <div class="w-10 h-10 rounded-full bg-white text-mochaPrimary flex items-center justify-center font-bold mr-3" x-text="activeChat.avatar"></div>
+                            <div class="w-10 h-10 rounded-full bg-white text-brandSecondary flex items-center justify-center font-bold mr-3" x-text="activeChat.avatar"></div>
                             <div>
                                 <h2 class="font-semibold text-base leading-tight" x-text="activeChat.name"></h2>
                                 <span class="text-xs opacity-80">Online</span>
@@ -96,7 +95,7 @@
                     <div class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col">
                         <template x-for="msg in activeChat.messages" :key="msg.id">
                             <div :class="msg.sender === 'me' ? 'self-end' : 'self-start'" class="max-w-[75%] md:max-w-[60%]">
-                                <div :class="msg.sender === 'me' ? 'bg-mochaOutgoing text-white rounded-l-xl rounded-tr-xl' : 'bg-mochaIncoming text-zinc-800 rounded-r-xl rounded-tl-xl'" 
+                                <div :class="msg.sender === 'me' ? 'bg-brandPrimary text-white rounded-l-xl rounded-tr-xl' : 'bg-brandIncoming text-zinc-800 rounded-r-xl rounded-tl-xl'" 
                                      class="p-3 shadow-sm text-sm relative">
                                     <p x-text="msg.text" class="leading-relaxed"></p>
                                     <div class="flex justify-end items-center mt-1 space-x-1">
@@ -115,9 +114,9 @@
                         <input type="text" 
                                x-model="newMessageText" 
                                @keydown.enter="sendMessage()" 
-                               placeholder="Type a warm message..." 
-                               class="flex-1 px-4 py-2.5 bg-mochaBackground rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-mochaPrimary">
-                        <button @click="sendMessage()" class="bg-mochaAccent hover:opacity-90 text-white p-2.5 rounded-full shadow-sm transition-transform active:scale-95 flex items-center justify-center">
+                               placeholder="Type a message..." 
+                               class="flex-1 px-4 py-2.5 bg-brandBackground rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-brandSecondary">
+                        <button @click="sendMessage()" class="bg-brandSecondary hover:opacity-90 text-white p-2.5 rounded-full shadow-sm transition-transform active:scale-95 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                             </svg>
@@ -129,9 +128,9 @@
             <!-- Empty State when no chat is selected -->
             <template x-if="!activeChat">
                 <div class="flex-1 flex flex-col items-center justify-center text-zinc-400 p-6 text-center">
-                    <div class="w-20 h-20 bg-mochaIncoming rounded-full flex items-center justify-center mb-4 text-mochaPrimary font-bold text-2xl shadow-inner">☕</div>
+                    <div class="w-20 h-20 bg-brandIncoming rounded-full flex items-center justify-center mb-4 text-brandSecondary font-bold text-2xl shadow-inner">💬</div>
                     <h3 class="text-lg font-medium text-zinc-700">Select a conversation</h3>
-                    <p class="text-sm max-w-sm mt-1">Choose from your chats on the left to start messaging with a warm, eye-soothing mocha theme.</p>
+                    <p class="text-sm max-w-sm mt-1">Choose from your chats on the left to start messaging with your custom color theme.</p>
                 </div>
             </template>
 
@@ -146,24 +145,24 @@
                 chats: [
                     {
                         id: 1,
-                        name: 'Nusrat Jahan',
-                        avatar: 'NJ',
-                        time: '11:20 AM',
-                        lastMessage: 'This warm brown tone is so unique and cozy!',
+                        name: 'Farhan Ahmed',
+                        avatar: 'FA',
+                        time: '12:15 PM',
+                        lastMessage: 'This custom color combination looks amazing!',
                         messages: [
-                            { id: 1, sender: 'them', text: 'Hey! How do you like this new look?', time: '11:15 AM' },
-                            { id: 2, sender: 'me', text: 'It feels completely different from WhatsApp and very easy on the eyes.', time: '11:18 AM' },
-                            { id: 3, sender: 'them', text: 'This warm brown tone is so unique and cozy!', time: '11:20 AM' }
+                            { id: 1, sender: 'them', text: 'Hey, how do you like these custom colors?', time: '12:10 PM' },
+                            { id: 2, sender: 'me', text: 'Completely unique and totally away from WhatsApp!', time: '12:12 PM' },
+                            { id: 3, sender: 'them', text: 'This custom color combination looks amazing!', time: '12:15 PM' }
                         ]
                     },
                     {
                         id: 2,
-                        name: 'Rahim Uddin',
-                        avatar: 'RU',
+                        name: 'Sumaiya Akter',
+                        avatar: 'SA',
                         time: 'Yesterday',
-                        lastMessage: 'Let me know when you are free.',
+                        lastMessage: 'Check the file when you are online.',
                         messages: [
-                            { id: 1, sender: 'them', text: 'Let me know when you are free.', time: 'Yesterday' }
+                            { id: 1, sender: 'them', text: 'Check the file when you are online.', time: 'Yesterday' }
                         ]
                     }
                 ],
@@ -193,7 +192,7 @@
                             this.activeChat.messages.push({
                                 id: Date.now() + 1,
                                 sender: 'them',
-                                text: `Received: "${textCopy}"`,
+                                text: `Echo: "${textCopy}"`,
                                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                             });
                         }
