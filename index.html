@@ -147,6 +147,60 @@
   .icon-btn-ghost:hover { background: var(--bg); color: var(--text); }
   .icon-btn-ghost:disabled { opacity: 0.3; cursor: default; }
 
+  /* Recent Contacts Bubble Row Style */
+  .recent-bubbles-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
+    scrollbar-width: none; /* Firefox */
+  }
+  .recent-bubbles-row::-webkit-scrollbar { display: none; /* Safari and Chrome */ }
+  .recent-bubble-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .recent-bubble-avatar-wrap {
+    position: relative;
+    width: 50px;
+    height: 50px;
+  }
+  .recent-bubble-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+    overflow: hidden;
+    border: 2px solid var(--marigold);
+  }
+  .recent-bubble-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .recent-bubble-name {
+    font-size: 11px;
+    color: var(--text);
+    max-width: 56px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+  }
+
   .search-filter-container { padding: 10px 14px; background: var(--panel); border-bottom: 1px solid var(--border); flex-shrink: 0; }
   .search-box { display: flex; align-items: center; background: var(--bg); border-radius: 22px; padding: 8px 14px; gap: 10px; border: 1px solid transparent; }
   .search-box:focus-within { border-color: var(--marigold); background: var(--panel); }
@@ -273,6 +327,23 @@
   .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 4px 8px; cursor: pointer; display: none; z-index: 51; }
   @media(max-width: 768px) { .back-btn { display: flex; align-items: center; justify-content: center; } }
 
+  /* Thin navigation indicator style */
+  .chat-nav-indicator {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    z-index: 51;
+  }
+  .chat-nav-indicator:hover { opacity: 1; }
+
   .chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer; padding: 4px; z-index: 51; }
   .chat-partner-name { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 16px; color: #fff; }
   .chat-partner-status { font-size: 11px; color: rgba(255, 255, 255, 0.75); }
@@ -294,9 +365,35 @@
   .composer { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 50; }
   .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: var(--bg); color: var(--text); }
   .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; }
-  .round-btn.plus { background: var(--border); color: var(--text); font-weight: 700; font-size: 20px; transition: background 0.2s; }
+  
+  /* Improved Floating "+" Button Icon style */
+  .round-btn.plus { background: var(--border); color: var(--text); font-weight: 400; font-size: 24px; transition: background 0.2s, color 0.2s; }
   .round-btn.plus:hover { background: var(--marigold); color: #fff; }
-  .round-btn.mic { background: var(--border); color: var(--muted); }
+  .sidebar-bottom-fab {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: var(--marigold);
+    color: #fff;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 300;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    border: none;
+    cursor: pointer;
+    z-index: 20;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .sidebar-bottom-fab:hover { transform: scale(1.06); background: var(--marigold-hover); }
+
+  /* Hover Effect for Audio Record Button */
+  .round-btn.mic { background: var(--border); color: var(--muted); transition: background 0.2s, color 0.2s; }
+  .round-btn.mic:hover { background: var(--marigold); color: #fff; }
   .round-btn.mic svg { width: 20px; height: 20px; fill: currentColor; }
   .round-btn.mic.recording { background: #ef4444; color: #fff; animation: pulse 1.2s infinite; }
   .round-btn.send { background: var(--marigold); color: #fff; font-weight: 700; }
@@ -350,10 +447,13 @@
       <div class="header-actions">
         <button class="icon-btn-ghost" id="navBackBtn" onclick="historyBack()" title="Back" disabled>◀</button>
         <button class="icon-btn-ghost" id="navForwardBtn" onclick="historyForward()" title="Forward" disabled>▶</button>
-        <button class="icon-btn-ghost" onclick="openUserList()" title="Start New Chat">➕</button>
+        <button class="icon-btn-ghost" onclick="openUserList()" title="Start New Chat">?</button>
         <button class="icon-btn-ghost" onclick="openSettings()" title="Settings">⋮</button>
       </div>
     </div>
+
+    <!-- Recent Contacts Bubble Row -->
+    <div class="recent-bubbles-row" id="recentBubblesRow"></div>
 
     <div class="search-filter-container">
       <div class="search-box">
@@ -369,7 +469,7 @@
 
     <div class="contact-list" id="contactList"></div>
 
-    <button class="sidebar-bottom-fab" onclick="openUserList()" title="Add someone to chat">➕</button>
+    <button class="sidebar-bottom-fab" onclick="openUserList()" title="Add someone to chat">?</button>
   </div>
 
   <div class="main-pane" id="mainPane">
@@ -380,7 +480,7 @@
         <h2 style="font-family:'Baloo Da 2',sans-serif; font-size:26px; color:var(--text);">Talknu for Web</h2>
         <p style="max-width:380px; font-size:14px;">Send and receive messages seamlessly across your devices. Select a chat from the left panel to begin.</p>
         <div class="welcome-placeholder-actions">
-          <button class="welcome-action-btn" onclick="openUserList()"><span>➕</span> Add contact</button>
+          <button class="welcome-action-btn" onclick="openUserList()"><span>?</span> Add contact</button>
           <button class="welcome-action-btn" onclick="openSettings()"><span>⚙️</span> Settings</button>
         </div>
       </div>
@@ -452,6 +552,7 @@
     <div class="screen" id="chatScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
+        <button class="chat-nav-indicator" onclick="closeCurrentConversation()" title="Back to Chats">?</button>
         <div class="chat-header-info" onclick='openContactInfo(activePartner)'>
           <div class="avatar" id="chatAvatar" style="width:38px;height:38px;font-size:14px;"></div>
           <div>
@@ -461,7 +562,12 @@
         </div>
         
         <div style="display: flex; align-items: center; gap: 4px;">
-          <button class="three-dot-btn" id="headerThemeToggleBtn" onclick="toggleThemeQuick()" title="Toggle Theme" style="font-size: 18px;">🌙</button>
+          <!-- Theme Toggle Icon replaced with brightness (sun) icon -->
+          <button class="three-dot-btn" id="headerThemeToggleBtn" onclick="toggleThemeQuick()" title="Toggle Theme" style="font-size: 18px;">☀️</button>
+          
+          <!-- Close Chat Button (✕) next to the three-dot menu -->
+          <button class="three-dot-btn" onclick="closeCurrentConversation()" title="Close Chat" style="font-size: 18px;">✕</button>
+
           <div class="menu-wrapper">
             <button class="three-dot-btn" onclick="toggleChatMenu(event)">⋮</button>
             <div class="dropdown-menu" id="chatDropdownMenu">
@@ -491,7 +597,7 @@
         <input type="file" id="audioInput" accept="audio/*" onchange="onAudioSelected(event)" />
 
         <div class="attach-wrapper">
-          <button class="round-btn plus" onclick="toggleAttachMenu(event)" title="Attach">＋</button>
+          <button class="round-btn plus" onclick="toggleAttachMenu(event)" title="Attach">?</button>
           <div class="attach-menu" id="attachMenu">
             <div class="attach-item" onclick="document.getElementById('docInput').click(); closeAttachMenu();"><span>📄</span> Documents</div>
             <div class="attach-item" onclick="document.getElementById('imageInput').click(); closeAttachMenu();"><span>🖼️</span> Photos & videos</div>
@@ -606,6 +712,15 @@ function updateNavButtons() {
   if (fwdBtn) fwdBtn.disabled = navIndex >= navHistory.length - 1;
 }
 
+function closeCurrentConversation() {
+  activePartner = null;
+  activeConversationId = null;
+  if (messagesUnsub) { messagesUnsub(); messagesUnsub = null; }
+  if (convDocUnsub) { convDocUnsub(); convDocUnsub = null; }
+  navigateToScreen('welcomeScreen');
+  renderContactList();
+}
+
 function toggleChatMenu(event) {
   event.stopPropagation();
   const menu = document.getElementById('chatDropdownMenu');
@@ -640,7 +755,7 @@ function changeTheme(themeName) {
     document.getElementById('headerThemeToggleBtn').innerText = '☀️';
   } else {
     document.documentElement.removeAttribute('data-theme');
-    document.getElementById('headerThemeToggleBtn').innerText = '🌙';
+    document.getElementById('headerThemeToggleBtn').innerText = '☀️';
   }
   localStorage.setItem('talknu_theme_mode', themeName);
   const selector = document.getElementById('themeSelector');
@@ -670,6 +785,7 @@ function avatarHtml(user) {
 }
 function avatarBg(user) { return (user && user.photoBase64) ? 'transparent' : colorForName(user ? user.displayName || '?' : '?'); }
 
+/* Accurate Online / Offline Status System */
 function formatLastActive(lastSeenTs) {
   if (!lastSeenTs) return "Offline";
   
@@ -678,25 +794,25 @@ function formatLastActive(lastSeenTs) {
   const diffInSeconds = Math.floor((now - lastActive) / 1000);
   const diffInDays = Math.floor(diffInSeconds / (60 * 60 * 24));
 
-  if (diffInDays >= 180) {
+  if (diffInDays >= 30) {
     return "Offline";
   }
 
   if (diffInDays > 0) {
-    return `${diffInDays} din agee active chhilo`;
+    return `Active ${diffInDays} days ago`;
   }
 
   const diffInHours = Math.floor(diffInSeconds / 3600);
   if (diffInHours > 0) {
-    return `${diffInHours} ghonta agee active chhilo`;
+    return `Active ${diffInHours} hours ago`;
   }
 
   const diffInMinutes = Math.floor(diffInSeconds / 60);
   if (diffInMinutes > 0) {
-    return `${diffInMinutes} minute agee active chhilo`;
+    return `Active ${diffInMinutes} minutes ago`;
   }
 
-  return "Ekhuni active chhilo";
+  return "Online";
 }
 
 function timeAgoLabel(ts) {
@@ -820,9 +936,10 @@ async function submitAuth() {
 async function setPresence(online) {
   if (!currentUser) return;
   try {
-    await db.collection('users').doc(currentUser.uid).update({
-      online, lastSeen: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    const updateData = { lastSeen: firebase.firestore.FieldValue.serverTimestamp() };
+    if (online) updateData.online = true;
+    else updateData.online = false;
+    await db.collection('users').doc(currentUser.uid).update(updateData);
   } catch (e) {}
 }
 
@@ -832,14 +949,24 @@ function startHeartbeat() {
 }
 function stopHeartbeat() {
   if (heartbeatInterval) clearInterval(heartbeatInterval);
+  setPresence(false);
 }
+
+window.addEventListener('beforeunload', () => {
+  if (currentUser) {
+    // Synchronously or via navigator.sendBeacon if needed, but best effort:
+    db.collection('users').doc(currentUser.uid).update({
+      online: false,
+      lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }
+});
 
 function logout() {
   if (messagesUnsub) messagesUnsub();
   if (convDocUnsub) convDocUnsub();
   if (usersUnsub) usersUnsub();
   if (conversationsUnsub) conversationsUnsub();
-  setPresence(false);
   stopHeartbeat();
   auth.signOut();
 }
@@ -879,6 +1006,7 @@ function listenContacts() {
 
   usersUnsub = db.collection('users').onSnapshot(snap => {
     allUsers = snap.docs.map(d => d.data()).filter(u => u.uid !== currentUser.uid);
+    renderRecentBubbles();
     renderContactList();
     renderAllUsersList();
   });
@@ -888,6 +1016,7 @@ function listenContacts() {
     .onSnapshot(snap => {
       myConversations = {};
       snap.docs.forEach(d => { myConversations[d.id] = d.data(); });
+      renderRecentBubbles();
       renderContactList();
     });
 }
@@ -901,6 +1030,53 @@ function setFilter(filterType, btnEl) {
 
 function filterContactList() {
   renderContactList();
+}
+
+/* Recent Contacts Bubble Row Rendering */
+function renderRecentBubbles() {
+  const rowEl = document.getElementById('recentBubblesRow');
+  if (!rowEl) return;
+
+  // Combine recently contacted users and currently online users
+  let mapUsers = {};
+  
+  // First add online users
+  allUsers.filter(u => u.online).forEach(u => {
+    mapUsers[u.uid] = { u, score: 2000000 };
+  });
+
+  // Then add/update with recently messaged users
+  allUsers.forEach(u => {
+    const convId = [currentUser.uid, u.uid].sort().join('_');
+    const conv = myConversations[convId];
+    if (conv && conv.lastUpdated) {
+      const ts = conv.lastUpdated.toMillis();
+      if (mapUsers[u.uid]) {
+        mapUsers[u.uid].score = Math.max(mapUsers[u.uid].score, ts + 1000000);
+      } else {
+        mapUsers[u.uid] = { u, score: ts };
+      }
+    }
+  });
+
+  let bubbleArr = Object.values(mapUsers);
+  bubbleArr.sort((a, b) => b.score - a.score);
+
+  if (bubbleArr.length === 0) {
+    rowEl.style.display = 'none';
+    return;
+  }
+
+  rowEl.style.display = 'flex';
+  rowEl.innerHTML = bubbleArr.map(item => `
+    <div class="recent-bubble-item" onclick='openChat(${JSON.stringify(item.u)})'>
+      <div class="recent-bubble-avatar-wrap">
+        <div class="recent-bubble-avatar" style="background:${avatarBg(item.u)}">${avatarHtml(item.u)}</div>
+        ${item.u.online ? '<div class="online-dot"></div>' : ''}
+      </div>
+      <div class="recent-bubble-name">${escapeHtml(item.u.displayName)}</div>
+    </div>
+  `).join('');
 }
 
 function renderContactList() {
@@ -963,7 +1139,7 @@ function renderContactList() {
       </div>
       <div class="contact-main">
         <div class="contact-top-row">
-          <div class="contact-name">${r.u.displayName}</div>
+          <div class="contact-name">${escapeHtml(r.u.displayName)}</div>
           <div class="contact-time">${r.timeLabel}</div>
         </div>
         <div class="contact-bottom-row">
@@ -995,7 +1171,7 @@ function renderAllUsersList() {
       </div>
       <div class="contact-main">
         <div class="contact-top-row">
-          <div class="contact-name">${u.displayName}</div>
+          <div class="contact-name">${escapeHtml(u.displayName)}</div>
         </div>
         <div class="contact-bottom-row">
           <div class="contact-sub">${u.online ? 'Online' : formatLastActive(u.lastSeen)}</div>
@@ -1015,7 +1191,7 @@ function openContactInfo(userObj) {
   container.innerHTML = `
     <div class="profile-hero">
       <div class="profile-big-avatar" style="background:${avatarBg(userObj)}">${avatarHtml(userObj)}</div>
-      <div class="profile-name">${userObj.displayName}</div>
+      <div class="profile-name">${escapeHtml(userObj.displayName)}</div>
       <div class="profile-status-text">📱 ${userObj.phone || 'No phone'}</div>
     </div>
 
@@ -1498,4 +1674,3 @@ async function reportChatPartner() {
 </script>
 </body>
 </html>
-```[cite: 4]
