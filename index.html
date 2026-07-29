@@ -392,8 +392,30 @@
   .bubble .ticks.seen { color: #93C5FD; }
   .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; background: var(--panel); }
   
-  .composer { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 50; }
-  .composer input[type="text"] { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; background: var(--bg); color: var(--text); }
+  /* FIXED: Composer & Send Button alignment and overflow fix for mobile screen */
+  .composer { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    padding: 10px 14px; 
+    background: var(--panel); 
+    border-top: 1px solid var(--border); 
+    flex-shrink: 0; 
+    position: relative; 
+    z-index: 50; 
+    width: 100%;
+    overflow: hidden;
+  }
+  .composer input[type="text"] { 
+    flex: 1; 
+    min-width: 0; 
+    border: 1.5px solid var(--border); 
+    border-radius: 22px; 
+    padding: 10px 16px; 
+    font-size: 14px; 
+    background: var(--bg); 
+    color: var(--text); 
+  }
   .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; }
   
   .round-btn.plus { background: var(--border); color: var(--text); font-weight: 400; font-size: 24px; transition: background 0.2s, color 0.2s; }
@@ -424,7 +446,7 @@
   .round-btn.mic:hover { background: var(--marigold); color: #fff; }
   .round-btn.mic svg { width: 20px; height: 20px; fill: currentColor; }
   .round-btn.mic.recording { background: #ef4444; color: #fff; animation: pulse 1.2s infinite; }
-  .round-btn.send { background: var(--marigold); color: #fff; font-weight: 700; }
+  .round-btn.send { background: var(--marigold); color: #fff; font-weight: 700; flex-shrink: 0; }
   .round-btn.send:hover { background: var(--marigold-hover); }
 
   @keyframes pulse {
@@ -945,9 +967,27 @@ function navigateToScreen(screenId, pushToStack = true) {
     navHistory = navHistory.slice(0, navIndex + 1);
     navHistory.push(screenId);
     navIndex = navHistory.length - 1;
+    // Push state for hardware/software mobile back navigation support
+    history.pushState({ screenId, navIndex }, '');
   }
   updateNavButtons();
 }
+
+// Mobile Hardware/Software Navigation Back Button Support Handler
+window.addEventListener('popstate', (event) => {
+  if (navIndex > 0) {
+    navIndex--;
+    isNavigatingHistory = true;
+    navigateToScreen(navHistory[navIndex], false);
+    if (navHistory[navIndex] === 'welcomeScreen') {
+      activePartner = null;
+      activeConversationId = null;
+      if (partnerUserUnsub) { partnerUserUnsub(); partnerUserUnsub = null; }
+      renderContactList();
+    }
+    isNavigatingHistory = false;
+  }
+});
 
 function historyBack() {
   if (navIndex > 0) {
