@@ -344,7 +344,7 @@
   .privacy-label-group div:first-child { font-weight: 600; color: var(--text); }
   .privacy-label-group div:last-child { font-size: 12px; color: var(--muted); }
 
-  #chatScreen header, #userListScreen header, #contactInfoScreen header, #settingsScreen header, #privacyScreen header, #mediaViewerScreen header {
+  #chatScreen header, #userListScreen header, #contactInfoScreen header, #settingsScreen header, #privacyScreen header, #accountScreen header, #chatsScreen header, #notificationsScreen header, #storageScreen header, #helpScreen header, #mediaViewerScreen header {
     background: var(--teal); color: #fff; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative; z-index: 50; border-bottom: 1px solid var(--border);
   }
@@ -552,21 +552,53 @@
           <button class="btn-primary" onclick="saveProfileChanges()">Update Profile</button>
         </div>
 
+        <!-- WhatsApp Main Settings Hub Options -->
+        <div class="settings-card" style="cursor: pointer;" onclick="openAccountSettings()">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>🔑 Account</h3>
+            <span style="color: var(--muted);">›</span>
+          </div>
+          <div style="font-size: 13px; color: var(--muted);">Security notifications, change number, request account info</div>
+        </div>
+
         <div class="settings-card" style="cursor: pointer;" onclick="openPrivacySettings()">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3>🔒 Privacy Settings</h3>
+            <h3>🔒 Privacy</h3>
             <span style="color: var(--muted);">›</span>
           </div>
           <div style="font-size: 13px; color: var(--muted);">Control who can see your personal info, read receipts & disappearing messages</div>
         </div>
 
-        <div class="settings-card">
-          <h3>Theme Preferences</h3>
-          <div class="settings-label">Select App Theme</div>
-          <select class="settings-select" id="themeSelector" onchange="changeTheme(this.value)">
-            <option value="light">☀️ Light Mode</option>
-            <option value="dark">🌙 Dark Mode</option>
-          </select>
+        <div class="settings-card" style="cursor: pointer;" onclick="openChatsSettings()">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>💬 Chats</h3>
+            <span style="color: var(--muted);">›</span>
+          </div>
+          <div style="font-size: 13px; color: var(--muted);">Theme, wallpapers, chat history, enter to send</div>
+        </div>
+
+        <div class="settings-card" style="cursor: pointer;" onclick="openNotificationsSettings()">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>🔔 Notifications</h3>
+            <span style="color: var(--muted);">›</span>
+          </div>
+          <div style="font-size: 13px; color: var(--muted);">Message, group & call tone alerts</div>
+        </div>
+
+        <div class="settings-card" style="cursor: pointer;" onclick="openStorageSettings()">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>💾 Storage and Data</h3>
+            <span style="color: var(--muted);">›</span>
+          </div>
+          <div style="font-size: 13px; color: var(--muted);">Network usage, auto-download media settings</div>
+        </div>
+
+        <div class="settings-card" style="cursor: pointer;" onclick="openHelpSettings()">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>❓ Help</h3>
+            <span style="color: var(--muted);">›</span>
+          </div>
+          <div style="font-size: 13px; color: var(--muted);">Help center, contact us, app info</div>
         </div>
 
         <div class="settings-card">
@@ -580,7 +612,7 @@
     <div class="screen" id="privacyScreen">
       <header>
         <button class="back-btn" onclick="historyBack()">←</button>
-        <div class="app-title" style="font-size:18px; color: #fff;">Privacy Settings</div>
+        <div class="app-title" style="font-size:18px; color: #fff;">Privacy</div>
         <div style="width:24px;"></div>
       </header>
       <div class="settings-content">
@@ -657,6 +689,196 @@
           <h3 style="color: #ef4444;">Delete My Account</h3>
           <div style="font-size: 13px; color: var(--muted);">Deleting your account removes your profile, chat history and settings permanently from Talknu.</div>
           <button class="btn-danger" onclick="deleteMyAccount()">🗑️ Delete Account</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WhatsApp Account Settings Screen -->
+    <div class="screen" id="accountScreen">
+      <header>
+        <button class="back-btn" onclick="historyBack()">←</button>
+        <div class="app-title" style="font-size:18px; color: #fff;">Account</div>
+        <div style="width:24px;"></div>
+      </header>
+      <div class="settings-content">
+        <div class="settings-card">
+          <h3>Security Notifications</h3>
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Show security notifications on this device</div>
+              <div>Get notified when security code changes</div>
+            </div>
+            <select class="settings-select" id="accountSecNotif" style="width: 100px;">
+              <option value="on">On</option>
+              <option value="off">Off</option>
+            </select>
+          </div>
+        </div>
+        <div class="settings-card">
+          <h3>Account Details</h3>
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Request Account Info</div>
+              <div>Get a report of your account settings</div>
+            </div>
+            <button class="btn-primary" style="width: 120px; padding: 6px 0; font-size: 13px;" onclick="alert('Account info report requested.')">Request</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WhatsApp Chats Settings Screen -->
+    <div class="screen" id="chatsScreen">
+      <header>
+        <button class="back-btn" onclick="historyBack()">←</button>
+        <div class="app-title" style="font-size:18px; color: #fff;">Chats</div>
+        <div style="width:24px;"></div>
+      </header>
+      <div class="settings-content">
+        <div class="settings-card">
+          <h3>Display Settings</h3>
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Theme</div>
+              <div>Select app color scheme</div>
+            </div>
+            <select class="settings-select" id="chatsThemeSelector" style="width: 140px;" onchange="changeTheme(this.value)">
+              <option value="light">☀️ Light</option>
+              <option value="dark">🌙 Dark</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <h3>Chat Settings</h3>
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Enter is send</div>
+              <div>Enter key will send your message</div>
+            </div>
+            <select class="settings-select" style="width: 100px;">
+              <option value="on">On</option>
+              <option value="off">Off</option>
+            </select>
+          </div>
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Media visibility</div>
+              <div>Show newly downloaded media in gallery</div>
+            </div>
+            <select class="settings-select" style="width: 100px;">
+              <option value="on">On</option>
+              <option value="off">Off</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WhatsApp Notifications Settings Screen -->
+    <div class="screen" id="notificationsScreen">
+      <header>
+        <button class="back-btn" onclick="historyBack()">←</button>
+        <div class="app-title" style="font-size:18px; color: #fff;">Notifications</div>
+        <div style="width:24px;"></div>
+      </header>
+      <div class="settings-content">
+        <div class="settings-card">
+          <h3>Message Notifications</h3>
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Conversation Tones</div>
+              <div>Play sounds for incoming and outgoing messages</div>
+            </div>
+            <select class="settings-select" style="width: 100px;">
+              <option value="on">On</option>
+              <option value="off">Off</option>
+            </select>
+          </div>
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Notification Tone</div>
+              <div>Default ringtone</div>
+            </div>
+            <select class="settings-select" style="width: 120px;">
+              <option value="chime">Chime</option>
+              <option value="classic">Classic</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WhatsApp Storage and Data Settings Screen -->
+    <div class="screen" id="storageScreen">
+      <header>
+        <button class="back-btn" onclick="historyBack()">←</button>
+        <div class="app-title" style="font-size:18px; color: #fff;">Storage and Data</div>
+        <div style="width:24px;"></div>
+      </header>
+      <div class="settings-content">
+        <div class="settings-card">
+          <h3>Network Usage</h3>
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Storage Usage</div>
+              <div>Manage data storage on device</div>
+            </div>
+            <button class="btn-primary" style="width: 110px; padding: 6px 0; font-size: 13px;" onclick="alert('Storage usage: 24.5 MB used')">Manage</button>
+          </div>
+        </div>
+        <div class="settings-card">
+          <h3>Media Auto-Download</h3>
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Photos</div>
+              <div>Auto-download over cellular & Wi-Fi</div>
+            </div>
+            <select class="settings-select" style="width: 110px;">
+              <option value="wifi">Wi-Fi</option>
+              <option value="all">All media</option>
+              <option value="none">None</option>
+            </select>
+          </div>
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Documents</div>
+              <div>Auto-download files</div>
+            </div>
+            <select class="settings-select" style="width: 110px;">
+              <option value="wifi">Wi-Fi</option>
+              <option value="all">All media</option>
+              <option value="none">None</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WhatsApp Help Settings Screen -->
+    <div class="screen" id="helpScreen">
+      <header>
+        <button class="back-btn" onclick="historyBack()">←</button>
+        <div class="app-title" style="font-size:18px; color: #fff;">Help</div>
+        <div style="width:24px;"></div>
+      </header>
+      <div class="settings-content">
+        <div class="settings-card">
+          <h3>Support Info</h3>
+          <div class="privacy-item" style="cursor:pointer;" onclick="alert('Opening Help Center website...')">
+            <div class="privacy-label-group">
+              <div>Help Center</div>
+              <div>Get answers, contact us</div>
+            </div>
+            <span style="color:var(--muted);">›</span>
+          </div>
+          <div class="privacy-item" style="cursor:pointer;" onclick="alert('Talknu Web v2.5.0 - Powered by Firebase')">
+            <div class="privacy-label-group">
+              <div>App Info</div>
+              <div>Version details and licenses</div>
+            </div>
+            <span style="color:var(--muted);">›</span>
+          </div>
         </div>
       </div>
     </div>
@@ -884,6 +1106,8 @@ function changeTheme(themeName) {
   localStorage.setItem('talknu_theme_mode', themeName);
   const selector = document.getElementById('themeSelector');
   if (selector) selector.value = themeName;
+  const chatsSelector = document.getElementById('chatsThemeSelector');
+  if (chatsSelector) chatsSelector.value = themeName;
 }
 
 function toggleThemeQuick() {
@@ -1115,7 +1339,7 @@ function logout() {
   auth.signOut();
 }
 
-// 100% Guaranteed Session Check: Bypasses Auth Screen instantly if session exists
+// 100% Guaranteed Session Check: Bypasses Auth Screen instantly if session exists[cite: 1]
 auth.onAuthStateChanged(async (user) => {
   const authEl = document.getElementById('authScreen');
   const appEl = document.getElementById('appContainer');
@@ -1341,7 +1565,6 @@ function openContactInfo(userObj) {
   const isOnline = checkIfOnline(userObj);
   const statusStr = isOnline ? 'Online' : formatLastActive(userObj);
 
-  // Apply privacy settings check for profile photo and status view
   let displayAvatarHtml = avatarHtml(userObj);
   let displayAvatarBg = avatarBg(userObj);
   if (userObj.privacy && userObj.privacy.photo === 'nobody') {
@@ -1388,6 +1611,7 @@ function openSettings() {
   navigateToScreen('settingsScreen');
 }
 
+function openAccountSettings() { navigateToScreen('accountScreen'); }
 function openPrivacySettings() {
   if (currentUser.privacy) {
     document.getElementById('privLastSeen').value = currentUser.privacy.lastSeen || 'all';
@@ -1398,6 +1622,10 @@ function openPrivacySettings() {
   }
   navigateToScreen('privacyScreen');
 }
+function openChatsSettings() { navigateToScreen('chatsScreen'); }
+function openNotificationsSettings() { navigateToScreen('notificationsScreen'); }
+function openStorageSettings() { navigateToScreen('storageScreen'); }
+function openHelpSettings() { navigateToScreen('helpScreen'); }
 
 async function savePrivacySettings() {
   const privacyData = {
@@ -1420,9 +1648,7 @@ async function deleteMyAccount() {
   if (confirm('Are you absolutely sure you want to delete your account? This action is permanent and cannot be undone.')) {
     try {
       const uid = currentUser.uid;
-      // Delete user doc from firestore
       await db.collection('users').doc(uid).delete();
-      // Delete user authentication
       const user = auth.currentUser;
       if (user) {
         await user.delete();
@@ -1527,7 +1753,6 @@ function openChat(partner) {
 }
 
 async function markIncomingAsSeen(docs) {
-  // If user disabled read receipts in privacy settings, don't update seen status
   if (currentUser.privacy && currentUser.privacy.readReceipts === 'off') return;
 
   const batch = db.batch();
