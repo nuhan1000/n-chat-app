@@ -122,12 +122,7 @@
 
   #authScreen { align-items: center; justify-content: center; background: linear-gradient(135deg, #1E3A8A 0%, #172554 100%); padding: 24px; overflow-y: auto; position: fixed; z-index: 1000; }
   .auth-card { width: 100%; max-width: 360px; background: var(--panel); border-radius: 20px; padding: 32px 26px; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.15); margin: 20px 0; border: 1px solid var(--border); }
-  
-  /* Logo styling */
-  .auth-logo { text-align: center; margin-bottom: 4px; display: flex; justify-content: center; align-items: center; }
-  .auth-logo img { height: 42px; width: auto; object-fit: contain; }
-  .app-logo-img { height: 30px; width: auto; object-fit: contain; display: block; }
-
+  .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 34px; font-weight: 800; color: #1E3A8A; text-align: center; margin-bottom: 4px; }
   .auth-sub { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 22px; }
   .field { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 14px; margin-bottom: 10px; background: var(--bg); color: var(--text); }
   .btn-primary { width: 100%; padding: 12px 0; border-radius: 12px; border: none; background: var(--marigold); color: #fff; font-weight: 700; font-size: 15px; margin-top: 6px; cursor: pointer; transition: background 0.2s; }
@@ -146,7 +141,7 @@
     padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     background: var(--panel); border-bottom: 1px solid var(--border);
   }
-  .app-title { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 22px; color: var(--text); display: flex; align-items: center; }
+  .app-title { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 22px; color: var(--text); }
   .header-actions { display: flex; align-items: center; gap: 4px; }
   
   .thin-icon-btn {
@@ -440,11 +435,10 @@
 </head>
 <body onclick="closeDropdowns(event)">
 
-<div class="screen active" id="authScreen" style="display:flex;">
+<!-- শুরুতে উভয় স্ক্রিন ডিসপ্লে none করা হয়েছে যাতে ফ্লিকার না করে -->
+<div class="screen" id="authScreen" style="display:none;">
   <div class="auth-card" style="margin: auto;">
-    <div class="auth-logo">
-      <img src="Talk (2).png" alt="Talknu Logo" />
-    </div>
+    <div class="auth-logo">Talknu</div>
     <div class="auth-sub" id="authSubLabel">Sign in with your mobile number to start chatting</div>
     <div class="auth-error" id="authError"></div>
     <input class="field" id="displayNameField" placeholder="Your Name" style="display:none;" />
@@ -464,9 +458,7 @@
   
   <div class="sidebar-pane">
     <div class="sidebar-header">
-      <div class="app-title">
-        <img src="Talk (2).png" alt="Talknu Logo" class="app-logo-img" />
-      </div>
+      <div class="app-title">Talknu</div>
       <div class="header-actions">
         <button class="thin-icon-btn" id="navBackBtn" onclick="historyBack()" title="Back" disabled>
           <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
@@ -506,7 +498,8 @@
     
     <div class="screen active" id="welcomeScreen">
       <div class="welcome-screen-placeholder">
-        <img src="Talk (2).png" alt="Talknu Logo" style="height: 64px; width: auto; object-fit: contain;" />
+        <div style="font-size: 64px;">💬</div>
+        <h2 style="font-family:'Baloo Da 2',sans-serif; font-size:26px; color:var(--text);">Talknu for Web</h2>
         <p style="max-width:380px; font-size:14px;">Send and receive messages seamlessly across your devices. Select a chat from the left panel to begin.</p>
         <div class="welcome-placeholder-actions">
           <button class="welcome-action-btn" onclick="openUserList()"><span>＋</span> Add contact</button>
@@ -1007,6 +1000,7 @@ function logout() {
   auth.signOut();
 }
 
+// ফায়ারবেসAuthStateChanged লজিক যেখানে অ্যাকাউন্ট থাকলে ডিরেক্ট অ্যাপ শো করবে এবং ফ্লিকার করবে না
 auth.onAuthStateChanged(async (user) => {
   if (user) {
     const userDocRef = db.collection('users').doc(user.uid);
@@ -1032,7 +1026,7 @@ auth.onAuthStateChanged(async (user) => {
   } else {
     currentUser = null;
     document.getElementById('appContainer').style.display = 'none';
-    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('authScreen').style.display = 'flex'; // শুধু ইউজার না থাকলে লগইন পেজ দেখাবে
   }
 });
 
