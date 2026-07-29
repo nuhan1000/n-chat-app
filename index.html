@@ -338,7 +338,6 @@
   .settings-label { font-size: 12.5px; font-weight: 600; color: var(--muted); }
   .settings-select, .settings-input { width: 100%; padding: 11px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; }
 
-  /* New WhatsApp Privacy Style Items */
   .privacy-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
   .privacy-item:last-child { border-bottom: none; }
   .privacy-label-group div:first-child { font-weight: 600; color: var(--text); }
@@ -440,7 +439,7 @@
 </head>
 <body onclick="closeDropdowns(event)">
 
-<!-- Authentication Screen (Hidden instantly if logged in via onAuthStateChanged) -->
+<!-- Authentication Screen (Hidden instantly if logged in) -->
 <div class="screen" id="authScreen" style="display:none;">
   <div class="auth-card" style="margin: auto;">
     <div class="auth-logo">Talknu</div>
@@ -459,7 +458,7 @@
   </div>
 </div>
 
-<!-- Main App Container (Directly displayed if logged in) -->
+<!-- Main App Container -->
 <div class="app-container" id="appContainer" style="display:none;">
   
   <div class="sidebar-pane">
@@ -551,7 +550,6 @@
           <button class="btn-primary" onclick="saveProfileChanges()">Update Profile</button>
         </div>
 
-        <!-- WhatsApp Main Settings Hub Options -->
         <div class="settings-card" style="cursor: pointer;" onclick="openAccountSettings()">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <h3>🔑 Account</h3>
@@ -607,7 +605,6 @@
       </div>
     </div>
 
-    <!-- WhatsApp Privacy Settings Screen -->
     <div class="screen" id="privacyScreen">
       <header>
         <button class="back-btn" onclick="historyBack()" title="Back">←</button>
@@ -683,7 +680,6 @@
           </div>
         </div>
 
-        <!-- Account Delete Section -->
         <div class="settings-card" style="border-color: #ef4444;">
           <h3 style="color: #ef4444;">Delete My Account</h3>
           <div style="font-size: 13px; color: var(--muted);">Deleting your account removes your profile, chat history and settings permanently from Talknu.</div>
@@ -692,7 +688,6 @@
       </div>
     </div>
 
-    <!-- WhatsApp Account Settings Screen -->
     <div class="screen" id="accountScreen">
       <header>
         <button class="back-btn" onclick="historyBack()" title="Back">←</button>
@@ -726,7 +721,6 @@
       </div>
     </div>
 
-    <!-- WhatsApp Chats Settings Screen -->
     <div class="screen" id="chatsScreen">
       <header>
         <button class="back-btn" onclick="historyBack()" title="Back">←</button>
@@ -774,7 +768,6 @@
       </div>
     </div>
 
-    <!-- WhatsApp Notifications Settings Screen -->
     <div class="screen" id="notificationsScreen">
       <header>
         <button class="back-btn" onclick="historyBack()" title="Back">←</button>
@@ -808,7 +801,6 @@
       </div>
     </div>
 
-    <!-- WhatsApp Storage and Data Settings Screen -->
     <div class="screen" id="storageScreen">
       <header>
         <button class="back-btn" onclick="historyBack()" title="Back">←</button>
@@ -854,7 +846,6 @@
       </div>
     </div>
 
-    <!-- WhatsApp Help Settings Screen -->
     <div class="screen" id="helpScreen">
       <header>
         <button class="back-btn" onclick="historyBack()" title="Back">←</button>
@@ -1925,214 +1916,126 @@ async function toggleVoiceRecording() {
       mediaRecorder.start();
       isRecording = true;
       micBtn.classList.add('recording');
-      micBtn.title = "Stop Recording";
     } catch (e) {
       alert('Microphone access denied or not supported.');
     }
   } else {
-    if (mediaRecorder) {
-      mediaRecorder.stop();
-    }
+    mediaRecorder.stop();
     isRecording = false;
     micBtn.classList.remove('recording');
-    micBtn.title = "Record Audio Message";
   }
 }
 
 function clearImagePreview() {
   pendingImageDataUrl = null;
   pendingAttachmentData = null;
+  document.getElementById('imgPreviewBar').style.display = 'none';
   document.getElementById('imageInput').value = '';
   document.getElementById('docInput').value = '';
   document.getElementById('audioInput').value = '';
-  document.getElementById('imgPreviewBar').style.display = 'none';
 }
 
 async function sendMessage() {
   const input = document.getElementById('messageInput');
   const text = input.value.trim();
-  if (!text && !pendingAttachmentData) return;
 
-  const sendBtn = document.getElementById('sendBtn');
-  sendBtn.disabled = true;
+  if (!text && !pendingImageDataUrl && !pendingAttachmentData) return;
+  if (!activeConversationId || !activePartner) return;
+
+  const messageData = {
+    senderId: currentUser.uid,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    seen: false,
+    deleted: false
+  };
+
+  if (pendingImageDataUrl) {
+    messageData.type = 'image';
+    messageData.imageUrl = pendingImageDataUrl;
+  } else if (pendingAttachmentData) {
+    messageData.type = pendingAttachmentData.type;
+    if (pendingAttachmentData.fileName) messageData.fileName = pendingAttachmentData.fileName;
+    if (pendingAttachmentData.audioUrl) messageData.audioUrl = pendingAttachmentData.audioUrl;
+    if (pendingAttachmentData.locationUrl) messageData.locationUrl = pendingAttachmentData.locationUrl;
+  } else {
+    messageData.type = 'text';
+    messageData.text = text;
+  }
+
+  input.value = '';
+  clearImagePreview();
+  setTyping(false);
+
+  const batch = db.batch();
+  const newMsgRef = db.collection('conversations').doc(activeConversationId).collection('messages').doc();
+  batch.set(newMsgRef, messageData);
+
+  const convRef = db.collection('conversations').doc(activeConversationId);
+  const currentConv = myConversations[activeConversationId];
+  let currentUnread = (currentConv && currentConv.unreadCount && currentConv.unreadCount[activePartner.uid]) ? currentConv.unreadCount[activePartner.uid] : 0;
+
+  batch.set(convRef, {
+    participants: [currentUser.uid, activePartner.uid],
+    lastMessageText: messageData.type === 'text' ? text : (`[${messageData.type}]`),
+    lastMessageType: messageData.type,
+    lastMessageSenderId: currentUser.uid,
+    lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+    unreadCount: {
+      [currentUser.uid]: 0,
+      [activePartner.uid]: currentUnread + 1
+    }
+  }, { merge: true });
 
   try {
-    let msgType = 'text';
-    let extraData = {};
-
-    if (pendingAttachmentData) {
-      msgType = pendingAttachmentData.type;
-      if (msgType === 'image') {
-        extraData.imageUrl = pendingImageDataUrl;
-      } else if (msgType === 'document') {
-        extraData.fileName = pendingAttachmentData.fileName;
-      } else if (msgType === 'audio') {
-        extraData.fileName = pendingAttachmentData.fileName;
-        extraData.audioUrl = pendingAttachmentData.audioUrl;
-      } else if (msgType === 'location') {
-        extraData.locationUrl = pendingAttachmentData.locationUrl;
-      }
-    }
-
-    let summaryLabel = text || (msgType === 'image' ? '📷 Photo' : (msgType === 'document' ? '📄 Document' : (msgType === 'audio' ? '🎵 Audio' : '📍 Location')));
-
-    await db.collection('conversations').doc(activeConversationId).set({
-      participants: [currentUser.uid, activePartner.uid],
-      lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-      lastMessageText: summaryLabel,
-      lastMessageType: msgType,
-      lastMessageSenderId: currentUser.uid,
-      typing: { [currentUser.uid]: false },
-      unreadCount: { [activePartner.uid]: firebase.firestore.FieldValue.increment(1) }
-    }, { merge: true });
-
-    await db.collection('conversations').doc(activeConversationId).collection('messages').add({
-      senderId: currentUser.uid,
-      text: text || null,
-      type: msgType,
-      ...extraData,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      seen: false
-    });
-
-    input.value = '';
-    clearImagePreview();
-    if (typingTimeout) clearTimeout(typingTimeout);
+    await batch.commit();
   } catch (e) {
     alert('Failed to send message');
-  } finally {
-    sendBtn.disabled = false;
   }
 }
 
-async function openContactInfoFromChat() {
-  closeDropdowns();
-  if (activePartner) {
-    openContactInfo(activePartner);
-  }
+function openContactInfoFromChat() {
+  if (activePartner) openContactInfo(activePartner);
 }
-
-async function openMediaLinksDocs() {
-  closeDropdowns();
-  if (!activeConversationId) return;
-
-  const container = document.getElementById('mediaViewerContentEl');
-  container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--muted);">Loading media...</div>';
+function openMediaLinksDocs() {
   navigateToScreen('mediaViewerScreen');
-
-  try {
-    const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').orderBy('timestamp', 'desc').get();
-    
-    let imagesHtml = '';
-    let docsHtml = '';
-    let audioHtml = '';
-
-    snap.docs.forEach(doc => {
-      const m = doc.data();
-      if (m.type === 'image' && m.imageUrl) {
-        imagesHtml += `<div class="media-thumb-box" onclick="window.open('${m.imageUrl}', '_blank')"><img src="${m.imageUrl}" /></div>`;
-      } else if (m.type === 'document') {
-        docsHtml += `<div class="media-file-item"><span style="font-size:24px;">📄</span><div style="flex:1;min-width:0;"><strong style="display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(m.fileName || 'Document')}</strong><span style="font-size:11px;color:var(--muted);">${shortTime(m.timestamp)}</span></div></div>`;
-      } else if (m.type === 'audio') {
-        audioHtml += `<div class="media-file-item"><span style="font-size:24px;">🎵</span><div style="flex:1;min-width:0;"><strong style="display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(m.fileName || 'Audio')}</strong><audio controls style="height:28px;width:100%;margin-top:4px;"><source src="${m.audioUrl || ''}" type="audio/webm"></audio></div></div>`;
-      }
-    });
-
-    container.innerHTML = `
-      <div>
-        <div class="media-section-title">Photos & Videos</div>
-        <div class="media-grid">${imagesHtml || '<div style="font-size:13px;color:var(--muted);">No media shared</div>'}</div>
-      </div>
-      <div style="margin-top:10px;">
-        <div class="media-section-title">Documents</div>
-        <div class="media-file-list">${docsHtml || '<div style="font-size:13px;color:var(--muted);">No documents shared</div>'}</div>
-      </div>
-      <div style="margin-top:10px;">
-        <div class="media-section-title">Audio Files</div>
-        <div class="media-file-list">${audioHtml || '<div style="font-size:13px;color:var(--muted);">No audio shared</div>'}</div>
-      </div>
-    `;
-  } catch (e) {
-    container.innerHTML = '<div style="text-align:center; padding:40px; color:#ef4444;">Failed to load media files.</div>';
-  }
+  // Load media items if needed
 }
-
-async function toggleNotificationSettings() {
-  closeDropdowns();
-  alert('Notification settings updated for this chat.');
-}
-
-async function toggleFavouriteChat() {
-  closeDropdowns();
+function toggleNotificationSettings() { alert('Notification settings toggled'); }
+function toggleFavouriteChat() {
   if (!activePartner) return;
-  const idx = favouritesList.indexOf(activePartner.uid);
-  if (idx > -1) {
-    favouritesList.splice(idx, 1);
-    alert(`${activePartner.displayName} has been removed from favourites.`);
+  if (favouritesList.includes(activePartner.uid)) {
+    favouritesList = favouritesList.filter(id => id !== activePartner.uid);
+    alert('Removed from favourites');
   } else {
     favouritesList.push(activePartner.uid);
-    alert(`${activePartner.displayName} has been added to favourites.`);
+    alert('Added to favourites');
   }
   localStorage.setItem('talknu_favourites', JSON.stringify(favouritesList));
   renderContactList();
 }
-
-async function blockChatPartner() {
-  closeDropdowns();
-  if (!activePartner) return;
-  if (confirm(`Are you sure you want to block ${activePartner.displayName}?`)) {
-    alert(`${activePartner.displayName} has been blocked.`);
-    historyBack();
+function blockChatPartner() {
+  if (confirm('Are you sure you want to block this user?')) {
+    alert('User blocked');
+    closeCurrentConversation();
   }
 }
-
 async function clearChatMessages() {
-  closeDropdowns();
-  if (!activeConversationId) return;
-  if (confirm('Are you sure you want to clear all messages in this chat?')) {
-    try {
-      const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
-      const batch = db.batch();
-      snap.docs.forEach(doc => batch.delete(doc.ref));
-      await batch.commit();
-      await db.collection('conversations').doc(activeConversationId).update({
-        lastMessageText: '',
-        lastMessageType: 'text',
-        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      alert('Chat cleared successfully.');
-    } catch (e) {
-      alert('Failed to clear chat.');
-    }
-  }
+  if (!confirm('Clear all messages in this chat?')) return;
+  const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
+  const batch = db.batch();
+  snap.docs.forEach(d => batch.delete(d.ref));
+  await batch.commit();
 }
-
 async function deleteChatConversation() {
-  closeDropdowns();
-  if (!activeConversationId) return;
-  if (confirm('Are you sure you want to delete this entire chat conversation?')) {
-    try {
-      const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
-      const batch = db.batch();
-      snap.docs.forEach(doc => batch.delete(doc.ref));
-      batch.delete(db.collection('conversations').doc(activeConversationId));
-      await batch.commit();
-      alert('Conversation deleted.');
-      historyBack();
-    } catch (e) {
-      alert('Failed to delete conversation.');
-    }
-  }
+  if (!confirm('Delete this entire chat conversation?')) return;
+  await db.collection('conversations').doc(activeConversationId).delete();
+  closeCurrentConversation();
 }
-
-async function reportChatPartner() {
-  closeDropdowns();
-  if (!activePartner) return;
-  if (confirm(`Do you want to report ${activePartner.displayName} for inappropriate behavior?`)) {
-    alert('User has been reported. Thank you for keeping the platform safe.');
+function reportChatPartner() {
+  if (confirm('Report this user for spam or abuse?')) {
+    alert('User reported successfully.');
   }
 }
 </script>
 </body>
 </html>
-```[cite: 1]
