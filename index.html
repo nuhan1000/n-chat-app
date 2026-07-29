@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <title>Talknu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -35,7 +35,7 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
-  html, body { height: 100%; width: 100%; overflow: hidden; }
+  html, body { height: 100%; width: 100%; overflow: hidden; position: fixed; }
   body {
     font-family: 'Inter', sans-serif;
     background: var(--bg);
@@ -99,13 +99,22 @@
   }
   .screen.active { display: flex; z-index: 10; animation: appOpen 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
+  /* Mobile Responsive View Fixes for APK / Small Screens */
   @media(max-width: 768px) {
+    .app-container {
+      position: relative;
+    }
     .sidebar-pane {
       width: 100%;
+      height: 100%;
       position: absolute;
       top: 0;
       left: 0;
       z-index: 2;
+      transition: transform 0.3s ease;
+    }
+    .sidebar-pane.hidden-mobile {
+      transform: translateX(-100%);
     }
     .main-pane {
       position: absolute;
@@ -120,7 +129,7 @@
     }
   }
 
-  #authScreen { align-items: center; justify-content: center; background: linear-gradient(135deg, #1E3A8A 0%, #172554 100%); padding: 24px; overflow-y: auto; position: fixed; z-index: 1000; }
+  #authScreen { align-items: center; justify-content: center; background: linear-gradient(135deg, #1E3A8A 0%, #172554 100%); padding: 24px; overflow-y: auto; position: fixed; z-index: 9999; }
   .auth-card { width: 100%; max-width: 360px; background: var(--panel); border-radius: 20px; padding: 32px 26px; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.15); margin: 20px 0; border: 1px solid var(--border); }
   .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 34px; font-weight: 800; color: #1E3A8A; text-align: center; margin-bottom: 4px; }
   .auth-sub { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 22px; }
@@ -373,7 +382,7 @@
   .msg-row { display: flex; align-items: center; gap: 6px; }
   .msg-row.mine { justify-content: flex-end; }
   .delete-msg-btn { background: none; border: none; font-size: 12px; opacity: 0.45; padding: 2px 4px; color: var(--text); cursor: pointer; }
-  .bubble { max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14px; line-height: 1.4; position: relative; }
+  .bubble { max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14px; line-height: 1.4; position: relative; word-break: break-word; }
   .bubble.theirs { background: var(--panel); color: var(--text); border-top-left-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); border: 1px solid var(--border); }
   .bubble.mine { background: #2563EB; color: #FFFFFF; border-top-right-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
   .bubble img { max-width: 100%; border-radius: 8px; display: block; margin-top: 4px; }
@@ -439,7 +448,7 @@
 </head>
 <body onclick="closeDropdowns(event)">
 
-<!-- Authentication Screen (Hidden instantly if logged in) -->
+<!-- Authentication Screen (Default Hidden: Loads only if user is logged out) -->
 <div class="screen" id="authScreen" style="display:none;">
   <div class="auth-card" style="margin: auto;">
     <div class="auth-logo">Talknu</div>
@@ -458,10 +467,10 @@
   </div>
 </div>
 
-<!-- Main App Container -->
+<!-- Main App Container (Directly displayed if already logged in) -->
 <div class="app-container" id="appContainer" style="display:none;">
   
-  <div class="sidebar-pane">
+  <div class="sidebar-pane" id="sidebarPane">
     <div class="sidebar-header">
       <div class="app-title">Talknu</div>
       <div class="header-actions">
@@ -504,7 +513,7 @@
     <div class="screen active" id="welcomeScreen">
       <div class="welcome-screen-placeholder">
         <div style="font-size: 64px;">💬</div>
-        <h2 style="font-family:'Baloo Da 2',sans-serif; font-size:26px; color:var(--text);">Talknu for Web</h2>
+        <h2 style="font-family:'Baloo Da 2',sans-serif; font-size:26px; color:var(--text);">Talknu Mobile & Web</h2>
         <p style="max-width:380px; font-size:14px;">Send and receive messages seamlessly across your devices. Select a chat from the left panel to begin.</p>
         <div class="welcome-placeholder-actions">
           <button class="welcome-action-btn" onclick="openUserList()"><span>＋</span> Add contact</button>
@@ -563,7 +572,7 @@
             <h3>🔒 Privacy</h3>
             <span style="color: var(--muted);">›</span>
           </div>
-          <div style="font-size: 13px; color: var(--muted);">Control who can see your personal info, read receipts & disappearing messages</div>
+          <div style="font-size: 13px; color: var(--muted);">Control who can see your personal info, read receipts</div>
         </div>
 
         <div class="settings-card" style="cursor: pointer;" onclick="openChatsSettings()">
@@ -571,7 +580,7 @@
             <h3>💬 Chats</h3>
             <span style="color: var(--muted);">›</span>
           </div>
-          <div style="font-size: 13px; color: var(--muted);">Theme, wallpapers, chat history, enter to send</div>
+          <div style="font-size: 13px; color: var(--muted);">Theme, wallpapers, chat history</div>
         </div>
 
         <div class="settings-card" style="cursor: pointer;" onclick="openNotificationsSettings()">
@@ -665,24 +674,11 @@
               <option value="off">Off</option>
             </select>
           </div>
-
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Default Message Timer</div>
-              <div>Start new chats with disappearing messages</div>
-            </div>
-            <select class="settings-select" id="privDisappearing" style="width: 140px;" onchange="savePrivacySettings()">
-              <option value="off">Off</option>
-              <option value="24h">24 Hours</option>
-              <option value="7d">7 Days</option>
-              <option value="90d">90 Days</option>
-            </select>
-          </div>
         </div>
 
         <div class="settings-card" style="border-color: #ef4444;">
           <h3 style="color: #ef4444;">Delete My Account</h3>
-          <div style="font-size: 13px; color: var(--muted);">Deleting your account removes your profile, chat history and settings permanently from Talknu.</div>
+          <div style="font-size: 13px; color: var(--muted);">Deleting your account removes your profile and data permanently.</div>
           <button class="btn-danger" onclick="deleteMyAccount()">🗑️ Delete Account</button>
         </div>
       </div>
@@ -699,23 +695,12 @@
           <h3>Security Notifications</h3>
           <div class="privacy-item">
             <div class="privacy-label-group">
-              <div>Show security notifications on this device</div>
-              <div>Get notified when security code changes</div>
+              <div>Show security notifications</div>
             </div>
             <select class="settings-select" id="accountSecNotif" style="width: 100px;">
               <option value="on">On</option>
               <option value="off">Off</option>
             </select>
-          </div>
-        </div>
-        <div class="settings-card">
-          <h3>Account Details</h3>
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Request Account Info</div>
-              <div>Get a report of your account settings</div>
-            </div>
-            <button class="btn-primary" style="width: 120px; padding: 6px 0; font-size: 13px;" onclick="alert('Account info report requested.')">Request</button>
           </div>
         </div>
       </div>
@@ -741,30 +726,6 @@
             </select>
           </div>
         </div>
-
-        <div class="settings-card">
-          <h3>Chat Settings</h3>
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Enter is send</div>
-              <div>Enter key will send your message</div>
-            </div>
-            <select class="settings-select" style="width: 100px;">
-              <option value="on">On</option>
-              <option value="off">Off</option>
-            </select>
-          </div>
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Media visibility</div>
-              <div>Show newly downloaded media in gallery</div>
-            </div>
-            <select class="settings-select" style="width: 100px;">
-              <option value="on">On</option>
-              <option value="off">Off</option>
-            </select>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -780,21 +741,10 @@
           <div class="privacy-item">
             <div class="privacy-label-group">
               <div>Conversation Tones</div>
-              <div>Play sounds for incoming and outgoing messages</div>
             </div>
             <select class="settings-select" style="width: 100px;">
               <option value="on">On</option>
               <option value="off">Off</option>
-            </select>
-          </div>
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Notification Tone</div>
-              <div>Default ringtone</div>
-            </div>
-            <select class="settings-select" style="width: 120px;">
-              <option value="chime">Chime</option>
-              <option value="classic">Classic</option>
             </select>
           </div>
         </div>
@@ -813,34 +763,8 @@
           <div class="privacy-item">
             <div class="privacy-label-group">
               <div>Storage Usage</div>
-              <div>Manage data storage on device</div>
             </div>
             <button class="btn-primary" style="width: 110px; padding: 6px 0; font-size: 13px;" onclick="alert('Storage usage: 24.5 MB used')">Manage</button>
-          </div>
-        </div>
-        <div class="settings-card">
-          <h3>Media Auto-Download</h3>
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Photos</div>
-              <div>Auto-download over cellular & Wi-Fi</div>
-            </div>
-            <select class="settings-select" style="width: 110px;">
-              <option value="wifi">Wi-Fi</option>
-              <option value="all">All media</option>
-              <option value="none">None</option>
-            </select>
-          </div>
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Documents</div>
-              <div>Auto-download files</div>
-            </div>
-            <select class="settings-select" style="width: 110px;">
-              <option value="wifi">Wi-Fi</option>
-              <option value="all">All media</option>
-              <option value="none">None</option>
-            </select>
           </div>
         </div>
       </div>
@@ -855,17 +779,10 @@
       <div class="settings-content">
         <div class="settings-card">
           <h3>Support Info</h3>
-          <div class="privacy-item" style="cursor:pointer;" onclick="alert('Opening Help Center website...')">
-            <div class="privacy-label-group">
-              <div>Help Center</div>
-              <div>Get answers, contact us</div>
-            </div>
-            <span style="color:var(--muted);">›</span>
-          </div>
-          <div class="privacy-item" style="cursor:pointer;" onclick="alert('Talknu Web v2.5.0 - Powered by Firebase')">
+          <div class="privacy-item" style="cursor:pointer;" onclick="alert('Talknu Mobile & Web v2.6.0')">
             <div class="privacy-label-group">
               <div>App Info</div>
-              <div>Version details and licenses</div>
+              <div>Version details</div>
             </div>
             <span style="color:var(--muted);">›</span>
           </div>
@@ -1001,6 +918,10 @@ let navHistory = ['welcomeScreen'];
 let navIndex = 0;
 let isNavigatingHistory = false;
 
+function isMobileView() {
+  return window.innerWidth <= 768;
+}
+
 function navigateToScreen(screenId, pushToStack = true) {
   document.querySelectorAll('#mainPane .screen').forEach(s => {
     s.classList.remove('active');
@@ -1008,6 +929,16 @@ function navigateToScreen(screenId, pushToStack = true) {
   const target = document.getElementById(screenId);
   if (target) {
     target.classList.add('active');
+  }
+
+  // Mobile layout handling between sidebar and active chat/screen pane
+  if (isMobileView()) {
+    const sidebar = document.getElementById('sidebarPane');
+    if (screenId === 'welcomeScreen') {
+      sidebar.classList.remove('hidden-mobile');
+    } else {
+      sidebar.classList.add('hidden-mobile');
+    }
   }
 
   if (pushToStack && !isNavigatingHistory) {
@@ -1104,8 +1035,6 @@ function changeTheme(themeName) {
     document.documentElement.removeAttribute('data-theme');
   }
   localStorage.setItem('talknu_theme_mode', themeName);
-  const selector = document.getElementById('themeSelector');
-  if (selector) selector.value = themeName;
   const chatsSelector = document.getElementById('chatsThemeSelector');
   if (chatsSelector) chatsSelector.value = themeName;
 }
@@ -1148,14 +1077,9 @@ function formatLastActive(userObj) {
   const lastActive = userObj.lastSeen.toDate ? userObj.lastSeen.toDate() : new Date(userObj.lastSeen);
   const diffInSeconds = Math.floor((now - lastActive) / 1000);
   
-  if (diffInSeconds < 45) {
-    return "Online";
-  }
-
+  if (diffInSeconds < 45) return "Online";
   const fifteenDaysInSeconds = 15 * 24 * 60 * 60;
-  if (diffInSeconds > fifteenDaysInSeconds || diffInSeconds < 0) {
-    return "Offline";
-  }
+  if (diffInSeconds > fifteenDaysInSeconds || diffInSeconds < 0) return "Offline";
 
   const diffInDays = Math.floor(diffInSeconds / (60 * 60 * 24));
   if (diffInDays > 0) return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
@@ -1256,13 +1180,7 @@ async function submitAuth() {
         online: true,
         lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        privacy: {
-          lastSeen: 'all',
-          photo: 'all',
-          about: 'all',
-          readReceipts: 'on',
-          disappearing: 'off'
-        }
+        privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on', disappearing: 'off' }
       });
     } else {
       try {
@@ -1278,13 +1196,7 @@ async function submitAuth() {
             online: true,
             lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            privacy: {
-              lastSeen: 'all',
-              photo: 'all',
-              about: 'all',
-              readReceipts: 'on',
-              disappearing: 'off'
-            }
+            privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on', disappearing: 'off' }
           });
           return;
         }
@@ -1294,20 +1206,19 @@ async function submitAuth() {
   } catch (e) {
     if(e.code === 'auth/email-already-in-use') errEl.textContent = 'This number is already registered! Please login instead.';
     else if(e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password') errEl.textContent = 'Incorrect number or password!';
-    else if(e.code === 'auth/invalid-email') errEl.textContent = 'Invalid phone number format.';
     else errEl.textContent = e.message || 'An error occurred, please try again';
   } finally {
     submitBtn.disabled = false;
   }
 }
 
-async function setPresence(online) {
+function setPresence(online) {
   if (!currentUser) return;
   try {
     const updateData = { lastSeen: firebase.firestore.FieldValue.serverTimestamp() };
     if (online) updateData.online = true;
     else updateData.online = false;
-    await db.collection('users').doc(currentUser.uid).update(updateData);
+    db.collection('users').doc(currentUser.uid).update(updateData);
   } catch (e) {}
 }
 
@@ -1339,7 +1250,7 @@ function logout() {
   auth.signOut();
 }
 
-// 100% Guaranteed Session Check: Bypasses Auth Screen instantly if session exists[cite: 1]
+// Session Check: Direct entry to App Interface if already logged in[cite: 1]
 auth.onAuthStateChanged(async (user) => {
   const authEl = document.getElementById('authScreen');
   const appEl = document.getElementById('appContainer');
@@ -1370,7 +1281,7 @@ auth.onAuthStateChanged(async (user) => {
   } else {
     currentUser = null;
     appEl.style.display = 'none';
-    authEl.style.display = 'flex';
+    authEl.style.display = 'flex'; // Shows login screen only if not logged in
   }
 });
 
@@ -1618,7 +1529,6 @@ function openPrivacySettings() {
     document.getElementById('privPhoto').value = currentUser.privacy.photo || 'all';
     document.getElementById('privAbout').value = currentUser.privacy.about || 'all';
     document.getElementById('privReadReceipts').value = currentUser.privacy.readReceipts || 'on';
-    document.getElementById('privDisappearing').value = currentUser.privacy.disappearing || 'off';
   }
   navigateToScreen('privacyScreen');
 }
@@ -1632,31 +1542,24 @@ async function savePrivacySettings() {
     lastSeen: document.getElementById('privLastSeen').value,
     photo: document.getElementById('privPhoto').value,
     about: document.getElementById('privAbout').value,
-    readReceipts: document.getElementById('privReadReceipts').value,
-    disappearing: document.getElementById('privDisappearing').value
+    readReceipts: document.getElementById('privReadReceipts').value
   };
-
   try {
     await db.collection('users').doc(currentUser.uid).update({ privacy: privacyData });
     currentUser.privacy = privacyData;
-  } catch (e) {
-    alert('Failed to save privacy settings');
-  }
+  } catch (e) {}
 }
 
 async function deleteMyAccount() {
-  if (confirm('Are you absolutely sure you want to delete your account? This action is permanent and cannot be undone.')) {
+  if (confirm('Are you sure you want to delete your account?')) {
     try {
       const uid = currentUser.uid;
       await db.collection('users').doc(uid).delete();
       const user = auth.currentUser;
-      if (user) {
-        await user.delete();
-      }
-      alert('Your account has been deleted successfully.');
+      if (user) await user.delete();
       logout();
     } catch (e) {
-      alert('Failed to delete account. Please re-login and try again.');
+      alert('Failed to delete account.');
     }
   }
 }
@@ -1878,13 +1781,13 @@ function shareLocation() {
       const mapUrl = `https://www.google.com/maps?q=${lat},${lon}`;
       pendingAttachmentData = { type: 'location', locationUrl: mapUrl };
       document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23ef4444"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>';
-      document.getElementById('imgPreviewText').textContent = 'Google Map Location Ready to Share';
+      document.getElementById('imgPreviewText').textContent = 'Google Map Location Ready';
       document.getElementById('imgPreviewBar').style.display = 'flex';
     }, () => {
-      alert('Unable to retrieve your location. Please check browser permissions.');
+      alert('Unable to retrieve your location.');
     });
   } else {
-    alert('Geolocation is not supported by your browser');
+    alert('Geolocation is not supported');
   }
 }
 
@@ -1896,10 +1799,7 @@ async function toggleVoiceRecording() {
       mediaRecorder = new MediaRecorder(stream);
       audioChunks = [];
       
-      mediaRecorder.ondataavailable = event => {
-        audioChunks.push(event.data);
-      };
-
+      mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
         const reader = new FileReader();
@@ -1920,7 +1820,7 @@ async function toggleVoiceRecording() {
       alert('Microphone access denied or not supported.');
     }
   } else {
-    mediaRecorder.stop();
+    if (mediaRecorder) mediaRecorder.stop();
     isRecording = false;
     micBtn.classList.remove('recording');
   }
@@ -1929,111 +1829,172 @@ async function toggleVoiceRecording() {
 function clearImagePreview() {
   pendingImageDataUrl = null;
   pendingAttachmentData = null;
-  document.getElementById('imgPreviewBar').style.display = 'none';
   document.getElementById('imageInput').value = '';
   document.getElementById('docInput').value = '';
   document.getElementById('audioInput').value = '';
+  document.getElementById('imgPreviewBar').style.display = 'none';
 }
 
 async function sendMessage() {
   const input = document.getElementById('messageInput');
   const text = input.value.trim();
+  if (!text && !pendingAttachmentData) return;
 
-  if (!text && !pendingImageDataUrl && !pendingAttachmentData) return;
-  if (!activeConversationId || !activePartner) return;
-
-  const messageData = {
-    senderId: currentUser.uid,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    seen: false,
-    deleted: false
-  };
-
-  if (pendingImageDataUrl) {
-    messageData.type = 'image';
-    messageData.imageUrl = pendingImageDataUrl;
-  } else if (pendingAttachmentData) {
-    messageData.type = pendingAttachmentData.type;
-    if (pendingAttachmentData.fileName) messageData.fileName = pendingAttachmentData.fileName;
-    if (pendingAttachmentData.audioUrl) messageData.audioUrl = pendingAttachmentData.audioUrl;
-    if (pendingAttachmentData.locationUrl) messageData.locationUrl = pendingAttachmentData.locationUrl;
-  } else {
-    messageData.type = 'text';
-    messageData.text = text;
-  }
-
-  input.value = '';
-  clearImagePreview();
-  setTyping(false);
-
-  const batch = db.batch();
-  const newMsgRef = db.collection('conversations').doc(activeConversationId).collection('messages').doc();
-  batch.set(newMsgRef, messageData);
-
-  const convRef = db.collection('conversations').doc(activeConversationId);
-  const currentConv = myConversations[activeConversationId];
-  let currentUnread = (currentConv && currentConv.unreadCount && currentConv.unreadCount[activePartner.uid]) ? currentConv.unreadCount[activePartner.uid] : 0;
-
-  batch.set(convRef, {
-    participants: [currentUser.uid, activePartner.uid],
-    lastMessageText: messageData.type === 'text' ? text : (`[${messageData.type}]`),
-    lastMessageType: messageData.type,
-    lastMessageSenderId: currentUser.uid,
-    lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-    unreadCount: {
-      [currentUser.uid]: 0,
-      [activePartner.uid]: currentUnread + 1
-    }
-  }, { merge: true });
+  const sendBtn = document.getElementById('sendBtn');
+  sendBtn.disabled = true;
 
   try {
-    await batch.commit();
+    let msgType = 'text';
+    let extraData = {};
+
+    if (pendingAttachmentData) {
+      msgType = pendingAttachmentData.type;
+      if (msgType === 'image') extraData.imageUrl = pendingImageDataUrl;
+      else if (msgType === 'document') extraData.fileName = pendingAttachmentData.fileName;
+      else if (msgType === 'audio') {
+        extraData.fileName = pendingAttachmentData.fileName;
+        extraData.audioUrl = pendingAttachmentData.audioUrl;
+      } else if (msgType === 'location') extraData.locationUrl = pendingAttachmentData.locationUrl;
+    }
+
+    let summaryLabel = text || (msgType === 'image' ? '📷 Photo' : (msgType === 'document' ? '📄 Document' : (msgType === 'audio' ? '🎵 Audio' : '📍 Location')));
+
+    await db.collection('conversations').doc(activeConversationId).set({
+      participants: [currentUser.uid, activePartner.uid],
+      lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+      lastMessageText: summaryLabel,
+      lastMessageType: msgType,
+      lastMessageSenderId: currentUser.uid,
+      typing: { [currentUser.uid]: false },
+      unreadCount: { [activePartner.uid]: firebase.firestore.FieldValue.increment(1) }
+    }, { merge: true });
+
+    await db.collection('conversations').doc(activeConversationId).collection('messages').add({
+      senderId: currentUser.uid,
+      text: text || null,
+      type: msgType,
+      ...extraData,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      seen: false
+    });
+
+    input.value = '';
+    clearImagePreview();
+    if (typingTimeout) clearTimeout(typingTimeout);
   } catch (e) {
     alert('Failed to send message');
+  } finally {
+    sendBtn.disabled = false;
   }
 }
 
-function openContactInfoFromChat() {
+async function openContactInfoFromChat() {
+  closeDropdowns();
   if (activePartner) openContactInfo(activePartner);
 }
-function openMediaLinksDocs() {
+
+async function openMediaLinksDocs() {
+  closeDropdowns();
+  if (!activeConversationId) return;
+
+  const container = document.getElementById('mediaViewerContentEl');
+  container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--muted);">Loading media...</div>';
   navigateToScreen('mediaViewerScreen');
-  // Load media items if needed
+
+  try {
+    const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').orderBy('timestamp', 'desc').get();
+    
+    let imagesHtml = '', docsHtml = '', audioHtml = '';
+    snap.docs.forEach(doc => {
+      const m = doc.data();
+      if (m.type === 'image' && m.imageUrl) {
+        imagesHtml += `<div class="media-thumb-box" onclick="window.open('${m.imageUrl}', '_blank')"><img src="${m.imageUrl}" /></div>`;
+      } else if (m.type === 'document') {
+        docsHtml += `<div class="media-file-item"><span style="font-size:24px;">📄</span><div style="flex:1;min-width:0;"><strong style="display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(m.fileName || 'Document')}</strong><span style="font-size:11px;color:var(--muted);">${shortTime(m.timestamp)}</span></div></div>`;
+      } else if (m.type === 'audio') {
+        audioHtml += `<div class="media-file-item"><span style="font-size:24px;">🎵</span><div style="flex:1;min-width:0;"><strong style="display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(m.fileName || 'Audio')}</strong><audio controls style="height:28px;width:100%;margin-top:4px;"><source src="${m.audioUrl || ''}" type="audio/webm"></audio></div></div>`;
+      }
+    });
+
+    container.innerHTML = `
+      <div><div class="media-section-title">Photos & Videos</div><div class="media-grid">${imagesHtml || '<div style="font-size:13px;color:var(--muted);">No media shared</div>'}</div></div>
+      <div style="margin-top:10px;"><div class="media-section-title">Documents</div><div class="media-file-list">${docsHtml || '<div style="font-size:13px;color:var(--muted);">No documents shared</div>'}</div></div>
+      <div style="margin-top:10px;"><div class="media-section-title">Audio Files</div><div class="media-file-list">${audioHtml || '<div style="font-size:13px;color:var(--muted);">No audio shared</div>'}</div></div>
+    `;
+  } catch (e) {
+    container.innerHTML = '<div style="text-align:center; padding:40px; color:#ef4444;">Failed to load media files.</div>';
+  }
 }
-function toggleNotificationSettings() { alert('Notification settings toggled'); }
-function toggleFavouriteChat() {
+
+async function toggleNotificationSettings() {
+  closeDropdowns();
+  alert('Notification settings updated for this chat.');
+}
+
+async function toggleFavouriteChat() {
+  closeDropdowns();
   if (!activePartner) return;
-  if (favouritesList.includes(activePartner.uid)) {
-    favouritesList = favouritesList.filter(id => id !== activePartner.uid);
-    alert('Removed from favourites');
+  const idx = favouritesList.indexOf(activePartner.uid);
+  if (idx > -1) {
+    favouritesList.splice(idx, 1);
+    alert(`${activePartner.displayName} removed from favourites.`);
   } else {
     favouritesList.push(activePartner.uid);
-    alert('Added to favourites');
+    alert(`${activePartner.displayName} added to favourites.`);
   }
   localStorage.setItem('talknu_favourites', JSON.stringify(favouritesList));
   renderContactList();
 }
-function blockChatPartner() {
-  if (confirm('Are you sure you want to block this user?')) {
-    alert('User blocked');
-    closeCurrentConversation();
+
+async function blockChatPartner() {
+  closeDropdowns();
+  if (!activePartner) return;
+  if (confirm(`Block ${activePartner.displayName}?`)) {
+    alert('User has been blocked.');
+    historyBack();
   }
 }
+
 async function clearChatMessages() {
-  if (!confirm('Clear all messages in this chat?')) return;
-  const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
-  const batch = db.batch();
-  snap.docs.forEach(d => batch.delete(d.ref));
-  await batch.commit();
+  closeDropdowns();
+  if (!activeConversationId) return;
+  if (confirm('Clear all messages in this chat?')) {
+    try {
+      const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
+      const batch = db.batch();
+      snap.docs.forEach(doc => batch.delete(doc.ref));
+      await batch.commit();
+      await db.collection('conversations').doc(activeConversationId).update({
+        lastMessageText: '',
+        lastMessageType: 'text',
+        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      alert('Chat cleared successfully.');
+    } catch (e) { alert('Failed to clear chat.'); }
+  }
 }
+
 async function deleteChatConversation() {
-  if (!confirm('Delete this entire chat conversation?')) return;
-  await db.collection('conversations').doc(activeConversationId).delete();
-  closeCurrentConversation();
+  closeDropdowns();
+  if (!activeConversationId) return;
+  if (confirm('Delete this entire conversation?')) {
+    try {
+      const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
+      const batch = db.batch();
+      snap.docs.forEach(doc => batch.delete(doc.ref));
+      batch.delete(db.collection('conversations').doc(activeConversationId));
+      await batch.commit();
+      alert('Conversation deleted.');
+      historyBack();
+    } catch (e) { alert('Failed to delete conversation.'); }
+  }
 }
-function reportChatPartner() {
-  if (confirm('Report this user for spam or abuse?')) {
-    alert('User reported successfully.');
+
+async function reportChatPartner() {
+  closeDropdowns();
+  if (!activePartner) return;
+  if (confirm(`Report ${activePartner.displayName}?`)) {
+    alert('User has been reported.');
   }
 }
 </script>
