@@ -349,8 +349,7 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative; z-index: 50; border-bottom: 1px solid var(--border);
   }
   #chatScreen header { gap: 8px; }
-  .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 4px 8px; cursor: pointer; display: none; z-index: 51; }
-  @media(max-width: 768px) { .back-btn { display: flex; align-items: center; justify-content: center; } }
+  .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 4px 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 51; }
 
   .chat-back-indicator {
     background: none;
@@ -517,27 +516,27 @@
 
     <div class="screen" id="userListScreen">
       <header>
-        <button class="back-btn" onclick="historyBack()">←</button>
+        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
         <div class="app-title" style="font-size:18px; color: #fff;">Select Contact</div>
-        <div style="width:24px;"></div>
+        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
       </header>
       <div class="all-users-list" id="allUsersListEl"></div>
     </div>
 
     <div class="screen" id="contactInfoScreen">
       <header>
-        <button class="back-btn" onclick="historyBack()">←</button>
+        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
         <div class="app-title" style="font-size:18px; color: #fff;">Contact Info</div>
-        <div style="width:24px;"></div>
+        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
       </header>
       <div class="profile-container" id="profileContainerEl"></div>
     </div>
 
     <div class="screen" id="settingsScreen">
       <header>
-        <button class="back-btn" onclick="historyBack()">←</button>
+        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
         <div class="app-title" style="font-size:18px; color: #fff;">Settings</div>
-        <div style="width:24px;"></div>
+        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
       </header>
       <div class="settings-content">
         <div class="settings-card">
@@ -611,9 +610,9 @@
     <!-- WhatsApp Privacy Settings Screen -->
     <div class="screen" id="privacyScreen">
       <header>
-        <button class="back-btn" onclick="historyBack()">←</button>
+        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
         <div class="app-title" style="font-size:18px; color: #fff;">Privacy</div>
-        <div style="width:24px;"></div>
+        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
       </header>
       <div class="settings-content">
         <div class="settings-card">
@@ -696,9 +695,9 @@
     <!-- WhatsApp Account Settings Screen -->
     <div class="screen" id="accountScreen">
       <header>
-        <button class="back-btn" onclick="historyBack()">←</button>
+        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
         <div class="app-title" style="font-size:18px; color: #fff;">Account</div>
-        <div style="width:24px;"></div>
+        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
       </header>
       <div class="settings-content">
         <div class="settings-card">
@@ -730,9 +729,9 @@
     <!-- WhatsApp Chats Settings Screen -->
     <div class="screen" id="chatsScreen">
       <header>
-        <button class="back-btn" onclick="historyBack()">←</button>
+        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
         <div class="app-title" style="font-size:18px; color: #fff;">Chats</div>
-        <div style="width:24px;"></div>
+        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
       </header>
       <div class="settings-content">
         <div class="settings-card">
@@ -778,9 +777,9 @@
     <!-- WhatsApp Notifications Settings Screen -->
     <div class="screen" id="notificationsScreen">
       <header>
-        <button class="back-btn" onclick="historyBack()">←</button>
+        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
         <div class="app-title" style="font-size:18px; color: #fff;">Notifications</div>
-        <div style="width:24px;"></div>
+        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
       </header>
       <div class="settings-content">
         <div class="settings-card">
@@ -812,9 +811,9 @@
     <!-- WhatsApp Storage and Data Settings Screen -->
     <div class="screen" id="storageScreen">
       <header>
-        <button class="back-btn" onclick="historyBack()">←</button>
+        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
         <div class="app-title" style="font-size:18px; color: #fff;">Storage and Data</div>
-        <div style="width:24px;"></div>
+        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
       </header>
       <div class="settings-content">
         <div class="settings-card">
@@ -858,9 +857,9 @@
     <!-- WhatsApp Help Settings Screen -->
     <div class="screen" id="helpScreen">
       <header>
-        <button class="back-btn" onclick="historyBack()">←</button>
+        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
         <div class="app-title" style="font-size:18px; color: #fff;">Help</div>
-        <div style="width:24px;"></div>
+        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
       </header>
       <div class="settings-content">
         <div class="settings-card">
@@ -885,9 +884,9 @@
 
     <div class="screen" id="mediaViewerScreen">
       <header>
-        <button class="back-btn" onclick="historyBack()">←</button>
+        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
         <div class="app-title" style="font-size:18px; color: #fff;">Media, links and docs</div>
-        <div style="width:24px;"></div>
+        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
       </header>
       <div class="media-viewer-content" id="mediaViewerContentEl"></div>
     </div>
@@ -1041,6 +1040,16 @@ function historyBack() {
     }
     isNavigatingHistory = false;
   }
+}
+
+function closeSubScreen() {
+  navHistory = ['welcomeScreen'];
+  navIndex = 0;
+  navigateToScreen('welcomeScreen', false);
+  activePartner = null;
+  activeConversationId = null;
+  if (partnerUserUnsub) { partnerUserUnsub(); partnerUserUnsub = null; }
+  renderContactList();
 }
 
 function historyForward() {
@@ -2126,3 +2135,4 @@ async function reportChatPartner() {
 </script>
 </body>
 </html>
+```[cite: 1]
