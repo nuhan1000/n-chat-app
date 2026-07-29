@@ -99,34 +99,14 @@
   }
   .screen.active { display: flex; z-index: 10; animation: appOpen 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-  /* Mobile Responsive View Fixes for APK / Small Screens */
   @media(max-width: 768px) {
-    .app-container {
-      position: relative;
-    }
+    .app-container { position: relative; }
     .sidebar-pane {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 2;
-      transition: transform 0.3s ease;
+      width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 2; transition: transform 0.3s ease;
     }
-    .sidebar-pane.hidden-mobile {
-      transform: translateX(-100%);
-    }
-    .main-pane {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
-    .main-pane .screen.active {
-      z-index: 30;
-    }
+    .sidebar-pane.hidden-mobile { transform: translateX(-100%); }
+    .main-pane { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+    .main-pane .screen.active { z-index: 30; }
   }
 
   #authScreen { align-items: center; justify-content: center; background: linear-gradient(135deg, #1E3A8A 0%, #172554 100%); padding: 24px; overflow-y: auto; position: fixed; z-index: 9999; }
@@ -137,7 +117,6 @@
   .btn-primary { width: 100%; padding: 12px 0; border-radius: 12px; border: none; background: var(--marigold); color: #fff; font-weight: 700; font-size: 15px; margin-top: 6px; cursor: pointer; transition: background 0.2s; }
   .btn-primary:hover { background: var(--marigold-hover); }
   .btn-danger { width: 100%; padding: 12px 0; border-radius: 12px; border: none; background: #ef4444; color: #fff; font-weight: 700; font-size: 15px; margin-top: 6px; cursor: pointer; }
-  .btn-danger:hover { opacity: 0.9; }
   .auth-switch { text-align: center; font-size: 13px; color: var(--muted); margin-top: 16px; }
   .auth-switch a { color: #2563EB; font-weight: 700; text-decoration: none; cursor: pointer; }
   .auth-error { color: #ef4444; font-size: 12px; text-align: center; min-height: 16px; margin-bottom: 6px; }
@@ -162,89 +141,27 @@
   .thin-icon-btn svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
   .theme-switch {
-    position: relative;
-    width: 46px;
-    height: 24px;
-    background: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    padding: 2px;
-    transition: background 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s ease;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+    position: relative; width: 46px; height: 24px; background: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px; cursor: pointer; display: flex; align-items: center; padding: 2px;
+    transition: background 0.35s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
   }
-  [data-theme="dark"] .theme-switch {
-    background: #27272a;
-    border-color: rgba(255, 255, 255, 0.15);
-  }
+  [data-theme="dark"] .theme-switch { background: #27272a; border-color: rgba(255, 255, 255, 0.15); }
   .theme-switch-knob {
-    width: 18px;
-    height: 18px;
-    background: #1e293b;
-    border-radius: 50%;
-    transform: translateX(0);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.35s ease;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    width: 18px; height: 18px; background: #1e293b; border-radius: 50%; transform: translateX(0);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.35s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   }
-  [data-theme="dark"] .theme-switch-knob {
-    transform: translateX(22px);
-    background: #ffffff;
-  }
+  [data-theme="dark"] .theme-switch-knob { transform: translateX(22px); background: #ffffff; }
 
   .recent-bubbles-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    background: var(--panel);
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-    flex-shrink: 0;
-    white-space: nowrap;
-    scrollbar-width: none;
+    display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--panel);
+    border-bottom: 1px solid var(--border); overflow-x: auto; flex-shrink: 0; white-space: nowrap; scrollbar-width: none;
   }
   .recent-bubbles-row::-webkit-scrollbar { display: none; }
-  .recent-bubble-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-  .recent-bubble-avatar-wrap {
-    position: relative;
-    width: 50px;
-    height: 50px;
-  }
-  .recent-bubble-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 16px;
-    color: #fff;
-    overflow: hidden;
-    border: 2px solid var(--marigold);
-  }
-  .recent-bubble-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .recent-bubble-name {
-    font-size: 11px;
-    color: var(--text);
-    max-width: 56px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
-  }
+  .recent-bubble-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex-shrink: 0; }
+  .recent-bubble-avatar-wrap { position: relative; width: 50px; height: 50px; }
+  .recent-bubble-avatar { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #fff; overflow: hidden; border: 2px solid var(--marigold); }
+  .recent-bubble-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .recent-bubble-name { font-size: 11px; color: var(--text); max-width: 56px; overflow: hidden; text-overflow: ellipsis; text-align: center; }
 
   .search-filter-container { padding: 10px 14px; background: var(--panel); border-bottom: 1px solid var(--border); flex-shrink: 0; }
   .search-box { display: flex; align-items: center; background: var(--bg); border-radius: 22px; padding: 8px 14px; gap: 10px; border: 1px solid transparent; }
@@ -315,18 +232,18 @@
   .dropdown-menu.show { display: block; animation: appOpen 0.2s ease-out; }
   .dropdown-item {
     padding: 12px 16px; font-size: 14px; color: var(--text); cursor: pointer;
-    display: flex; align-items: center; gap: 10px; transition: background 0.2s;
-    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px; transition: background 0.2s; border-bottom: 1px solid var(--border);
   }
   .dropdown-item:last-child { border-bottom: none; }
   .dropdown-item:hover { background: var(--bg); }
   .dropdown-item.danger { color: #ef4444; }
 
-  .attach-wrapper { position: relative; z-index: 100; }
+  /* FIXED ATTACH MENU: High Z-index & absolute positioning to prevent clipping */
+  .attach-wrapper { position: relative; z-index: 9999; }
   .attach-menu {
-    display: none; position: absolute; bottom: 120%; left: 0; background: var(--panel);
-    border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    width: 240px; z-index: 9999; overflow: hidden; animation: appOpen 0.2s ease-out;
+    display: none; position: absolute; bottom: 50px; left: 0; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    width: 240px; z-index: 99999; overflow: hidden; animation: appOpen 0.2s ease-out;
   }
   .attach-menu.show { display: block; }
   .attach-item {
@@ -360,16 +277,8 @@
   .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 4px 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 51; }
 
   .chat-back-indicator {
-    background: none;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    padding: 4px 8px 4px 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 51;
-    transition: opacity 0.2s;
+    background: none; border: none; color: #fff; cursor: pointer; padding: 4px 8px 4px 2px;
+    display: flex; align-items: center; justify-content: center; z-index: 51; transition: opacity 0.2s;
   }
   .chat-back-indicator:hover { opacity: 0.8; }
   .chat-back-indicator svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
@@ -392,68 +301,47 @@
   .bubble .ticks.seen { color: #93C5FD; }
   .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; background: var(--panel); }
   
-  /* FIXED: Composer & Send Button alignment and overflow fix for mobile screen */
   .composer { 
-    display: flex; 
-    align-items: center; 
-    gap: 8px; 
-    padding: 10px 14px; 
-    background: var(--panel); 
-    border-top: 1px solid var(--border); 
-    flex-shrink: 0; 
-    position: relative; 
-    z-index: 50; 
-    width: 100%;
-    overflow: hidden;
+    display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--panel); 
+    border-top: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 50; width: 100%;
   }
   .composer input[type="text"] { 
-    flex: 1; 
-    min-width: 0; 
-    border: 1.5px solid var(--border); 
-    border-radius: 22px; 
-    padding: 10px 16px; 
-    font-size: 14px; 
-    background: var(--bg); 
-    color: var(--text); 
+    flex: 1; min-width: 0; border: 1.5px solid var(--border); border-radius: 22px; 
+    padding: 10px 16px; font-size: 14px; background: var(--bg); color: var(--text); 
   }
   .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; }
   
   .round-btn.plus { background: var(--border); color: var(--text); font-weight: 400; font-size: 24px; transition: background 0.2s, color 0.2s; }
   .round-btn.plus:hover { background: var(--marigold); color: #fff; }
   .sidebar-bottom-fab {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    background: var(--marigold);
-    color: #fff;
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    font-weight: 300;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    border: none;
-    cursor: pointer;
-    z-index: 20;
-    transition: transform 0.2s, background 0.2s;
+    position: absolute; bottom: 20px; right: 20px; background: var(--marigold); color: #fff;
+    width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 300; box-shadow: 0 6px 16px rgba(0,0,0,0.15); border: none; cursor: pointer; z-index: 20; transition: transform 0.2s, background 0.2s;
   }
   .sidebar-bottom-fab:hover { transform: scale(1.06); background: var(--marigold-hover); }
 
   .round-btn.mic { background: var(--border); color: var(--muted); transition: background 0.2s, color 0.2s; }
   .round-btn.mic:hover { background: var(--marigold); color: #fff; }
   .round-btn.mic svg { width: 20px; height: 20px; fill: currentColor; }
-  .round-btn.mic.recording { background: #ef4444; color: #fff; animation: pulse 1.2s infinite; }
   .round-btn.send { background: var(--marigold); color: #fff; font-weight: 700; flex-shrink: 0; }
   .round-btn.send:hover { background: var(--marigold-hover); }
 
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+  /* WHATSAPP STYLE AUDIO RECORDING BAR */
+  .wa-recording-bar {
+    display: none; align-items: center; gap: 12px; flex: 1; background: var(--panel);
+    padding: 4px 8px; animation: appOpen 0.2s ease-out;
   }
+  .wa-rec-anim { display: flex; align-items: center; gap: 3px; height: 24px; flex: 1; justify-content: center; }
+  .wa-bar { width: 3px; background: #ef4444; border-radius: 2px; animation: soundWave 1.2s infinite ease-in-out; }
+  .wa-bar:nth-child(2) { animation-delay: 0.2s; }
+  .wa-bar:nth-child(3) { animation-delay: 0.4s; }
+  .wa-bar:nth-child(4) { animation-delay: 0.1s; }
+  .wa-bar:nth-child(5) { animation-delay: 0.5s; }
+  @keyframes soundWave {
+    0%, 100% { height: 6px; }
+    50% { height: 22px; }
+  }
+  .wa-timer { font-size: 13px; font-weight: 600; color: #ef4444; min-width: 38px; }
 
   #imageInput, #photoInput, #settingsPhotoInput, #docInput, #audioInput { display: none; }
   .img-preview-bar { padding: 8px 14px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; z-index: 45; position: relative; }
@@ -470,7 +358,7 @@
 </head>
 <body onclick="closeDropdowns(event)">
 
-<!-- Authentication Screen (Default Hidden: Loads only if user is logged out) -->
+<!-- Authentication Screen (Hidden if logged in) -->
 <div class="screen" id="authScreen" style="display:none;">
   <div class="auth-card" style="margin: auto;">
     <div class="auth-logo">Talknu</div>
@@ -489,7 +377,7 @@
   </div>
 </div>
 
-<!-- Main App Container (Directly displayed if already logged in) -->
+<!-- Main App Container (Directly loaded if authenticated) -->
 <div class="app-container" id="appContainer" style="display:none;">
   
   <div class="sidebar-pane" id="sidebarPane">
@@ -583,50 +471,44 @@
 
         <div class="settings-card" style="cursor: pointer;" onclick="openAccountSettings()">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3>🔑 Account</h3>
-            <span style="color: var(--muted);">›</span>
+            <h3>🔑 Account</h3><span style="color: var(--muted);">›</span>
           </div>
-          <div style="font-size: 13px; color: var(--muted);">Security notifications, change number, request account info</div>
+          <div style="font-size: 13px; color: var(--muted);">Security notifications, change number</div>
         </div>
 
         <div class="settings-card" style="cursor: pointer;" onclick="openPrivacySettings()">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3>🔒 Privacy</h3>
-            <span style="color: var(--muted);">›</span>
+            <h3>🔒 Privacy</h3><span style="color: var(--muted);">›</span>
           </div>
-          <div style="font-size: 13px; color: var(--muted);">Control who can see your personal info, read receipts</div>
+          <div style="font-size: 13px; color: var(--muted);">Control who can see your personal info</div>
         </div>
 
         <div class="settings-card" style="cursor: pointer;" onclick="openChatsSettings()">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3>💬 Chats</h3>
-            <span style="color: var(--muted);">›</span>
+            <h3>💬 Chats</h3><span style="color: var(--muted);">›</span>
           </div>
           <div style="font-size: 13px; color: var(--muted);">Theme, wallpapers, chat history</div>
         </div>
 
         <div class="settings-card" style="cursor: pointer;" onclick="openNotificationsSettings()">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3>🔔 Notifications</h3>
-            <span style="color: var(--muted);">›</span>
+            <h3>🔔 Notifications</h3><span style="color: var(--muted);">›</span>
           </div>
-          <div style="font-size: 13px; color: var(--muted);">Message, group & call tone alerts</div>
+          <div style="font-size: 13px; color: var(--muted);">Message tone alerts</div>
         </div>
 
         <div class="settings-card" style="cursor: pointer;" onclick="openStorageSettings()">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3>💾 Storage and Data</h3>
-            <span style="color: var(--muted);">›</span>
+            <h3>💾 Storage and Data</h3><span style="color: var(--muted);">›</span>
           </div>
-          <div style="font-size: 13px; color: var(--muted);">Network usage, auto-download media settings</div>
+          <div style="font-size: 13px; color: var(--muted);">Network usage, auto-download media</div>
         </div>
 
         <div class="settings-card" style="cursor: pointer;" onclick="openHelpSettings()">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3>❓ Help</h3>
-            <span style="color: var(--muted);">›</span>
+            <h3>❓ Help</h3><span style="color: var(--muted);">›</span>
           </div>
-          <div style="font-size: 13px; color: var(--muted);">Help center, contact us, app info</div>
+          <div style="font-size: 13px; color: var(--muted);">Help center, contact us</div>
         </div>
 
         <div class="settings-card">
@@ -645,171 +527,41 @@
       <div class="settings-content">
         <div class="settings-card">
           <h3>Who can see my personal info</h3>
-          
           <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Last Seen & Online</div>
-              <div>Who can see when I'm online</div>
-            </div>
+            <div class="privacy-label-group"><div>Last Seen & Online</div><div>Who can see when I'm online</div></div>
             <select class="settings-select" id="privLastSeen" style="width: 140px;" onchange="savePrivacySettings()">
-              <option value="all">Everyone</option>
-              <option value="contacts">My contacts</option>
-              <option value="nobody">Nobody</option>
+              <option value="all">Everyone</option><option value="contacts">My contacts</option><option value="nobody">Nobody</option>
             </select>
           </div>
-
           <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Profile Photo</div>
-              <div>Who can see my profile picture</div>
-            </div>
+            <div class="privacy-label-group"><div>Profile Photo</div><div>Who can see my picture</div></div>
             <select class="settings-select" id="privPhoto" style="width: 140px;" onchange="savePrivacySettings()">
-              <option value="all">Everyone</option>
-              <option value="contacts">My contacts</option>
-              <option value="nobody">Nobody</option>
+              <option value="all">Everyone</option><option value="contacts">My contacts</option><option value="nobody">Nobody</option>
             </select>
           </div>
-
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>About / Status</div>
-              <div>Who can see my status bio</div>
-            </div>
-            <select class="settings-select" id="privAbout" style="width: 140px;" onchange="savePrivacySettings()">
-              <option value="all">Everyone</option>
-              <option value="contacts">My contacts</option>
-              <option value="nobody">Nobody</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="settings-card">
-          <h3>Messaging Privacy</h3>
-          
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Read Receipts</div>
-              <div>If turned off, you won't send or receive read receipts</div>
-            </div>
-            <select class="settings-select" id="privReadReceipts" style="width: 140px;" onchange="savePrivacySettings()">
-              <option value="on">On</option>
-              <option value="off">Off</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="settings-card" style="border-color: #ef4444;">
-          <h3 style="color: #ef4444;">Delete My Account</h3>
-          <div style="font-size: 13px; color: var(--muted);">Deleting your account removes your profile and data permanently.</div>
-          <button class="btn-danger" onclick="deleteMyAccount()">🗑️ Delete Account</button>
         </div>
       </div>
     </div>
 
     <div class="screen" id="accountScreen">
-      <header>
-        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
-        <div class="app-title" style="font-size:18px; color: #fff;">Account</div>
-        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
-      </header>
-      <div class="settings-content">
-        <div class="settings-card">
-          <h3>Security Notifications</h3>
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Show security notifications</div>
-            </div>
-            <select class="settings-select" id="accountSecNotif" style="width: 100px;">
-              <option value="on">On</option>
-              <option value="off">Off</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      <header><button class="back-btn" onclick="historyBack()">←</button><div class="app-title" style="font-size:18px; color: #fff;">Account</div><button class="close-conv-btn" onclick="closeSubScreen()">✕</button></header>
+      <div class="settings-content"><div class="settings-card"><h3>Security</h3><div class="privacy-item"><div>Security notifications</div><select class="settings-select" style="width:100px;"><option value="on">On</option></select></div></div></div>
     </div>
-
     <div class="screen" id="chatsScreen">
-      <header>
-        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
-        <div class="app-title" style="font-size:18px; color: #fff;">Chats</div>
-        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
-      </header>
-      <div class="settings-content">
-        <div class="settings-card">
-          <h3>Display Settings</h3>
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Theme</div>
-              <div>Select app color scheme</div>
-            </div>
-            <select class="settings-select" id="chatsThemeSelector" style="width: 140px;" onchange="changeTheme(this.value)">
-              <option value="light">☀️ Light</option>
-              <option value="dark">🌙 Dark</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      <header><button class="back-btn" onclick="historyBack()">←</button><div class="app-title" style="font-size:18px; color: #fff;">Chats</div><button class="close-conv-btn" onclick="closeSubScreen()">✕</button></header>
+      <div class="settings-content"><div class="settings-card"><h3>Theme</h3><div class="privacy-item"><div>App Theme</div><select class="settings-select" id="chatsThemeSelector" style="width:140px;" onchange="changeTheme(this.value)"><option value="light">☀️ Light</option><option value="dark">🌙 Dark</option></select></div></div></div>
     </div>
-
     <div class="screen" id="notificationsScreen">
-      <header>
-        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
-        <div class="app-title" style="font-size:18px; color: #fff;">Notifications</div>
-        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
-      </header>
-      <div class="settings-content">
-        <div class="settings-card">
-          <h3>Message Notifications</h3>
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Conversation Tones</div>
-            </div>
-            <select class="settings-select" style="width: 100px;">
-              <option value="on">On</option>
-              <option value="off">Off</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      <header><button class="back-btn" onclick="historyBack()">←</button><div class="app-title" style="font-size:18px; color: #fff;">Notifications</div><button class="close-conv-btn" onclick="closeSubScreen()">✕</button></header>
+      <div class="settings-content"><div class="settings-card"><h3>Alerts</h3><div class="privacy-item"><div>Tones</div><select class="settings-select" style="width:100px;"><option value="on">On</option></select></div></div></div>
     </div>
-
     <div class="screen" id="storageScreen">
-      <header>
-        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
-        <div class="app-title" style="font-size:18px; color: #fff;">Storage and Data</div>
-        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
-      </header>
-      <div class="settings-content">
-        <div class="settings-card">
-          <h3>Network Usage</h3>
-          <div class="privacy-item">
-            <div class="privacy-label-group">
-              <div>Storage Usage</div>
-            </div>
-            <button class="btn-primary" style="width: 110px; padding: 6px 0; font-size: 13px;" onclick="alert('Storage usage: 24.5 MB used')">Manage</button>
-          </div>
-        </div>
-      </div>
+      <header><button class="back-btn" onclick="historyBack()">←</button><div class="app-title" style="font-size:18px; color: #fff;">Storage</div><button class="close-conv-btn" onclick="closeSubScreen()">✕</button></header>
+      <div class="settings-content"><div class="settings-card"><h3>Data</h3><div class="privacy-item"><div>Usage</div><button class="btn-primary" style="width:100px;padding:6px;">Check</button></div></div></div>
     </div>
-
     <div class="screen" id="helpScreen">
-      <header>
-        <button class="back-btn" onclick="historyBack()" title="Back">←</button>
-        <div class="app-title" style="font-size:18px; color: #fff;">Help</div>
-        <button class="close-conv-btn" onclick="closeSubScreen()" title="Close">✕</button>
-      </header>
-      <div class="settings-content">
-        <div class="settings-card">
-          <h3>Support Info</h3>
-          <div class="privacy-item" style="cursor:pointer;" onclick="alert('Talknu Mobile & Web v2.6.0')">
-            <div class="privacy-label-group">
-              <div>App Info</div>
-              <div>Version details</div>
-            </div>
-            <span style="color:var(--muted);">›</span>
-          </div>
-        </div>
-      </div>
+      <header><button class="back-btn" onclick="historyBack()">←</button><div class="app-title" style="font-size:18px; color: #fff;">Help</div><button class="close-conv-btn" onclick="closeSubScreen()">✕</button></header>
+      <div class="settings-content"><div class="settings-card"><h3>Support</h3><div class="privacy-item"><div>App Version</div><span>v2.6.0</span></div></div></div>
     </div>
 
     <div class="screen" id="mediaViewerScreen">
@@ -821,6 +573,7 @@
       <div class="media-viewer-content" id="mediaViewerContentEl"></div>
     </div>
 
+    <!-- CHAT SCREEN -->
     <div class="screen" id="chatScreen">
       <header>
         <button class="chat-back-indicator" onclick="closeCurrentConversation()" title="Back">
@@ -845,12 +598,10 @@
             <div class="dropdown-menu" id="chatDropdownMenu">
               <div class="dropdown-item" onclick="openContactInfoFromChat()">ℹ️ View Contact Info</div>
               <div class="dropdown-item" onclick="openMediaLinksDocs()">🖼️ Media, link and docs</div>
-              <div class="dropdown-item" onclick="toggleNotificationSettings()">🔔 Notification settings</div>
               <div class="dropdown-item" onclick="toggleFavouriteChat()">⭐ Add to favourites</div>
               <div class="dropdown-item danger" onclick="blockChatPartner()">🚫 Block User</div>
               <div class="dropdown-item" onclick="clearChatMessages()">🧹 Clear Chat</div>
               <div class="dropdown-item danger" onclick="deleteChatConversation()">🗑️ Delete Chat</div>
-              <div class="dropdown-item" onclick="reportChatPartner()">⚠️ Report User</div>
             </div>
           </div>
 
@@ -860,11 +611,14 @@
       </header>
       <div class="messages" id="messagesEl"></div>
       <div class="typing-indicator" id="typingIndicator" style="display:none;">typing...</div>
+      
       <div class="img-preview-bar" id="imgPreviewBar" style="display:none;">
         <img id="imgPreviewThumb" />
         <span style="flex:1;font-size:12px;" id="imgPreviewText">Ready to send</span>
         <button onclick="clearImagePreview()" style="background:none;border:none;color:red;font-size:12px;cursor:pointer;">Cancel</button>
       </div>
+
+      <!-- COMPOSER -->
       <div class="composer">
         <input type="file" id="imageInput" accept="image/*" onchange="onImageSelected(event)" />
         <input type="file" id="docInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" onchange="onDocSelected(event)" />
@@ -878,6 +632,16 @@
             <div class="attach-item" onclick="document.getElementById('audioInput').click(); closeAttachMenu();"><span>🎵</span> Audio</div>
             <div class="attach-item" onclick="shareLocation(); closeAttachMenu();"><span>📍</span> Share google map location</div>
           </div>
+        </div>
+
+        <!-- WhatsApp Style Live Audio Recording Container -->
+        <div class="wa-recording-bar" id="waRecordingBar">
+          <button class="round-btn" onclick="cancelAudioRecording()" style="background:#ef4444;color:#fff;width:34px;height:34px;font-size:14px;" title="Cancel Recording">🗑️</button>
+          <div class="wa-rec-anim">
+            <div class="wa-bar"></div><div class="wa-bar"></div><div class="wa-bar"></div><div class="wa-bar"></div><div class="wa-bar"></div>
+          </div>
+          <div class="wa-timer" id="waTimer">0:00</div>
+          <button class="round-btn" onclick="stopAndSendAudioRecording()" style="background:#22C55E;color:#fff;width:34px;height:34px;font-size:14px;" title="Send Voice Note">➤</button>
         </div>
 
         <button class="round-btn mic" id="micBtn" onclick="toggleVoiceRecording()" title="Record Audio Message">
@@ -935,53 +699,42 @@ let favouritesList = JSON.parse(localStorage.getItem('talknu_favourites') || '[]
 let mediaRecorder = null;
 let audioChunks = [];
 let isRecording = false;
+let recTimerInterval = null;
+let recSeconds = 0;
 
 let navHistory = ['welcomeScreen'];
 let navIndex = 0;
 let isNavigatingHistory = false;
 
-function isMobileView() {
-  return window.innerWidth <= 768;
-}
+function isMobileView() { return window.innerWidth <= 768; }
 
 function navigateToScreen(screenId, pushToStack = true) {
-  document.querySelectorAll('#mainPane .screen').forEach(s => {
-    s.classList.remove('active');
-  });
+  document.querySelectorAll('#mainPane .screen').forEach(s => s.classList.remove('active'));
   const target = document.getElementById(screenId);
-  if (target) {
-    target.classList.add('active');
-  }
+  if (target) target.classList.add('active');
 
-  // Mobile layout handling between sidebar and active chat/screen pane
   if (isMobileView()) {
     const sidebar = document.getElementById('sidebarPane');
-    if (screenId === 'welcomeScreen') {
-      sidebar.classList.remove('hidden-mobile');
-    } else {
-      sidebar.classList.add('hidden-mobile');
-    }
+    if (screenId === 'welcomeScreen') sidebar.classList.remove('hidden-mobile');
+    else sidebar.classList.add('hidden-mobile');
   }
 
   if (pushToStack && !isNavigatingHistory) {
     navHistory = navHistory.slice(0, navIndex + 1);
     navHistory.push(screenId);
     navIndex = navHistory.length - 1;
-    // Push state for hardware/software mobile back navigation support
     history.pushState({ screenId, navIndex }, '');
   }
   updateNavButtons();
 }
 
-// Mobile Hardware/Software Navigation Back Button Support Handler
-window.addEventListener('popstate', (event) => {
+window.addEventListener('popstate', () => {
   if (navIndex > 0) {
     navIndex--;
     isNavigatingHistory = true;
     navigateToScreen(navHistory[navIndex], false);
     if (navHistory[navIndex] === 'welcomeScreen') {
-      activePartner = null;
-      activeConversationId = null;
+      activePartner = null; activeConversationId = null;
       if (partnerUserUnsub) { partnerUserUnsub(); partnerUserUnsub = null; }
       renderContactList();
     }
@@ -995,8 +748,7 @@ function historyBack() {
     isNavigatingHistory = true;
     navigateToScreen(navHistory[navIndex], false);
     if (navHistory[navIndex] === 'welcomeScreen') {
-      activePartner = null;
-      activeConversationId = null;
+      activePartner = null; activeConversationId = null;
       if (partnerUserUnsub) { partnerUserUnsub(); partnerUserUnsub = null; }
       renderContactList();
     }
@@ -1005,19 +757,16 @@ function historyBack() {
 }
 
 function closeSubScreen() {
-  navHistory = ['welcomeScreen'];
-  navIndex = 0;
+  navHistory = ['welcomeScreen']; navIndex = 0;
   navigateToScreen('welcomeScreen', false);
-  activePartner = null;
-  activeConversationId = null;
+  activePartner = null; activeConversationId = null;
   if (partnerUserUnsub) { partnerUserUnsub(); partnerUserUnsub = null; }
   renderContactList();
 }
 
 function historyForward() {
   if (navIndex < navHistory.length - 1) {
-    navIndex++;
-    isNavigatingHistory = true;
+    navIndex++; isNavigatingHistory = true;
     navigateToScreen(navHistory[navIndex], false);
     isNavigatingHistory = false;
   }
@@ -1031,8 +780,7 @@ function updateNavButtons() {
 }
 
 function closeCurrentConversation() {
-  activePartner = null;
-  activeConversationId = null;
+  activePartner = null; activeConversationId = null;
   if (messagesUnsub) { messagesUnsub(); messagesUnsub = null; }
   if (convDocUnsub) { convDocUnsub(); convDocUnsub = null; }
   if (partnerUserUnsub) { partnerUserUnsub(); partnerUserUnsub = null; }
@@ -1040,40 +788,20 @@ function closeCurrentConversation() {
   renderContactList();
 }
 
-function toggleChatMenu(event) {
-  event.stopPropagation();
-  const menu = document.getElementById('chatDropdownMenu');
-  menu.classList.toggle('show');
-}
-
-function toggleAttachMenu(event) {
-  event.stopPropagation();
-  const menu = document.getElementById('attachMenu');
-  menu.classList.toggle('show');
-}
-
-function closeAttachMenu() {
-  const menu = document.getElementById('attachMenu');
-  if (menu) menu.classList.remove('show');
-}
+function toggleChatMenu(event) { event.stopPropagation(); document.getElementById('chatDropdownMenu').classList.toggle('show'); }
+function toggleAttachMenu(event) { event.stopPropagation(); document.getElementById('attachMenu').classList.toggle('show'); }
+function closeAttachMenu() { const menu = document.getElementById('attachMenu'); if (menu) menu.classList.remove('show'); }
 
 function closeDropdowns(event) {
   const menu = document.getElementById('chatDropdownMenu');
-  if (menu && menu.classList.contains('show')) {
-    menu.classList.remove('show');
-  }
+  if (menu && menu.classList.contains('show')) menu.classList.remove('show');
   const attachMenu = document.getElementById('attachMenu');
-  if (attachMenu && attachMenu.classList.contains('show')) {
-    attachMenu.classList.remove('show');
-  }
+  if (attachMenu && attachMenu.classList.contains('show')) attachMenu.classList.remove('show');
 }
 
 function changeTheme(themeName) {
-  if (themeName === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-  } else {
-    document.documentElement.removeAttribute('data-theme');
-  }
+  if (themeName === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  else document.documentElement.removeAttribute('data-theme');
   localStorage.setItem('talknu_theme_mode', themeName);
   const chatsSelector = document.getElementById('chatsThemeSelector');
   if (chatsSelector) chatsSelector.value = themeName;
@@ -1091,8 +819,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 const AVATAR_COLORS = ['#2563EB', '#1E40AF', '#1D4ED8', '#3B82F6', '#60A5FA', '#93C5FD'];
 function colorForName(name) {
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  let hash = 0; for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 function initialsFor(name) { return (name || '?').trim().charAt(0).toUpperCase(); }
@@ -1105,31 +832,21 @@ function avatarBg(user) { return (user && user.photoBase64) ? 'transparent' : co
 function checkIfOnline(user) {
   if (!user || !user.lastSeen) return false;
   const lastActiveTime = user.lastSeen.toDate ? user.lastSeen.toDate().getTime() : new Date(user.lastSeen).getTime();
-  const now = Date.now();
-  const diffSeconds = (now - lastActiveTime) / 1000;
-  return user.online === true && diffSeconds < 45;
+  return user.online === true && (Date.now() - lastActiveTime) / 1000 < 45;
 }
 
 function formatLastActive(userObj) {
   if (userObj && userObj.privacy && userObj.privacy.lastSeen === 'nobody') return "Offline";
   if (!userObj || !userObj.lastSeen) return "Offline";
-  const now = new Date();
-  const lastActive = userObj.lastSeen.toDate ? userObj.lastSeen.toDate() : new Date(userObj.lastSeen);
-  const diffInSeconds = Math.floor((now - lastActive) / 1000);
-  
+  const diffInSeconds = Math.floor((Date.now() - (userObj.lastSeen.toDate ? userObj.lastSeen.toDate() : new Date(userObj.lastSeen))) / 1000);
   if (diffInSeconds < 45) return "Online";
-  const fifteenDaysInSeconds = 15 * 24 * 60 * 60;
-  if (diffInSeconds > fifteenDaysInSeconds || diffInSeconds < 0) return "Offline";
-
-  const diffInDays = Math.floor(diffInSeconds / (60 * 60 * 24));
-  if (diffInDays > 0) return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
-
-  const diffInHours = Math.floor(diffInSeconds / 3600);
-  if (diffInHours > 0) return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
-
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  if (diffInMinutes > 0) return `${diffInMinutes} min ago`;
-
+  if (diffInSeconds > 1296000 || diffInSeconds < 0) return "Offline";
+  const days = Math.floor(diffInSeconds / 86400);
+  if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+  const hours = Math.floor(diffInSeconds / 3600);
+  if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  const mins = Math.floor(diffInSeconds / 60);
+  if (mins > 0) return `${mins} min ago`;
   return "Just now";
 }
 
@@ -1160,10 +877,7 @@ function toggleAuthMode() {
   document.getElementById('authError').textContent = '';
 }
 
-function phoneToEmail(phone) {
-  const cleanPhone = phone.replace(/[^0-9]/g, '');
-  return `user_${cleanPhone}@talknu.local`;
-}
+function phoneToEmail(phone) { return `user_${phone.replace(/[^0-9]/g, '')}@talknu.local`; }
 
 function onSignupPhotoSelected(event) {
   const file = event.target.files[0];
@@ -1172,13 +886,10 @@ function onSignupPhotoSelected(event) {
   reader.onload = (e) => {
     const img = new Image();
     img.onload = () => {
-      const SIZE = 120;
-      const canvas = document.createElement('canvas');
-      canvas.width = SIZE; canvas.height = SIZE;
+      const canvas = document.createElement('canvas'); canvas.width = 120; canvas.height = 120;
       const ctx = canvas.getContext('2d');
-      const scale = Math.max(SIZE / img.width, SIZE / img.height);
-      const w = img.width * scale, h = img.height * scale;
-      ctx.drawImage(img, (SIZE - w) / 2, (SIZE - h) / 2, w, h);
+      const scale = Math.max(120 / img.width, 120 / img.height);
+      ctx.drawImage(img, (120 - img.width * scale) / 2, (120 - img.height * scale) / 2, img.width * scale, img.height * scale);
       pendingSignupPhoto = canvas.toDataURL('image/jpeg', 0.7);
       document.getElementById('signupPhotoPreview').innerHTML = `<img src="${pendingSignupPhoto}" style="width:100%;height:100%;object-fit:cover;" />`;
     };
@@ -1193,14 +904,8 @@ async function submitAuth() {
   const errEl = document.getElementById('authError');
   errEl.textContent = '';
 
-  if (!phone || phone.length !== 11 || !/^\d{11}$/.test(phone)) { 
-    errEl.textContent = 'Mobile number must be exactly 11 digits'; 
-    return; 
-  }
-  if (!password || password.length < 6) { 
-    errEl.textContent = 'Password must be at least 6 characters'; 
-    return; 
-  }
+  if (!phone || phone.length !== 11 || !/^\d{11}$/.test(phone)) { errEl.textContent = 'Mobile number must be exactly 11 digits'; return; }
+  if (!password || password.length < 6) { errEl.textContent = 'Password must be at least 6 characters'; return; }
 
   const fakeEmail = phoneToEmail(phone);
   const submitBtn = document.getElementById('authSubmitBtn');
@@ -1210,33 +915,24 @@ async function submitAuth() {
     if (isSignupMode) {
       const displayName = document.getElementById('displayNameField').value.trim();
       if (!displayName) { errEl.textContent = 'Please enter your name'; submitBtn.disabled = false; return; }
-      
       const cred = await auth.createUserWithEmailAndPassword(fakeEmail, password);
       await db.collection('users').doc(cred.user.uid).set({
-        displayName,
-        phone,
-        uid: cred.user.uid,
-        photoBase64: pendingSignupPhoto || null,
-        online: true,
-        lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+        displayName, phone, uid: cred.user.uid, photoBase64: pendingSignupPhoto || null,
+        online: true, lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on', disappearing: 'off' }
+        privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on' }
       });
     } else {
       try {
         await auth.signInWithEmailAndPassword(fakeEmail, password);
       } catch (signInErr) {
-        if (signInErr.code === 'auth/user-not-found' || signInErr.code === 'auth/invalid-credential' || signInErr.code === 'auth/wrong-password') {
+        if (signInErr.code === 'auth/user-not-found' || signInErr.code === 'auth/invalid-credential') {
           const cred = await auth.createUserWithEmailAndPassword(fakeEmail, password);
           await db.collection('users').doc(cred.user.uid).set({
-            displayName: "User " + phone.slice(-4),
-            phone,
-            uid: cred.user.uid,
-            photoBase64: null,
-            online: true,
-            lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+            displayName: "User " + phone.slice(-4), phone, uid: cred.user.uid, photoBase64: null,
+            online: true, lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on', disappearing: 'off' }
+            privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on' }
           });
           return;
         }
@@ -1244,9 +940,7 @@ async function submitAuth() {
       }
     }
   } catch (e) {
-    if(e.code === 'auth/email-already-in-use') errEl.textContent = 'This number is already registered! Please login instead.';
-    else if(e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password') errEl.textContent = 'Incorrect number or password!';
-    else errEl.textContent = e.message || 'An error occurred, please try again';
+    errEl.textContent = e.message || 'An error occurred';
   } finally {
     submitBtn.disabled = false;
   }
@@ -1254,30 +948,16 @@ async function submitAuth() {
 
 function setPresence(online) {
   if (!currentUser) return;
-  try {
-    const updateData = { lastSeen: firebase.firestore.FieldValue.serverTimestamp() };
-    if (online) updateData.online = true;
-    else updateData.online = false;
-    db.collection('users').doc(currentUser.uid).update(updateData);
-  } catch (e) {}
+  try { db.collection('users').doc(currentUser.uid).update({ online, lastSeen: firebase.firestore.FieldValue.serverTimestamp() }); } catch (e) {}
 }
 
 function startHeartbeat() {
   setPresence(true);
   heartbeatInterval = setInterval(() => setPresence(true), 15000);
 }
-function stopHeartbeat() {
-  if (heartbeatInterval) clearInterval(heartbeatInterval);
-  setPresence(false);
-}
 
 window.addEventListener('beforeunload', () => {
-  if (currentUser) {
-    db.collection('users').doc(currentUser.uid).update({
-      online: false,
-      lastSeen: firebase.firestore.FieldValue.serverTimestamp()
-    });
-  }
+  if (currentUser) db.collection('users').doc(currentUser.uid).update({ online: false, lastSeen: firebase.firestore.FieldValue.serverTimestamp() });
 });
 
 function logout() {
@@ -1286,11 +966,12 @@ function logout() {
   if (partnerUserUnsub) partnerUserUnsub();
   if (usersUnsub) usersUnsub();
   if (conversationsUnsub) conversationsUnsub();
-  stopHeartbeat();
+  if (heartbeatInterval) clearInterval(heartbeatInterval);
+  setPresence(false);
   auth.signOut();
 }
 
-// Session Check: Direct entry to App Interface if already logged in[cite: 1]
+// Session Check: Direct entry to app interface if already logged in[cite: 1]
 auth.onAuthStateChanged(async (user) => {
   const authEl = document.getElementById('authScreen');
   const appEl = document.getElementById('appContainer');
@@ -1302,16 +983,13 @@ auth.onAuthStateChanged(async (user) => {
     const userDocRef = db.collection('users').doc(user.uid);
     let doc = await userDocRef.get();
     if (!doc.exists) {
-      const defaultName = "User " + user.uid.slice(0, 4);
       await userDocRef.set({
-        displayName: defaultName,
+        displayName: "User " + user.uid.slice(0, 4),
         phone: user.email ? user.email.replace('user_', '').replace('@talknu.local', '') : '',
-        uid: user.uid,
-        photoBase64: null,
-        online: true,
+        uid: user.uid, photoBase64: null, online: true,
         lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on', disappearing: 'off' }
+        privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on' }
       });
       doc = await userDocRef.get();
     }
@@ -1321,7 +999,7 @@ auth.onAuthStateChanged(async (user) => {
   } else {
     currentUser = null;
     appEl.style.display = 'none';
-    authEl.style.display = 'flex'; // Shows login screen only if not logged in
+    authEl.style.display = 'flex';
   }
 });
 
@@ -1353,73 +1031,49 @@ function setFilter(filterType, btnEl) {
   renderContactList();
 }
 
-function filterContactList() {
-  renderContactList();
-}
+function filterContactList() { renderContactList(); }
 
 function renderRecentBubbles() {
   const rowEl = document.getElementById('recentBubblesRow');
   if (!rowEl) return;
-
   let mapUsers = {};
-  allUsers.filter(u => checkIfOnline(u)).forEach(u => {
-    mapUsers[u.uid] = { u, score: 2000000 };
-  });
-
+  allUsers.filter(u => checkIfOnline(u)).forEach(u => { mapUsers[u.uid] = { u, score: 2000000 }; });
   allUsers.forEach(u => {
     const convId = [currentUser.uid, u.uid].sort().join('_');
     const conv = myConversations[convId];
     if (conv && conv.lastUpdated) {
       const ts = conv.lastUpdated.toMillis();
-      if (mapUsers[u.uid]) {
-        mapUsers[u.uid].score = Math.max(mapUsers[u.uid].score, ts + 1000000);
-      } else {
-        mapUsers[u.uid] = { u, score: ts };
-      }
+      if (mapUsers[u.uid]) mapUsers[u.uid].score = Math.max(mapUsers[u.uid].score, ts + 1000000);
+      else mapUsers[u.uid] = { u, score: ts };
     }
   });
-
   let bubbleArr = Object.values(mapUsers);
   bubbleArr.sort((a, b) => b.score - a.score);
 
-  if (bubbleArr.length === 0) {
-    rowEl.style.display = 'none';
-    return;
-  }
-
+  if (bubbleArr.length === 0) { rowEl.style.display = 'none'; return; }
   rowEl.style.display = 'flex';
-  rowEl.innerHTML = bubbleArr.map(item => {
-    const isOnline = checkIfOnline(item.u);
-    return `
-      <div class="recent-bubble-item" onclick='openChat(${JSON.stringify(item.u)})'>
-        <div class="recent-bubble-avatar-wrap">
-          <div class="recent-bubble-avatar" style="background:${avatarBg(item.u)}">${avatarHtml(item.u)}</div>
-          ${isOnline ? '<div class="online-dot"></div>' : ''}
-        </div>
-        <div class="recent-bubble-name">${escapeHtml(item.u.displayName)}</div>
+  rowEl.innerHTML = bubbleArr.map(item => `
+    <div class="recent-bubble-item" onclick='openChat(${JSON.stringify(item.u)})'>
+      <div class="recent-bubble-avatar-wrap">
+        <div class="recent-bubble-avatar" style="background:${avatarBg(item.u)}">${avatarHtml(item.u)}</div>
+        ${checkIfOnline(item.u) ? '<div class="online-dot"></div>' : ''}
       </div>
-    `;
-  }).join('');
+      <div class="recent-bubble-name">${escapeHtml(item.u.displayName)}</div>
+    </div>
+  `).join('');
 }
 
 function renderContactList() {
   const listEl = document.getElementById('contactList');
   const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
-  
-  if (allUsers.length === 0) {
-    listEl.innerHTML = '<div class="empty-state">No other users found. Click the (+) button to add someone.</div>';
-    return;
-  }
+  if (allUsers.length === 0) { listEl.innerHTML = '<div class="empty-state">No other users found. Click (+) to add.</div>'; return; }
 
   let rows = allUsers.map(u => {
     const convId = [currentUser.uid, u.uid].sort().join('_');
     const conv = myConversations[convId];
-    
     const isOnline = checkIfOnline(u);
     let previewPrefixed = isOnline ? 'Online' : formatLastActive(u);
-    let unread = 0;
-    let timeLabel = '';
-    let sortKey = conv && conv.lastUpdated ? conv.lastUpdated.toMillis() : 0;
+    let unread = 0, timeLabel = '', sortKey = conv && conv.lastUpdated ? conv.lastUpdated.toMillis() : 0;
 
     if (conv) {
       let preview = conv.lastMessageText || '';
@@ -1427,33 +1081,19 @@ function renderContactList() {
       else if (conv.lastMessageType === 'document') preview = '📄 Document';
       else if (conv.lastMessageType === 'audio') preview = '🎵 Audio';
       else if (conv.lastMessageType === 'location') preview = '📍 Location';
-
       previewPrefixed = conv.lastMessageSenderId === currentUser.uid ? 'You: ' + preview : preview;
       unread = conv.unreadCount && conv.unreadCount[currentUser.uid] ? conv.unreadCount[currentUser.uid] : 0;
       timeLabel = timeAgoLabel(conv.lastUpdated);
     }
-
-    const isFavourite = favouritesList.includes(u.uid);
-
-    return { u, convId, previewPrefixed, unread, timeLabel, sortKey, isFavourite, isOnline };
+    return { u, convId, previewPrefixed, unread, timeLabel, sortKey, isFavourite: favouritesList.includes(u.uid), isOnline };
   });
 
-  if (searchVal) {
-    rows = rows.filter(r => r.u.displayName.toLowerCase().includes(searchVal) || (r.u.phone && r.u.phone.includes(searchVal)));
-  }
-
-  if (activeFilter === 'unread') {
-    rows = rows.filter(r => r.unread > 0);
-  } else if (activeFilter === 'favourites') {
-    rows = rows.filter(r => r.isFavourite);
-  }
-
+  if (searchVal) rows = rows.filter(r => r.u.displayName.toLowerCase().includes(searchVal) || (r.u.phone && r.u.phone.includes(searchVal)));
+  if (activeFilter === 'unread') rows = rows.filter(r => r.unread > 0);
+  else if (activeFilter === 'favourites') rows = rows.filter(r => r.isFavourite);
   rows.sort((a, b) => b.sortKey - a.sortKey);
 
-  if (rows.length === 0) {
-    listEl.innerHTML = '<div class="empty-state">No chats match the current filter.</div>';
-    return;
-  }
+  if (rows.length === 0) { listEl.innerHTML = '<div class="empty-state">No chats match.</div>'; return; }
 
   listEl.innerHTML = rows.map(r => `
     <div class="contact-row ${activePartner && activePartner.uid === r.u.uid ? 'selected' : ''}" onclick='openChat(${JSON.stringify(r.u)})'>
@@ -1475,81 +1115,40 @@ function renderContactList() {
   `).join('');
 }
 
-function openUserList() {
-  renderAllUsersList();
-  navigateToScreen('userListScreen');
-}
+function openUserList() { renderAllUsersList(); navigateToScreen('userListScreen'); }
 
 function renderAllUsersList() {
   const listEl = document.getElementById('allUsersListEl');
-  if (allUsers.length === 0) {
-    listEl.innerHTML = '<div class="empty-state">No other users registered yet.</div>';
-    return;
-  }
-
-  listEl.innerHTML = allUsers.map(u => {
-    const isOnline = checkIfOnline(u);
-    return `
-      <div class="contact-row" onclick='openChat(${JSON.stringify(u)})'>
-        <div class="avatar-wrap">
-          <div class="avatar" style="background:${avatarBg(u)}">${avatarHtml(u)}</div>
-          ${isOnline ? '<div class="online-dot"></div>' : ''}
-        </div>
-        <div class="contact-main">
-          <div class="contact-top-row">
-            <div class="contact-name">${escapeHtml(u.displayName)}</div>
-          </div>
-          <div class="contact-bottom-row">
-            <div class="contact-sub">${isOnline ? 'Online' : formatLastActive(u)}</div>
-          </div>
-        </div>
+  if (allUsers.length === 0) { listEl.innerHTML = '<div class="empty-state">No users registered.</div>'; return; }
+  listEl.innerHTML = allUsers.map(u => `
+    <div class="contact-row" onclick='openChat(${JSON.stringify(u)})'>
+      <div class="avatar-wrap">
+        <div class="avatar" style="background:${avatarBg(u)}">${avatarHtml(u)}</div>
+        ${checkIfOnline(u) ? '<div class="online-dot"></div>' : ''}
       </div>
-    `;
-  }).join('');
+      <div class="contact-main">
+        <div class="contact-top-row"><div class="contact-name">${escapeHtml(u.displayName)}</div></div>
+        <div class="contact-bottom-row"><div class="contact-sub">${checkIfOnline(u) ? 'Online' : formatLastActive(u)}</div></div>
+      </div>
+    </div>
+  `).join('');
 }
 
 function openContactInfo(userObj) {
   if (!userObj) return;
   const container = document.getElementById('profileContainerEl');
-  
-  const formattedDate = userObj.createdAt && userObj.createdAt.toDate ? new Date(userObj.createdAt.toDate()).toLocaleDateString() : 'Recently';
-  const isOnline = checkIfOnline(userObj);
-  const statusStr = isOnline ? 'Online' : formatLastActive(userObj);
-
-  let displayAvatarHtml = avatarHtml(userObj);
-  let displayAvatarBg = avatarBg(userObj);
-  if (userObj.privacy && userObj.privacy.photo === 'nobody') {
-    displayAvatarHtml = initialsFor(userObj.displayName);
-    displayAvatarBg = colorForName(userObj.displayName);
-  }
-
+  const created = userObj.createdAt && userObj.createdAt.toDate ? new Date(userObj.createdAt.toDate()).toLocaleDateString() : 'Recently';
   container.innerHTML = `
     <div class="profile-hero">
-      <div class="profile-big-avatar" style="background:${displayAvatarBg}">${displayAvatarHtml}</div>
+      <div class="profile-big-avatar" style="background:${avatarBg(userObj)}">${avatarHtml(userObj)}</div>
       <div class="profile-name">${escapeHtml(userObj.displayName)}</div>
       <div class="profile-status-text">📱 ${userObj.phone || 'No phone'}</div>
     </div>
-
-    <div class="profile-section-card">
-      <div class="profile-section-label">Status</div>
-      <div class="profile-section-value">${statusStr}</div>
-    </div>
-
-    <div class="profile-section-card">
-      <div class="profile-section-label">Mobile Number</div>
-      <div class="profile-section-value">${userObj.phone || 'N/A'}</div>
-    </div>
-
-    <div class="profile-section-card">
-      <div class="profile-section-label">Account Created</div>
-      <div class="profile-section-value">${formattedDate}</div>
-    </div>
-
-    <div style="padding: 20px;">
-      <button class="btn-primary" onclick='openChat(${JSON.stringify(userObj)})'>Send Message</button>
-    </div>
+    <div class="profile-section-card"><div class="profile-section-label">Status</div><div class="profile-section-value">${checkIfOnline(userObj) ? 'Online' : formatLastActive(userObj)}</div></div>
+    <div class="profile-section-card"><div class="profile-section-label">Mobile</div><div class="profile-section-value">${userObj.phone || 'N/A'}</div></div>
+    <div class="profile-section-card"><div class="profile-section-label">Joined</div><div class="profile-section-value">${created}</div></div>
+    <div style="padding: 20px;"><button class="btn-primary" onclick='openChat(${JSON.stringify(userObj)})'>Send Message</button></div>
   `;
-
   navigateToScreen('contactInfoScreen');
 }
 
@@ -1567,8 +1166,6 @@ function openPrivacySettings() {
   if (currentUser.privacy) {
     document.getElementById('privLastSeen').value = currentUser.privacy.lastSeen || 'all';
     document.getElementById('privPhoto').value = currentUser.privacy.photo || 'all';
-    document.getElementById('privAbout').value = currentUser.privacy.about || 'all';
-    document.getElementById('privReadReceipts').value = currentUser.privacy.readReceipts || 'on';
   }
   navigateToScreen('privacyScreen');
 }
@@ -1578,30 +1175,8 @@ function openStorageSettings() { navigateToScreen('storageScreen'); }
 function openHelpSettings() { navigateToScreen('helpScreen'); }
 
 async function savePrivacySettings() {
-  const privacyData = {
-    lastSeen: document.getElementById('privLastSeen').value,
-    photo: document.getElementById('privPhoto').value,
-    about: document.getElementById('privAbout').value,
-    readReceipts: document.getElementById('privReadReceipts').value
-  };
-  try {
-    await db.collection('users').doc(currentUser.uid).update({ privacy: privacyData });
-    currentUser.privacy = privacyData;
-  } catch (e) {}
-}
-
-async function deleteMyAccount() {
-  if (confirm('Are you sure you want to delete your account?')) {
-    try {
-      const uid = currentUser.uid;
-      await db.collection('users').doc(uid).delete();
-      const user = auth.currentUser;
-      if (user) await user.delete();
-      logout();
-    } catch (e) {
-      alert('Failed to delete account.');
-    }
-  }
+  const privacyData = { lastSeen: document.getElementById('privLastSeen').value, photo: document.getElementById('privPhoto').value, readReceipts: 'on' };
+  try { await db.collection('users').doc(currentUser.uid).update({ privacy: privacyData }); currentUser.privacy = privacyData; } catch (e) {}
 }
 
 function onSettingsPhotoSelected(event) {
@@ -1611,13 +1186,10 @@ function onSettingsPhotoSelected(event) {
   reader.onload = (e) => {
     const img = new Image();
     img.onload = () => {
-      const SIZE = 120;
-      const canvas = document.createElement('canvas');
-      canvas.width = SIZE; canvas.height = SIZE;
+      const canvas = document.createElement('canvas'); canvas.width = 120; canvas.height = 120;
       const ctx = canvas.getContext('2d');
-      const scale = Math.max(SIZE / img.width, SIZE / img.height);
-      const w = img.width * scale, h = img.height * scale;
-      ctx.drawImage(img, (SIZE - w) / 2, (SIZE - h) / 2, w, h);
+      const scale = Math.max(120 / img.width, 120 / img.height);
+      ctx.drawImage(img, (120 - img.width * scale) / 2, (120 - img.height * scale) / 2, img.width * scale, img.height * scale);
       pendingSettingsPhoto = canvas.toDataURL('image/jpeg', 0.7);
       const previewEl = document.getElementById('settingsAvatarPreview');
       previewEl.style.background = 'transparent';
@@ -1630,18 +1202,12 @@ function onSettingsPhotoSelected(event) {
 
 async function saveProfileChanges() {
   const newName = document.getElementById('settingsNameInput').value.trim();
-  if (!newName) { alert('Please enter a name'); return; }
-
+  if (!newName) { alert('Enter name'); return; }
   try {
-    await db.collection('users').doc(currentUser.uid).update({
-      displayName: newName,
-      photoBase64: pendingSettingsPhoto
-    });
-    currentUser.displayName = newName;
-    currentUser.photoBase64 = pendingSettingsPhoto;
-    alert('Profile updated successfully!');
-    historyBack();
-  } catch (e) { alert('Failed to update profile'); }
+    await db.collection('users').doc(currentUser.uid).update({ displayName: newName, photoBase64: pendingSettingsPhoto });
+    currentUser.displayName = newName; currentUser.photoBase64 = pendingSettingsPhoto;
+    alert('Profile updated!'); historyBack();
+  } catch (e) { alert('Failed to update'); }
 }
 
 function openChat(partner) {
@@ -1650,22 +1216,15 @@ function openChat(partner) {
   document.getElementById('chatPartnerName').textContent = partner.displayName;
   
   const avatarEl = document.getElementById('chatAvatar');
-  if (partner.privacy && partner.privacy.photo === 'nobody') {
-    avatarEl.style.background = colorForName(partner.displayName);
-    avatarEl.innerHTML = initialsFor(partner.displayName);
-  } else {
-    avatarEl.style.background = avatarBg(partner);
-    avatarEl.innerHTML = avatarHtml(partner);
-  }
-
+  avatarEl.style.background = avatarBg(partner);
+  avatarEl.innerHTML = avatarHtml(partner);
   document.getElementById('messagesEl').innerHTML = '';
-  
+
   if (partnerUserUnsub) partnerUserUnsub();
   partnerUserUnsub = db.collection('users').doc(partner.uid).onSnapshot(doc => {
     if (doc.exists) {
       activePartner = { uid: doc.id, ...doc.data() };
-      const isOnline = checkIfOnline(activePartner);
-      document.getElementById('chatPartnerStatus').textContent = isOnline ? 'Online' : formatLastActive(activePartner);
+      document.getElementById('chatPartnerStatus').textContent = checkIfOnline(activePartner) ? 'Online' : formatLastActive(activePartner);
     }
   });
 
@@ -1690,22 +1249,15 @@ function openChat(partner) {
   if (convDocUnsub) convDocUnsub();
   convDocUnsub = db.collection('conversations').doc(activeConversationId).onSnapshot(doc => {
     const data = doc.data();
-    const typingEl = document.getElementById('typingIndicator');
-    typingEl.style.display = (data && data.typing && data.typing[partner.uid]) ? 'block' : 'none';
+    document.getElementById('typingIndicator').style.display = (data && data.typing && data.typing[partner.uid]) ? 'block' : 'none';
   });
 }
 
 async function markIncomingAsSeen(docs) {
-  if (currentUser.privacy && currentUser.privacy.readReceipts === 'off') return;
-
-  const batch = db.batch();
-  let any = false;
+  const batch = db.batch(); let any = false;
   docs.forEach(d => {
     const m = d.data();
-    if (m.senderId !== currentUser.uid && !m.seen) {
-      batch.update(d.ref, { seen: true });
-      any = true;
-    }
+    if (m.senderId !== currentUser.uid && !m.seen) { batch.update(d.ref, { seen: true }); any = true; }
   });
   if (any) { try { await batch.commit(); } catch (e) {} }
 }
@@ -1716,18 +1268,16 @@ function renderMessage(m, docId) {
   let inner = '';
   if (m.deleted) {
     inner += `<div style="font-style:italic;opacity:0.7;">This message was deleted</div>`;
+  } else if (m.type === 'image' && m.imageUrl) {
+    inner += `<img src="${m.imageUrl}" />`;
+  } else if (m.type === 'document') {
+    inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">📄</span><div><strong style="display:block;">${escapeHtml(m.fileName || 'Document')}</strong><span style="font-size:11px;opacity:0.8;">Shared Document</span></div></div>`;
+  } else if (m.type === 'audio') {
+    inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">🎵</span><div><strong style="display:block;">Voice Note (${m.duration || '0:05'})</strong><audio controls style="height:32px;margin-top:4px;max-width:200px;"><source src="${m.audioUrl || ''}" type="audio/webm"></audio></div></div>`;
+  } else if (m.type === 'location') {
+    inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">📍</span><div><strong style="display:block;">Google Map Location</strong><a href="${m.locationUrl}" target="_blank" style="font-size:12px;color:var(--marigold);text-decoration:underline;">View on Google Maps</a></div></div>`;
   } else {
-    if (m.type === 'image' && m.imageUrl) {
-      inner += `<img src="${m.imageUrl}" />`;
-    } else if (m.type === 'document') {
-      inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">📄</span><div><strong style="display:block;">${escapeHtml(m.fileName || 'Document')}</strong><span style="font-size:11px;opacity:0.8;">Shared Document</span></div></div>`;
-    } else if (m.type === 'audio') {
-      inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">🎵</span><div><strong style="display:block;">${escapeHtml(m.fileName || 'Audio Message')}</strong><audio controls style="height:32px;margin-top:4px;max-width:200px;"><source src="${m.audioUrl || ''}" type="audio/webm"></audio></div></div>`;
-    } else if (m.type === 'location') {
-      inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">📍</span><div><strong style="display:block;">Google Map Location</strong><a href="${m.locationUrl}" target="_blank" style="font-size:12px;color:var(--marigold);text-decoration:underline;">View on Google Maps</a></div></div>`;
-    } else {
-      inner += `<div>${escapeHtml(m.text)}</div>`;
-    }
+    inner += `<div>${escapeHtml(m.text)}</div>`;
   }
   const ticks = mine ? `<span class="ticks ${m.seen ? 'seen' : ''}">${m.seen ? '✓✓' : '✓'}</span>` : '';
   const deleteBtn = (mine && !m.deleted) ? `<button class="delete-msg-btn" onclick="deleteMessage('${docId}')">🗑</button>` : '';
@@ -1738,15 +1288,10 @@ function renderMessage(m, docId) {
 }
 
 async function deleteMessage(docId) {
-  if (!confirm('Are you sure you want to delete this message?')) return;
-  await db.collection('conversations').doc(activeConversationId).collection('messages').doc(docId).update({ deleted: true });
+  if (confirm('Delete message?')) await db.collection('conversations').doc(activeConversationId).collection('messages').doc(docId).update({ deleted: true });
 }
 
-function escapeHtml(str) {
-  const d = document.createElement('div');
-  d.textContent = str || '';
-  return d.innerHTML;
-}
+function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
 
 function onTyping() {
   if (!activeConversationId) return;
@@ -1755,7 +1300,7 @@ function onTyping() {
   typingTimeout = setTimeout(() => setTyping(false), 3000);
 }
 
-async function setTypo(isTyping) {
+async function setTyping(isTyping) {
   if (!activeConversationId || !activePartner) return;
   try {
     await db.collection('conversations').doc(activeConversationId).set({
@@ -1764,7 +1309,6 @@ async function setTypo(isTyping) {
     }, { merge: true });
   } catch (e) {}
 }
-function setTyping(isTyping) { setTypo(isTyping); }
 
 function onImageSelected(event) {
   const file = event.target.files[0];
@@ -1773,17 +1317,14 @@ function onImageSelected(event) {
   reader.onload = (e) => {
     const img = new Image();
     img.onload = () => {
-      const MAX_W = 800;
-      const scale = Math.min(1, MAX_W / img.width);
       const canvas = document.createElement('canvas');
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const scale = Math.min(1, 800 / img.width);
+      canvas.width = img.width * scale; canvas.height = img.height * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
       pendingImageDataUrl = canvas.toDataURL('image/jpeg', 0.6);
       pendingAttachmentData = { type: 'image' };
       document.getElementById('imgPreviewThumb').src = pendingImageDataUrl;
-      document.getElementById('imgPreviewText').textContent = 'Image ready to send';
+      document.getElementById('imgPreviewText').textContent = 'Image ready';
       document.getElementById('imgPreviewBar').style.display = 'flex';
     };
     img.src = e.target.result;
@@ -1800,78 +1341,112 @@ function onDocSelected(event) {
   document.getElementById('imgPreviewBar').style.display = 'flex';
 }
 
-function onAudioSelected(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    pendingAttachmentData = { type: 'audio', fileName: file.name, audioUrl: e.target.result };
-    document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%232563EB"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
-    document.getElementById('imgPreviewText').textContent = 'Audio: ' + file.name;
-    document.getElementById('imgPreviewBar').style.display = 'flex';
-  };
-  reader.readAsDataURL(file);
-}
-
 function shareLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-      const mapUrl = `https://www.google.com/maps?q=${lat},${lon}`;
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const mapUrl = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
       pendingAttachmentData = { type: 'location', locationUrl: mapUrl };
       document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23ef4444"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>';
-      document.getElementById('imgPreviewText').textContent = 'Google Map Location Ready';
+      document.getElementById('imgPreviewText').textContent = 'Location Ready';
       document.getElementById('imgPreviewBar').style.display = 'flex';
-    }, () => {
-      alert('Unable to retrieve your location.');
-    });
-  } else {
-    alert('Geolocation is not supported');
+    }, () => alert('Unable to retrieve location'));
   }
 }
 
+/* WHATSAPP STYLE AUDIO RECORDING FUNCTIONS */
 async function toggleVoiceRecording() {
   const micBtn = document.getElementById('micBtn');
+  const textInput = document.getElementById('messageInput');
+  const recordingBar = document.getElementById('waRecordingBar');
+
   if (!isRecording) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorder = new MediaRecorder(stream);
       audioChunks = [];
       
-      mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          pendingAttachmentData = { type: 'audio', fileName: 'Voice Note.webm', audioUrl: e.target.result };
-          document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%232563EB"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
-          document.getElementById('imgPreviewText').textContent = 'Voice Note Ready to Send';
-          document.getElementById('imgPreviewBar').style.display = 'flex';
-        };
-        reader.readAsDataURL(audioBlob);
-        stream.getTracks().forEach(track => track.stop());
-      };
+      mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+      mediaRecorder.onstop = () => { stream.getTracks().forEach(t => t.stop()); };
 
       mediaRecorder.start();
       isRecording = true;
-      micBtn.classList.add('recording');
+      
+      micBtn.style.display = 'none';
+      textInput.style.display = 'none';
+      recordingBar.style.display = 'flex';
+
+      recSeconds = 0;
+      document.getElementById('waTimer').textContent = '0:00';
+      recTimerInterval = setInterval(() => {
+        recSeconds++;
+        const mins = Math.floor(recSeconds / 60);
+        const secs = recSeconds % 60;
+        document.getElementById('waTimer').textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }, 1000);
     } catch (e) {
-      alert('Microphone access denied or not supported.');
+      alert('Microphone permission denied or unavailable.');
     }
-  } else {
-    if (mediaRecorder) mediaRecorder.stop();
-    isRecording = false;
-    micBtn.classList.remove('recording');
   }
 }
 
+function cancelAudioRecording() {
+  if (mediaRecorder && isRecording) {
+    mediaRecorder.stop();
+  }
+  isRecording = false;
+  if (recTimerInterval) clearInterval(recTimerInterval);
+  document.getElementById('waRecordingBar').style.display = 'none';
+  document.getElementById('micBtn').style.display = 'flex';
+  document.getElementById('messageInput').style.display = 'block';
+  audioChunks = [];
+}
+
+async function stopAndSendAudioRecording() {
+  if (!mediaRecorder || !isRecording) return;
+  
+  mediaRecorder.onstop = async () => {
+    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const audioUrl = e.target.result;
+      const durationFormatted = document.getElementById('waTimer').textContent;
+
+      const summaryLabel = '🎵 Audio (' + durationFormatted + ')';
+      await db.collection('conversations').doc(activeConversationId).set({
+        participants: [currentUser.uid, activePartner.uid],
+        lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+        lastMessageText: summaryLabel,
+        lastMessageType: 'audio',
+        lastMessageSenderId: currentUser.uid,
+        unreadCount: { [activePartner.uid]: firebase.firestore.FieldValue.increment(1) }
+      }, { merge: true });
+
+      await db.collection('conversations').doc(activeConversationId).collection('messages').add({
+        senderId: currentUser.uid,
+        text: null,
+        type: 'audio',
+        audioUrl: audioUrl,
+        duration: durationFormatted,
+        fileName: 'Voice Note.webm',
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        seen: false
+      });
+    };
+    reader.readAsDataURL(audioBlob);
+  };
+
+  mediaRecorder.stop();
+  isRecording = false;
+  if (recTimerInterval) clearInterval(recTimerInterval);
+  document.getElementById('waRecordingBar').style.display = 'none';
+  document.getElementById('micBtn').style.display = 'flex';
+  document.getElementById('messageInput').style.display = 'block';
+}
+
 function clearImagePreview() {
-  pendingImageDataUrl = null;
-  pendingAttachmentData = null;
+  pendingImageDataUrl = null; pendingAttachmentData = null;
   document.getElementById('imageInput').value = '';
   document.getElementById('docInput').value = '';
-  document.getElementById('audioInput').value = '';
   document.getElementById('imgPreviewBar').style.display = 'none';
 }
 
@@ -1880,24 +1455,16 @@ async function sendMessage() {
   const text = input.value.trim();
   if (!text && !pendingAttachmentData) return;
 
-  const sendBtn = document.getElementById('sendBtn');
-  sendBtn.disabled = true;
-
   try {
-    let msgType = 'text';
-    let extraData = {};
-
+    let msgType = 'text', extraData = {};
     if (pendingAttachmentData) {
       msgType = pendingAttachmentData.type;
       if (msgType === 'image') extraData.imageUrl = pendingImageDataUrl;
       else if (msgType === 'document') extraData.fileName = pendingAttachmentData.fileName;
-      else if (msgType === 'audio') {
-        extraData.fileName = pendingAttachmentData.fileName;
-        extraData.audioUrl = pendingAttachmentData.audioUrl;
-      } else if (msgType === 'location') extraData.locationUrl = pendingAttachmentData.locationUrl;
+      else if (msgType === 'location') extraData.locationUrl = pendingAttachmentData.locationUrl;
     }
 
-    let summaryLabel = text || (msgType === 'image' ? '📷 Photo' : (msgType === 'document' ? '📄 Document' : (msgType === 'audio' ? '🎵 Audio' : '📍 Location')));
+    let summaryLabel = text || (msgType === 'image' ? '📷 Photo' : (msgType === 'document' ? '📄 Document' : '📍 Location'));
 
     await db.collection('conversations').doc(activeConversationId).set({
       participants: [currentUser.uid, activePartner.uid],
@@ -1910,131 +1477,76 @@ async function sendMessage() {
     }, { merge: true });
 
     await db.collection('conversations').doc(activeConversationId).collection('messages').add({
-      senderId: currentUser.uid,
-      text: text || null,
-      type: msgType,
-      ...extraData,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      seen: false
+      senderId: currentUser.uid, text: text || null, type: msgType, ...extraData,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(), seen: false
     });
 
-    input.value = '';
-    clearImagePreview();
+    input.value = ''; clearImagePreview();
     if (typingTimeout) clearTimeout(typingTimeout);
   } catch (e) {
-    alert('Failed to send message');
-  } finally {
-    sendBtn.disabled = false;
+    alert('Failed to send');
   }
 }
 
-async function openContactInfoFromChat() {
-  closeDropdowns();
-  if (activePartner) openContactInfo(activePartner);
-}
+async function openContactInfoFromChat() { closeDropdowns(); if (activePartner) openContactInfo(activePartner); }
 
 async function openMediaLinksDocs() {
   closeDropdowns();
   if (!activeConversationId) return;
-
   const container = document.getElementById('mediaViewerContentEl');
   container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--muted);">Loading media...</div>';
   navigateToScreen('mediaViewerScreen');
 
   try {
     const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').orderBy('timestamp', 'desc').get();
-    
     let imagesHtml = '', docsHtml = '', audioHtml = '';
     snap.docs.forEach(doc => {
       const m = doc.data();
-      if (m.type === 'image' && m.imageUrl) {
-        imagesHtml += `<div class="media-thumb-box" onclick="window.open('${m.imageUrl}', '_blank')"><img src="${m.imageUrl}" /></div>`;
-      } else if (m.type === 'document') {
-        docsHtml += `<div class="media-file-item"><span style="font-size:24px;">📄</span><div style="flex:1;min-width:0;"><strong style="display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(m.fileName || 'Document')}</strong><span style="font-size:11px;color:var(--muted);">${shortTime(m.timestamp)}</span></div></div>`;
-      } else if (m.type === 'audio') {
-        audioHtml += `<div class="media-file-item"><span style="font-size:24px;">🎵</span><div style="flex:1;min-width:0;"><strong style="display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(m.fileName || 'Audio')}</strong><audio controls style="height:28px;width:100%;margin-top:4px;"><source src="${m.audioUrl || ''}" type="audio/webm"></audio></div></div>`;
-      }
+      if (m.type === 'image' && m.imageUrl) imagesHtml += `<div class="media-thumb-box" onclick="window.open('${m.imageUrl}', '_blank')"><img src="${m.imageUrl}" /></div>`;
+      else if (m.type === 'document') docsHtml += `<div class="media-file-item"><span style="font-size:24px;">📄</span><div style="flex:1;min-width:0;"><strong>${escapeHtml(m.fileName)}</strong></div></div>`;
+      else if (m.type === 'audio') audioHtml += `<div class="media-file-item"><span style="font-size:24px;">🎵</span><div style="flex:1;min-width:0;"><strong>Voice Note</strong><audio controls style="height:28px;width:100%;margin-top:4px;"><source src="${m.audioUrl}" type="audio/webm"></audio></div></div>`;
     });
-
     container.innerHTML = `
-      <div><div class="media-section-title">Photos & Videos</div><div class="media-grid">${imagesHtml || '<div style="font-size:13px;color:var(--muted);">No media shared</div>'}</div></div>
-      <div style="margin-top:10px;"><div class="media-section-title">Documents</div><div class="media-file-list">${docsHtml || '<div style="font-size:13px;color:var(--muted);">No documents shared</div>'}</div></div>
-      <div style="margin-top:10px;"><div class="media-section-title">Audio Files</div><div class="media-file-list">${audioHtml || '<div style="font-size:13px;color:var(--muted);">No audio shared</div>'}</div></div>
+      <div><div class="media-section-title">Photos</div><div class="media-grid">${imagesHtml || '<div style="color:var(--muted)">No images</div>'}</div></div>
+      <div style="margin-top:10px;"><div class="media-section-title">Documents</div><div class="media-file-list">${docsHtml || '<div style="color:var(--muted)">No documents</div>'}</div></div>
+      <div style="margin-top:10px;"><div class="media-section-title">Audio</div><div class="media-file-list">${audioHtml || '<div style="color:var(--muted)">No audio</div>'}</div></div>
     `;
-  } catch (e) {
-    container.innerHTML = '<div style="text-align:center; padding:40px; color:#ef4444;">Failed to load media files.</div>';
-  }
-}
-
-async function toggleNotificationSettings() {
-  closeDropdowns();
-  alert('Notification settings updated for this chat.');
+  } catch (e) { container.innerHTML = '<div style="color:#ef4444;text-align:center;">Failed to load</div>'; }
 }
 
 async function toggleFavouriteChat() {
   closeDropdowns();
   if (!activePartner) return;
   const idx = favouritesList.indexOf(activePartner.uid);
-  if (idx > -1) {
-    favouritesList.splice(idx, 1);
-    alert(`${activePartner.displayName} removed from favourites.`);
-  } else {
-    favouritesList.push(activePartner.uid);
-    alert(`${activePartner.displayName} added to favourites.`);
-  }
+  if (idx > -1) favouritesList.splice(idx, 1);
+  else favouritesList.push(activePartner.uid);
   localStorage.setItem('talknu_favourites', JSON.stringify(favouritesList));
   renderContactList();
+  alert('Favourites updated.');
 }
 
-async function blockChatPartner() {
-  closeDropdowns();
-  if (!activePartner) return;
-  if (confirm(`Block ${activePartner.displayName}?`)) {
-    alert('User has been blocked.');
-    historyBack();
-  }
-}
+async function blockChatPartner() { closeDropdowns(); if (confirm('Block user?')) historyBack(); }
 
 async function clearChatMessages() {
   closeDropdowns();
-  if (!activeConversationId) return;
-  if (confirm('Clear all messages in this chat?')) {
-    try {
-      const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
-      const batch = db.batch();
-      snap.docs.forEach(doc => batch.delete(doc.ref));
-      await batch.commit();
-      await db.collection('conversations').doc(activeConversationId).update({
-        lastMessageText: '',
-        lastMessageType: 'text',
-        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      alert('Chat cleared successfully.');
-    } catch (e) { alert('Failed to clear chat.'); }
+  if (confirm('Clear chat messages?')) {
+    const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
+    const batch = db.batch();
+    snap.docs.forEach(d => batch.delete(d.ref));
+    await batch.commit();
+    alert('Chat cleared.');
   }
 }
 
 async function deleteChatConversation() {
   closeDropdowns();
-  if (!activeConversationId) return;
-  if (confirm('Delete this entire conversation?')) {
-    try {
-      const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
-      const batch = db.batch();
-      snap.docs.forEach(doc => batch.delete(doc.ref));
-      batch.delete(db.collection('conversations').doc(activeConversationId));
-      await batch.commit();
-      alert('Conversation deleted.');
-      historyBack();
-    } catch (e) { alert('Failed to delete conversation.'); }
-  }
-}
-
-async function reportChatPartner() {
-  closeDropdowns();
-  if (!activePartner) return;
-  if (confirm(`Report ${activePartner.displayName}?`)) {
-    alert('User has been reported.');
+  if (confirm('Delete conversation?')) {
+    const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
+    const batch = db.batch();
+    snap.docs.forEach(d => batch.delete(d.ref));
+    batch.delete(db.collection('conversations').doc(activeConversationId));
+    await batch.commit();
+    historyBack();
   }
 }
 </script>
