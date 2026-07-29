@@ -338,7 +338,13 @@
   .settings-label { font-size: 12.5px; font-weight: 600; color: var(--muted); }
   .settings-select, .settings-input { width: 100%; padding: 11px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; }
 
-  #chatScreen header, #userListScreen header, #contactInfoScreen header, #settingsScreen header, #mediaViewerScreen header {
+  /* New WhatsApp Privacy Style Items */
+  .privacy-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .privacy-item:last-child { border-bottom: none; }
+  .privacy-label-group div:first-child { font-weight: 600; color: var(--text); }
+  .privacy-label-group div:last-child { font-size: 12px; color: var(--muted); }
+
+  #chatScreen header, #userListScreen header, #contactInfoScreen header, #settingsScreen header, #privacyScreen header, #mediaViewerScreen header {
     background: var(--teal); color: #fff; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative; z-index: 50; border-bottom: 1px solid var(--border);
   }
@@ -435,7 +441,7 @@
 </head>
 <body onclick="closeDropdowns(event)">
 
-<!-- শুরুতে উভয় স্ক্রিন ডিসপ্লে none করা হয়েছে যাতে ফ্লিকার না করে -->
+<!-- Authentication Screen (Hidden instantly if logged in via onAuthStateChanged) -->
 <div class="screen" id="authScreen" style="display:none;">
   <div class="auth-card" style="margin: auto;">
     <div class="auth-logo">Talknu</div>
@@ -454,6 +460,7 @@
   </div>
 </div>
 
+<!-- Main App Container (Directly displayed if logged in) -->
 <div class="app-container" id="appContainer" style="display:none;">
   
   <div class="sidebar-pane">
@@ -545,6 +552,14 @@
           <button class="btn-primary" onclick="saveProfileChanges()">Update Profile</button>
         </div>
 
+        <div class="settings-card" style="cursor: pointer;" onclick="openPrivacySettings()">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>🔒 Privacy Settings</h3>
+            <span style="color: var(--muted);">›</span>
+          </div>
+          <div style="font-size: 13px; color: var(--muted);">Control who can see your personal info, read receipts & disappearing messages</div>
+        </div>
+
         <div class="settings-card">
           <h3>Theme Preferences</h3>
           <div class="settings-label">Select App Theme</div>
@@ -557,6 +572,91 @@
         <div class="settings-card">
           <h3>Account Session</h3>
           <button class="btn-danger" onclick="logout()">🚪 Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WhatsApp Privacy Settings Screen -->
+    <div class="screen" id="privacyScreen">
+      <header>
+        <button class="back-btn" onclick="historyBack()">←</button>
+        <div class="app-title" style="font-size:18px; color: #fff;">Privacy Settings</div>
+        <div style="width:24px;"></div>
+      </header>
+      <div class="settings-content">
+        <div class="settings-card">
+          <h3>Who can see my personal info</h3>
+          
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Last Seen & Online</div>
+              <div>Who can see when I'm online</div>
+            </div>
+            <select class="settings-select" id="privLastSeen" style="width: 140px;" onchange="savePrivacySettings()">
+              <option value="all">Everyone</option>
+              <option value="contacts">My contacts</option>
+              <option value="nobody">Nobody</option>
+            </select>
+          </div>
+
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Profile Photo</div>
+              <div>Who can see my profile picture</div>
+            </div>
+            <select class="settings-select" id="privPhoto" style="width: 140px;" onchange="savePrivacySettings()">
+              <option value="all">Everyone</option>
+              <option value="contacts">My contacts</option>
+              <option value="nobody">Nobody</option>
+            </select>
+          </div>
+
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>About / Status</div>
+              <div>Who can see my status bio</div>
+            </div>
+            <select class="settings-select" id="privAbout" style="width: 140px;" onchange="savePrivacySettings()">
+              <option value="all">Everyone</option>
+              <option value="contacts">My contacts</option>
+              <option value="nobody">Nobody</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <h3>Messaging Privacy</h3>
+          
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Read Receipts</div>
+              <div>If turned off, you won't send or receive read receipts</div>
+            </div>
+            <select class="settings-select" id="privReadReceipts" style="width: 140px;" onchange="savePrivacySettings()">
+              <option value="on">On</option>
+              <option value="off">Off</option>
+            </select>
+          </div>
+
+          <div class="privacy-item">
+            <div class="privacy-label-group">
+              <div>Default Message Timer</div>
+              <div>Start new chats with disappearing messages</div>
+            </div>
+            <select class="settings-select" id="privDisappearing" style="width: 140px;" onchange="savePrivacySettings()">
+              <option value="off">Off</option>
+              <option value="24h">24 Hours</option>
+              <option value="7d">7 Days</option>
+              <option value="90d">90 Days</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Account Delete Section -->
+        <div class="settings-card" style="border-color: #ef4444;">
+          <h3 style="color: #ef4444;">Delete My Account</h3>
+          <div style="font-size: 13px; color: var(--muted);">Deleting your account removes your profile, chat history and settings permanently from Talknu.</div>
+          <button class="btn-danger" onclick="deleteMyAccount()">🗑️ Delete Account</button>
         </div>
       </div>
     </div>
@@ -817,10 +917,11 @@ function checkIfOnline(user) {
   return user.online === true && diffSeconds < 45;
 }
 
-function formatLastActive(lastSeenTs) {
-  if (!lastSeenTs) return "Offline";
+function formatLastActive(userObj) {
+  if (userObj && userObj.privacy && userObj.privacy.lastSeen === 'nobody') return "Offline";
+  if (!userObj || !userObj.lastSeen) return "Offline";
   const now = new Date();
-  const lastActive = lastSeenTs.toDate ? lastSeenTs.toDate() : new Date(lastSeenTs);
+  const lastActive = userObj.lastSeen.toDate ? userObj.lastSeen.toDate() : new Date(userObj.lastSeen);
   const diffInSeconds = Math.floor((now - lastActive) / 1000);
   
   if (diffInSeconds < 45) {
@@ -930,7 +1031,14 @@ async function submitAuth() {
         photoBase64: pendingSignupPhoto || null,
         online: true,
         lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        privacy: {
+          lastSeen: 'all',
+          photo: 'all',
+          about: 'all',
+          readReceipts: 'on',
+          disappearing: 'off'
+        }
       });
     } else {
       try {
@@ -945,7 +1053,14 @@ async function submitAuth() {
             photoBase64: null,
             online: true,
             lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            privacy: {
+              lastSeen: 'all',
+              photo: 'all',
+              about: 'all',
+              readReceipts: 'on',
+              disappearing: 'off'
+            }
           });
           return;
         }
@@ -1000,9 +1115,15 @@ function logout() {
   auth.signOut();
 }
 
-// ফায়ারবেসAuthStateChanged লজিক যেখানে অ্যাকাউন্ট থাকলে ডিরেক্ট অ্যাপ শো করবে এবং ফ্লিকার করবে না
+// 100% Guaranteed Session Check: Bypasses Auth Screen instantly if session exists
 auth.onAuthStateChanged(async (user) => {
+  const authEl = document.getElementById('authScreen');
+  const appEl = document.getElementById('appContainer');
+
   if (user) {
+    authEl.style.display = 'none';
+    appEl.style.display = 'flex';
+
     const userDocRef = db.collection('users').doc(user.uid);
     let doc = await userDocRef.get();
     if (!doc.exists) {
@@ -1014,19 +1135,18 @@ auth.onAuthStateChanged(async (user) => {
         photoBase64: null,
         online: true,
         lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on', disappearing: 'off' }
       });
       doc = await userDocRef.get();
     }
     currentUser = { uid: user.uid, ...doc.data() };
-    document.getElementById('authScreen').style.display = 'none';
-    document.getElementById('appContainer').style.display = 'flex';
     startHeartbeat();
     listenContacts();
   } else {
     currentUser = null;
-    document.getElementById('appContainer').style.display = 'none';
-    document.getElementById('authScreen').style.display = 'flex'; // শুধু ইউজার না থাকলে লগইন পেজ দেখাবে
+    appEl.style.display = 'none';
+    authEl.style.display = 'flex';
   }
 });
 
@@ -1121,7 +1241,7 @@ function renderContactList() {
     const conv = myConversations[convId];
     
     const isOnline = checkIfOnline(u);
-    let previewPrefixed = isOnline ? 'Online' : formatLastActive(u.lastSeen);
+    let previewPrefixed = isOnline ? 'Online' : formatLastActive(u);
     let unread = 0;
     let timeLabel = '';
     let sortKey = conv && conv.lastUpdated ? conv.lastUpdated.toMillis() : 0;
@@ -1205,7 +1325,7 @@ function renderAllUsersList() {
             <div class="contact-name">${escapeHtml(u.displayName)}</div>
           </div>
           <div class="contact-bottom-row">
-            <div class="contact-sub">${isOnline ? 'Online' : formatLastActive(u.lastSeen)}</div>
+            <div class="contact-sub">${isOnline ? 'Online' : formatLastActive(u)}</div>
           </div>
         </div>
       </div>
@@ -1219,11 +1339,19 @@ function openContactInfo(userObj) {
   
   const formattedDate = userObj.createdAt && userObj.createdAt.toDate ? new Date(userObj.createdAt.toDate()).toLocaleDateString() : 'Recently';
   const isOnline = checkIfOnline(userObj);
-  const statusStr = isOnline ? 'Online' : formatLastActive(userObj.lastSeen);
+  const statusStr = isOnline ? 'Online' : formatLastActive(userObj);
+
+  // Apply privacy settings check for profile photo and status view
+  let displayAvatarHtml = avatarHtml(userObj);
+  let displayAvatarBg = avatarBg(userObj);
+  if (userObj.privacy && userObj.privacy.photo === 'nobody') {
+    displayAvatarHtml = initialsFor(userObj.displayName);
+    displayAvatarBg = colorForName(userObj.displayName);
+  }
 
   container.innerHTML = `
     <div class="profile-hero">
-      <div class="profile-big-avatar" style="background:${avatarBg(userObj)}">${avatarHtml(userObj)}</div>
+      <div class="profile-big-avatar" style="background:${displayAvatarBg}">${displayAvatarHtml}</div>
       <div class="profile-name">${escapeHtml(userObj.displayName)}</div>
       <div class="profile-status-text">📱 ${userObj.phone || 'No phone'}</div>
     </div>
@@ -1258,6 +1386,53 @@ function openSettings() {
   previewEl.innerHTML = avatarHtml(currentUser);
   pendingSettingsPhoto = currentUser.photoBase64 || null;
   navigateToScreen('settingsScreen');
+}
+
+function openPrivacySettings() {
+  if (currentUser.privacy) {
+    document.getElementById('privLastSeen').value = currentUser.privacy.lastSeen || 'all';
+    document.getElementById('privPhoto').value = currentUser.privacy.photo || 'all';
+    document.getElementById('privAbout').value = currentUser.privacy.about || 'all';
+    document.getElementById('privReadReceipts').value = currentUser.privacy.readReceipts || 'on';
+    document.getElementById('privDisappearing').value = currentUser.privacy.disappearing || 'off';
+  }
+  navigateToScreen('privacyScreen');
+}
+
+async function savePrivacySettings() {
+  const privacyData = {
+    lastSeen: document.getElementById('privLastSeen').value,
+    photo: document.getElementById('privPhoto').value,
+    about: document.getElementById('privAbout').value,
+    readReceipts: document.getElementById('privReadReceipts').value,
+    disappearing: document.getElementById('privDisappearing').value
+  };
+
+  try {
+    await db.collection('users').doc(currentUser.uid).update({ privacy: privacyData });
+    currentUser.privacy = privacyData;
+  } catch (e) {
+    alert('Failed to save privacy settings');
+  }
+}
+
+async function deleteMyAccount() {
+  if (confirm('Are you absolutely sure you want to delete your account? This action is permanent and cannot be undone.')) {
+    try {
+      const uid = currentUser.uid;
+      // Delete user doc from firestore
+      await db.collection('users').doc(uid).delete();
+      // Delete user authentication
+      const user = auth.currentUser;
+      if (user) {
+        await user.delete();
+      }
+      alert('Your account has been deleted successfully.');
+      logout();
+    } catch (e) {
+      alert('Failed to delete account. Please re-login and try again.');
+    }
+  }
 }
 
 function onSettingsPhotoSelected(event) {
@@ -1304,9 +1479,16 @@ function openChat(partner) {
   activePartner = partner;
   activeConversationId = [currentUser.uid, partner.uid].sort().join('_');
   document.getElementById('chatPartnerName').textContent = partner.displayName;
+  
   const avatarEl = document.getElementById('chatAvatar');
-  avatarEl.style.background = avatarBg(partner);
-  avatarEl.innerHTML = avatarHtml(partner);
+  if (partner.privacy && partner.privacy.photo === 'nobody') {
+    avatarEl.style.background = colorForName(partner.displayName);
+    avatarEl.innerHTML = initialsFor(partner.displayName);
+  } else {
+    avatarEl.style.background = avatarBg(partner);
+    avatarEl.innerHTML = avatarHtml(partner);
+  }
+
   document.getElementById('messagesEl').innerHTML = '';
   
   if (partnerUserUnsub) partnerUserUnsub();
@@ -1314,7 +1496,7 @@ function openChat(partner) {
     if (doc.exists) {
       activePartner = { uid: doc.id, ...doc.data() };
       const isOnline = checkIfOnline(activePartner);
-      document.getElementById('chatPartnerStatus').textContent = isOnline ? 'Online' : formatLastActive(activePartner.lastSeen);
+      document.getElementById('chatPartnerStatus').textContent = isOnline ? 'Online' : formatLastActive(activePartner);
     }
   });
 
@@ -1345,6 +1527,9 @@ function openChat(partner) {
 }
 
 async function markIncomingAsSeen(docs) {
+  // If user disabled read receipts in privacy settings, don't update seen status
+  if (currentUser.privacy && currentUser.privacy.readReceipts === 'off') return;
+
   const batch = db.batch();
   let any = false;
   docs.forEach(d => {
