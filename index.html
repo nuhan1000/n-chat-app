@@ -107,7 +107,6 @@
     .sidebar-pane.hidden-mobile { transform: translateX(-100%); }
     .main-pane { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
     .main-pane .screen.active { z-index: 30; }
-    /* Requirement 3: Hide cross icon in mobile conversation header */
     .mobile-hide-cross { display: none !important; }
   }
 
@@ -318,7 +317,6 @@
   .bubble .ticks.seen { color: #93C5FD; }
   .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; background: var(--panel); }
   
-  /* Requirement 1: WhatsApp style message box / input supporting up to 10 lines */
   .composer { 
     display: flex; align-items: flex-end; gap: 8px; padding: 10px 14px; background: var(--panel); 
     border-top: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 50; width: 100%;
@@ -345,7 +343,6 @@
   .round-btn.send { background: var(--marigold); color: #fff; font-weight: 700; flex-shrink: 0; }
   .round-btn.send:hover { background: var(--marigold-hover); }
 
-  /* WHATSAPP STYLE AUDIO RECORDING BAR */
   .wa-recording-bar {
     display: none; align-items: center; gap: 12px; flex: 1; background: var(--panel);
     padding: 4px 8px; animation: appOpen 0.2s ease-out;
@@ -377,7 +374,6 @@
 </head>
 <body onclick="closeDropdowns(event)">
 
-<!-- Authentication Screen (Hidden if logged in) -->
 <div class="screen" id="authScreen" style="display:none;">
   <div class="auth-card" style="margin: auto;">
     <div class="auth-logo">Talknu</div>
@@ -396,7 +392,6 @@
   </div>
 </div>
 
-<!-- Main App Container (Directly loaded if authenticated)[cite: 1] -->
 <div class="app-container" id="appContainer" style="display:none;">
   
   <div class="sidebar-pane" id="sidebarPane">
@@ -593,7 +588,6 @@
       <div class="media-viewer-content" id="mediaViewerContentEl"></div>
     </div>
 
-    <!-- CHAT SCREEN -->
     <div class="screen" id="chatScreen">
       <header>
         <button class="chat-back-indicator" onclick="closeCurrentConversation()" title="Back">
@@ -625,7 +619,6 @@
             </div>
           </div>
 
-          <!-- Requirement 3: Cross button hidden on mobile version, present on web version -->
           <button class="close-conv-btn mobile-hide-cross" onclick="closeCurrentConversation()" title="Close Conversation">✕</button>
         </div>
 
@@ -639,14 +632,12 @@
         <button onclick="clearImagePreview()" style="background:none;border:none;color:red;font-size:12px;cursor:pointer;">Cancel</button>
       </div>
 
-      <!-- COMPOSER -->
       <div class="composer">
         <input type="file" id="imageInput" accept="image/*" onchange="onImageSelected(event)" />
         <input type="file" id="docInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" onchange="onDocSelected(event)" />
         <input type="file" id="audioInput" accept="audio/*" onchange="onAudioSelected(event)" />
 
         <div class="attach-wrapper">
-          <!-- Requirement 4: + icon attachment menu including WhatsApp-style phone contact sharing -->
           <button class="round-btn plus" onclick="toggleAttachMenu(event)" title="Attach">＋</button>
           <div class="attach-menu" id="attachMenu">
             <div class="attach-item" onclick="document.getElementById('docInput').click(); closeAttachMenu();"><span>📄</span> Documents</div>
@@ -657,7 +648,6 @@
           </div>
         </div>
 
-        <!-- WhatsApp Style Live Audio Recording Container -->
         <div class="wa-recording-bar" id="waRecordingBar">
           <button class="round-btn" onclick="cancelAudioRecording()" style="background:#ef4444;color:#fff;width:34px;height:34px;font-size:14px;" title="Cancel Recording">🗑️</button>
           <div class="wa-rec-anim">
@@ -674,7 +664,6 @@
           </svg>
         </button>
 
-        <!-- Requirement 1: WhatsApp style textarea message box (approx 10 lines expandable height) -->
         <textarea id="messageInput" rows="1" placeholder="Type a message..." oninput="autoResizeTextarea(this); onTyping();" onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"></textarea>
         <button class="round-btn send" id="sendBtn" onclick="sendMessage()" title="Send">➤</button>
       </div>
@@ -818,7 +807,6 @@ function closeAttachMenu() { const menu = document.getElementById('attachMenu');
 
 function toggleMessageMenu(event, docId) {
   event.stopPropagation();
-  // Close other open message menus
   document.querySelectorAll('.msg-dropdown').forEach(m => { if(m.id !== 'msgMenu_' + docId) m.classList.remove('show'); });
   const menu = document.getElementById('msgMenu_' + docId);
   if (menu) menu.classList.toggle('show');
@@ -1004,7 +992,6 @@ function logout() {
   auth.signOut();
 }
 
-// Session Check: Direct entry to app interface if already logged in[cite: 1]
 auth.onAuthStateChanged(async (user) => {
   const authEl = document.getElementById('authScreen');
   const appEl = document.getElementById('appContainer');
@@ -1101,7 +1088,6 @@ function renderContactList() {
   const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
   
   if (activeFilter === 'invite') {
-    // Requirement 2: WhatsApp-like contact invite view showing contacts available to invite
     let inviteContacts = allUsers.filter(u => {
       const convId = [currentUser.uid, u.uid].sort().join('_');
       return !myConversations[convId];
@@ -1180,7 +1166,7 @@ function renderContactList() {
 }
 
 function inviteUser(u) {
-  alert(`Invite link generated for ${u.displayName}! (Link feature active)`);
+  alert(`Invite link generated for ${u.displayName}!`);
   openChat(u);
 }
 
@@ -1336,7 +1322,6 @@ function renderMessage(m, docId) {
   const time = shortTime(m.timestamp);
   let inner = '';
   
-  // Requirement 6: WhatsApp style deleted message handling (tapable/manageable)
   if (m.deleted) {
     inner += `<div style="font-style:italic;opacity:0.7;cursor:pointer;" onclick="onDeletedMessageTap('${docId}')">🚫 This message was deleted</div>`;
   } else if (m.type === 'image' && m.imageUrl) {
@@ -1358,7 +1343,6 @@ function renderMessage(m, docId) {
 
   const ticks = mine ? `<span class="ticks ${m.seen ? 'seen' : ''}">${m.seen ? '✓✓' : '✓'}</span>` : '';
   
-  // Requirement 5: Small 3-dot menu beside each message for forward, reply, unsend, delete
   const msgMenuHtml = `
     <div class="msg-menu-wrapper">
       <button class="msg-menu-btn" onclick="toggleMessageMenu(event, '${docId}')">▼</button>
@@ -1372,9 +1356,8 @@ function renderMessage(m, docId) {
   `;
 
   return `<div class="msg-row ${mine ? 'mine' : ''}">
-            ${!mine ? msgMenuHtml : ''}
             <div class="bubble ${mine ? 'mine' : 'theirs'}">${inner}<div class="meta-row"><span class="time">${time}</span>${ticks}</div></div>
-            ${mine ? msgMenuHtml : ''}
+            ${msgMenuHtml}
           </div>`;
 }
 
@@ -1486,7 +1469,6 @@ function shareLocation() {
   }
 }
 
-// Requirement 4: Share phone contact feature
 function sharePhoneContact() {
   const contactName = prompt('Enter contact name to share:', 'John Doe');
   if (!contactName) return;
@@ -1499,7 +1481,6 @@ function sharePhoneContact() {
   document.getElementById('imgPreviewBar').style.display = 'flex';
 }
 
-/* WHATSAPP STYLE AUDIO RECORDING FUNCTIONS */
 async function toggleVoiceRecording() {
   const micBtn = document.getElementById('micBtn');
   const textInput = document.getElementById('messageInput');
