@@ -8,29 +8,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --teal: #1E3A8A;        
-    --teal-deep: #172554;   
-    --marigold: #2563EB;
-    --marigold-hover: #1D4ED8;
-    --bg: #F8FAFC;
-    --panel: #FFFFFF;
-    --border: #E2E8F0;
-    --text: #1E293B;
-    --muted: #64748B;
-    --online: #22C55E;
+    --teal: #008069;        
+    --teal-deep: #005c4b;   
+    --marigold: #00a884;
+    --marigold-hover: #008f72;
+    --bg: #efeae2;
+    --panel: #ffffff;
+    --border: #e9edef;
+    --text: #111b21;
+    --muted: #667781;
+    --online: #00a884;
+    --bubble-mine: #d9fdd3;
+    --bubble-theirs: #ffffff;
   }
 
   [data-theme="dark"] {
-    --teal: #0F172A;
-    --teal-deep: #020617;
-    --marigold: #3B82F6;
-    --marigold-hover: #2563EB;
-    --bg: #0F172A;
-    --panel: #1E293B;
-    --border: #334155;
-    --text: #F8FAFC;
-    --muted: #94A3B8;
-    --online: #22C55E;
+    --teal: #111b21;
+    --teal-deep: #0b141a;
+    --marigold: #00a884;
+    --marigold-hover: #008f72;
+    --bg: #0b141a;
+    --panel: #202c33;
+    --border: #222d34;
+    --text: #e9edef;
+    --muted: #8696a0;
+    --online: #00a884;
+    --bubble-mine: #005c4b;
+    --bubble-theirs: #202c33;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -110,16 +114,16 @@
     .mobile-hide-cross { display: none !important; }
   }
 
-  #authScreen { align-items: center; justify-content: center; background: linear-gradient(135deg, #1E3A8A 0%, #172554 100%); padding: 24px; overflow-y: auto; position: fixed; z-index: 9999; }
+  #authScreen { align-items: center; justify-content: center; background: linear-gradient(135deg, #008069 0%, #005c4b 100%); padding: 24px; overflow-y: auto; position: fixed; z-index: 9999; }
   .auth-card { width: 100%; max-width: 360px; background: var(--panel); border-radius: 20px; padding: 32px 26px; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.15); margin: 20px 0; border: 1px solid var(--border); }
-  .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 34px; font-weight: 800; color: #1E3A8A; text-align: center; margin-bottom: 4px; }
+  .auth-logo { font-family: 'Baloo Da 2', sans-serif; font-size: 34px; font-weight: 800; color: var(--teal); text-align: center; margin-bottom: 4px; }
   .auth-sub { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 22px; }
   .field { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 14px; margin-bottom: 10px; background: var(--bg); color: var(--text); }
   .btn-primary { width: 100%; padding: 12px 0; border-radius: 12px; border: none; background: var(--marigold); color: #fff; font-weight: 700; font-size: 15px; margin-top: 6px; cursor: pointer; transition: background 0.2s; }
   .btn-primary:hover { background: var(--marigold-hover); }
   .btn-danger { width: 100%; padding: 12px 0; border-radius: 12px; border: none; background: #ef4444; color: #fff; font-weight: 700; font-size: 15px; margin-top: 6px; cursor: pointer; }
   .auth-switch { text-align: center; font-size: 13px; color: var(--muted); margin-top: 16px; }
-  .auth-switch a { color: #2563EB; font-weight: 700; text-decoration: none; cursor: pointer; }
+  .auth-switch a { color: var(--marigold); font-weight: 700; text-decoration: none; cursor: pointer; }
   .auth-error { color: #ef4444; font-size: 12px; text-align: center; min-height: 16px; margin-bottom: 6px; }
   .photo-picker-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
   .photo-picker-preview { width: 52px; height: 52px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; border: 1.5px solid var(--border); }
@@ -127,7 +131,7 @@
   .photo-picker-btn { font-size: 12px; color: var(--text); font-weight: 700; background: var(--bg); border: 1.5px solid var(--border); padding: 8px 12px; border-radius: 10px; cursor: pointer; }
 
   .sidebar-header {
-    padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     background: var(--panel); border-bottom: 1px solid var(--border);
   }
   .app-title { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 22px; color: var(--text); }
@@ -139,7 +143,7 @@
   }
   .thin-icon-btn:hover { background: var(--bg); color: var(--text); }
   .thin-icon-btn:disabled { opacity: 0.3; cursor: default; }
-  .thin-icon-btn svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .thin-icon-btn svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
   .theme-switch {
     position: relative; width: 46px; height: 24px; background: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4);
@@ -164,17 +168,17 @@
   .recent-bubble-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .recent-bubble-name { font-size: 11px; color: var(--text); max-width: 56px; overflow: hidden; text-overflow: ellipsis; text-align: center; }
 
-  .search-filter-container { padding: 10px 14px; background: var(--panel); border-bottom: 1px solid var(--border); flex-shrink: 0; }
-  .search-box { display: flex; align-items: center; background: var(--bg); border-radius: 22px; padding: 8px 14px; gap: 10px; border: 1px solid transparent; }
+  .search-filter-container { padding: 8px 12px; background: var(--panel); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .search-box { display: flex; align-items: center; background: var(--bg); border-radius: 8px; padding: 6px 12px; gap: 10px; border: 1px solid transparent; }
   .search-box:focus-within { border-color: var(--marigold); background: var(--panel); }
   .search-box input { border: none; background: none; width: 100%; font-size: 14px; color: var(--text); outline: none; }
   
-  .filter-chips { display: flex; align-items: center; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 2px; }
-  .chip { padding: 6px 14px; border-radius: 16px; font-size: 13px; font-weight: 500; background: var(--bg); color: var(--muted); border: none; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-  .chip.active { background: var(--marigold); color: #fff; font-weight: 700; }
+  .filter-chips { display: flex; align-items: center; gap: 8px; margin-top: 8px; overflow-x: auto; padding-bottom: 2px; }
+  .chip { padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 500; background: var(--bg); color: var(--muted); border: none; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+  .chip.active { background: var(--teal); color: #fff; font-weight: 700; }
 
   .contact-list, .all-users-list { flex: 1; overflow-y: auto; padding: 0; background: var(--panel); }
-  .contact-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--panel); cursor: pointer; transition: background 0.2s; }
+  .contact-row { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--panel); cursor: pointer; transition: background 0.2s; }
   .contact-row:hover { background: var(--bg); }
   .contact-row.selected { background: var(--bg); }
   
@@ -185,11 +189,11 @@
   
   .contact-main { flex: 1; min-width: 0; }
   .contact-top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-  .contact-name { font-weight: 600; font-size: 15px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .contact-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .contact-name { font-weight: 600; font-size: 16px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .contact-time { font-size: 12px; color: var(--muted); white-space: nowrap; }
   
-  .contact-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 4px; }
-  .contact-sub { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .contact-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 2px; }
+  .contact-sub { font-size: 14px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .unread-badge { background: var(--marigold); color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0; }
   .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 60px 24px; }
 
@@ -258,7 +262,7 @@
 
   .settings-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
   .settings-card { width: 100%; max-width: 420px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-  .settings-card h3 { font-size: 16px; color: #2563EB; font-family: 'Baloo Da 2', sans-serif; }
+  .settings-card h3 { font-size: 16px; color: var(--marigold); font-family: 'Baloo Da 2', sans-serif; }
   .settings-profile-center { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 6px; }
   .settings-avatar-preview { width: 84px; height: 84px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 28px; overflow: hidden; border: 2.5px solid var(--marigold); }
   .settings-avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
@@ -271,8 +275,8 @@
   .privacy-label-group div:last-child { font-size: 12px; color: var(--muted); }
 
   #chatScreen header, #userListScreen header, #contactInfoScreen header, #settingsScreen header, #privacyScreen header, #accountScreen header, #chatsScreen header, #notificationsScreen header, #storageScreen header, #helpScreen header, #mediaViewerScreen header {
-    background: var(--teal); color: #fff; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative; z-index: 50; border-bottom: 1px solid var(--border);
+    background: var(--teal); color: #fff; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; z-index: 50; border-bottom: 1px solid var(--border);
   }
   #chatScreen header { gap: 8px; }
   .back-btn { background: none; border: none; color: #fff; font-size: 22px; padding: 4px 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 51; }
@@ -286,41 +290,44 @@
 
   .chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer; padding: 4px; z-index: 51; }
   .chat-partner-name { font-family: 'Baloo Da 2', sans-serif; font-weight: 700; font-size: 16px; color: #fff; }
-  .chat-partner-status { font-size: 11px; color: rgba(255, 255, 255, 0.75); }
+  .chat-partner-status { font-size: 12px; color: rgba(255, 255, 255, 0.75); }
   
-  .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; background: var(--bg); }
-  .msg-row { display: flex; align-items: flex-end; gap: 6px; position: relative; }
+  .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 6px; background: var(--bg); }
+  .msg-row { display: flex; align-items: flex-end; gap: 6px; position: relative; margin-bottom: 2px; }
   .msg-row.mine { justify-content: flex-end; }
   
-  /* Message 3-dot menu and options */
+  /* WhatsApp-style Context Popup Menu on Tap/Long-press and 3-dot trigger */
   .msg-menu-wrapper { position: relative; display: inline-block; }
-  .msg-menu-btn { background: none; border: none; color: var(--muted); font-size: 14px; cursor: pointer; padding: 2px 6px; opacity: 0; transition: opacity 0.2s; }
+  .msg-menu-btn { background: none; border: none; color: var(--muted); font-size: 14px; cursor: pointer; padding: 4px 6px; opacity: 0; transition: opacity 0.2s; border-radius: 50%; }
   .msg-row:hover .msg-menu-btn { opacity: 1; }
+  .msg-menu-btn:hover { background: rgba(0,0,0,0.05); }
+  [data-theme="dark"] .msg-menu-btn:hover { background: rgba(255,255,255,0.05); }
+
   .msg-dropdown {
     display: none; position: absolute; right: 0; top: 100%; background: var(--panel);
-    border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-    width: 140px; z-index: 999; overflow: hidden;
+    border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    width: 160px; z-index: 999; overflow: hidden; animation: appOpen 0.15s ease-out;
   }
   .msg-dropdown.show { display: block; }
-  .msg-dropdown-item { padding: 8px 12px; font-size: 12px; color: var(--text); cursor: pointer; border-bottom: 1px solid var(--border); }
+  .msg-dropdown-item { padding: 10px 14px; font-size: 13px; color: var(--text); cursor: pointer; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
   .msg-dropdown-item:last-child { border-bottom: none; }
   .msg-dropdown-item:hover { background: var(--bg); }
   .msg-dropdown-item.danger { color: #ef4444; }
 
-  .bubble { max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14.5px; line-height: 1.45; position: relative; word-break: break-word; cursor: pointer; }
-  .bubble.theirs { background: var(--panel); color: var(--text); border-top-left-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); border: 1px solid var(--border); }
-  .bubble.mine { background: #2563EB; color: #FFFFFF; border-top-right-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
-  .bubble img { max-width: 100%; border-radius: 8px; display: block; margin-top: 4px; }
-  .bubble .meta-row { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 2px; }
-  .bubble .time { font-size: 10px; opacity: 0.7; }
-  .bubble .ticks { font-size: 11px; margin-left: 2px; }
-  .bubble .ticks.seen { color: #93C5FD; }
+  .bubble { max-width: 75%; padding: 6px 10px 8px 10px; border-radius: 8px; font-size: 14.5px; line-height: 1.45; position: relative; word-break: break-word; cursor: pointer; box-shadow: 0 1px 0.5px rgba(0,0,0,0.13); }
+  .bubble.theirs { background: var(--bubble-theirs); color: var(--text); border-top-left-radius: 0px; }
+  .bubble.mine { background: var(--bubble-mine); color: var(--text); border-top-right-radius: 0px; }
+  .bubble img { max-width: 100%; border-radius: 6px; display: block; margin-top: 4px; }
+  .bubble .meta-row { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 2px; float: right; margin-left: 8px; }
+  .bubble .time { font-size: 11px; color: var(--muted); }
+  .bubble .ticks { font-size: 12px; margin-left: 2px; color: var(--muted); font-weight: bold; }
+  .bubble .ticks.seen { color: #53bdeb; }
   .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; background: var(--panel); }
   
   /* WhatsApp-style Forwarded badge and Reply preview inside bubble */
-  .forwarded-tag { font-size: 11px; font-style: italic; opacity: 0.75; margin-bottom: 2px; display: flex; align-items: center; gap: 3px; }
-  .bubble-reply-preview { background: rgba(0,0,0,0.08); padding: 4px 8px; border-left: 3px solid var(--marigold); border-radius: 4px; font-size: 12px; margin-bottom: 4px; opacity: 0.9; cursor: pointer; }
-  [data-theme="dark"] .bubble-reply-preview { background: rgba(255,255,255,0.08); }
+  .forwarded-tag { font-size: 11px; font-style: italic; color: var(--muted); margin-bottom: 2px; display: flex; align-items: center; gap: 3px; }
+  .bubble-reply-preview { background: rgba(0,0,0,0.05); padding: 4px 8px; border-left: 4px solid var(--marigold); border-radius: 4px; font-size: 12px; margin-bottom: 4px; color: var(--text); cursor: pointer; }
+  [data-theme="dark"] .bubble-reply-preview { background: rgba(255,255,255,0.05); }
 
   /* Composer reply preview banner */
   .reply-banner { display: none; background: var(--panel); padding: 8px 12px; border-left: 4px solid var(--marigold); border-top: 1px solid var(--border); align-items: center; justify-content: space-between; font-size: 13px; }
@@ -329,26 +336,26 @@
   /* Toast Notification */
   .toast-popup {
     position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
-    background: rgba(0, 0, 0, 0.8); color: #fff; padding: 8px 16px; border-radius: 20px;
+    background: rgba(0, 0, 0, 0.85); color: #fff; padding: 8px 16px; border-radius: 20px;
     font-size: 13px; font-weight: 500; z-index: 99999; opacity: 0; transition: opacity 0.3s, transform 0.3s;
     pointer-events: none;
   }
   .toast-popup.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   .composer { 
-    display: flex; align-items: flex-end; gap: 8px; padding: 10px 14px; background: var(--panel); 
-    border-top: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 50; width: 100%;
+    display: flex; align-items: flex-end; gap: 6px; padding: 10px 16px; background: var(--panel); 
+    flex-shrink: 0; position: relative; z-index: 50; width: 100%;
   }
   .composer textarea { 
-    flex: 1; min-width: 0; border: 1.5px solid var(--border); border-radius: 20px; 
-    padding: 10px 16px; font-size: 15px; line-height: 1.4; background: var(--bg); color: var(--text); 
-    resize: none; max-height: 220px; overflow-y: auto; outline: none;
+    flex: 1; min-width: 0; border: none; border-radius: 8px; 
+    padding: 9px 12px; font-size: 15px; line-height: 1.4; background: var(--bg); color: var(--text); 
+    resize: none; max-height: 120px; overflow-y: auto; outline: none;
   }
-  .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; transition: transform 0.2s, background 0.2s; }
-  .round-btn:active { transform: scale(0.95); }
+  .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; transition: transform 0.2s, background 0.2s; color: var(--muted); background: transparent; }
+  .round-btn:hover { background: rgba(0,0,0,0.05); }
+  [data-theme="dark"] .round-btn:hover { background: rgba(255,255,255,0.05); }
   
-  .round-btn.plus { background: var(--border); color: var(--text); font-weight: 400; font-size: 24px; transition: background 0.2s, color 0.2s; }
-  .round-btn.plus:hover { background: var(--marigold); color: #fff; }
+  .round-btn.plus { font-size: 24px; color: var(--muted); }
   .sidebar-bottom-fab {
     position: absolute; bottom: 20px; right: 20px; background: var(--marigold); color: #fff;
     width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -356,11 +363,12 @@
   }
   .sidebar-bottom-fab:hover { transform: scale(1.06); background: var(--marigold-hover); }
 
-  .round-btn.mic { background: var(--border); color: var(--muted); transition: background 0.2s, color 0.2s, transform 0.2s; }
-  .round-btn.mic:hover { background: var(--marigold); color: #fff; }
+  /* Audio Record Icon Styling (WhatsApp Style - circular green background) */
+  .round-btn.mic { background: var(--marigold); color: #fff; border-radius: 50%; }
+  .round-btn.mic:hover { background: var(--marigold-hover); }
   .round-btn.mic svg { width: 20px; height: 20px; fill: currentColor; }
   
-  .round-btn.send { background: var(--marigold); color: #fff; font-weight: 700; flex-shrink: 0; display: none; transition: transform 0.2s; }
+  .round-btn.send { background: var(--marigold); color: #fff; font-weight: 700; flex-shrink: 0; display: none; border-radius: 50%; }
   .round-btn.send:hover { background: var(--marigold-hover); }
 
   .wa-recording-bar {
@@ -379,7 +387,7 @@
   }
   .wa-timer { font-size: 13px; font-weight: 600; color: #ef4444; min-width: 38px; }
 
-  #imageInput, #photoInput, #settingsPhotoInput, #docInput, #audioInput { display: none; }
+  #imageInput, #photoInput, #settingsPhotoInput, #docInput, #audioInput, #cameraInput { display: none; }
   .img-preview-bar { padding: 8px 14px; background: var(--panel); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; z-index: 45; position: relative; }
   .img-preview-bar img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; }
 
@@ -661,21 +669,9 @@
 
       <div class="composer">
         <input type="file" id="imageInput" accept="image/*" onchange="onImageSelected(event)" />
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="onImageSelected(event)" />
         <input type="file" id="docInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" onchange="onDocSelected(event)" />
         <input type="file" id="audioInput" accept="audio/*" onchange="onAudioSelected(event)" />
-
-        <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
-          <div class="attach-wrapper">
-            <button class="round-btn plus" onclick="toggleAttachMenu(event)" title="Attach">＋</button>
-            <div class="attach-menu" id="attachMenu">
-              <div class="attach-item" onclick="document.getElementById('docInput').click(); closeAttachMenu();"><span>📄</span> Documents</div>
-              <div class="attach-item" onclick="document.getElementById('imageInput').click(); closeAttachMenu();"><span>🖼️</span> Photos & videos</div>
-              <div class="attach-item" onclick="document.getElementById('audioInput').click(); closeAttachMenu();"><span>🎵</span> Audio</div>
-              <div class="attach-item" onclick="shareLocation(); closeAttachMenu();"><span>📍</span> Share google map location</div>
-              <div class="attach-item" onclick="sharePhoneContact(); closeAttachMenu();"><span>👤</span> Share phone contact</div>
-            </div>
-          </div>
-        </div>
 
         <div class="wa-recording-bar" id="waRecordingBar">
           <button class="round-btn" onclick="cancelAudioRecording()" style="background:#ef4444;color:#fff;width:34px;height:34px;font-size:14px;" title="Cancel Recording">🗑️</button>
@@ -683,8 +679,23 @@
             <div class="wa-bar"></div><div class="wa-bar"></div><div class="wa-bar"></div><div class="wa-bar"></div><div class="wa-bar"></div>
           </div>
           <div class="wa-timer" id="waTimer">0:00</div>
-          <button class="round-btn" onclick="stopAndSendAudioRecording()" style="background:#22C55E;color:#fff;width:34px;height:34px;font-size:14px;" title="Send Voice Note">➤</button>
+          <button class="round-btn" onclick="stopAndSendAudioRecording()" style="background:#00a884;color:#fff;width:34px;height:34px;font-size:14px;" title="Send Voice Note">➤</button>
         </div>
+
+        <div class="attach-wrapper">
+          <button class="round-btn plus" onclick="toggleAttachMenu(event)" title="Attach">＋</button>
+          <div class="attach-menu" id="attachMenu">
+            <div class="attach-item" onclick="document.getElementById('docInput').click(); closeAttachMenu();"><span>📄</span> Documents</div>
+            <div class="attach-item" onclick="document.getElementById('imageInput').click(); closeAttachMenu();"><span>🖼️</span> Photos & videos</div>
+            <div class="attach-item" onclick="document.getElementById('audioInput').click(); closeAttachMenu();"><span>🎵</span> Audio</div>
+            <div class="attach-item" onclick="shareLocation(); closeAttachMenu();"><span>📍</span> Share google map location</div>
+            <div class="attach-item" onclick="sharePhoneContact(); closeAttachMenu();"><span>👤</span> Share phone contact</div>
+          </div>
+        </div>
+
+        <button class="round-btn" onclick="document.getElementById('cameraInput').click()" title="Camera">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" fill="none" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+        </button>
 
         <textarea id="messageInput" rows="1" placeholder="Type a message..." oninput="autoResizeTextarea(this); onTyping(); checkComposerState();" onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"></textarea>
         
@@ -876,7 +887,7 @@ window.addEventListener('DOMContentLoaded', () => {
   changeTheme(savedTheme);
 });
 
-const AVATAR_COLORS = ['#2563EB', '#1E40AF', '#1D4ED8', '#3B82F6', '#60A5FA', '#93C5FD'];
+const AVATAR_COLORS = ['#008069', '#005c4b', '#00a884', '#1f2c34', '#111b21', '#202c33'];
 function colorForName(name) {
   let hash = 0; for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
@@ -1394,19 +1405,28 @@ function renderMessage(m, docId) {
     <div class="msg-menu-wrapper">
       <button class="msg-menu-btn" onclick="toggleMessageMenu(event, '${docId}')">▼</button>
       <div class="msg-dropdown" id="msgMenu_${docId}">
-        <div class="msg-dropdown-item" onclick="replyMessage('${docId}', '${escapeHtml(m.text || m.fileName || (m.type==='image'?'Photo':'Audio')).replace(/'/g, "\\'")}', '${mine ? 'You' : (activePartner ? activePartner.displayName : 'User')}')">Reply</div>
-        <div class="msg-dropdown-item" onclick="forwardMessage('${docId}')">Forward</div>
-        <div class="msg-dropdown-item" onclick="copyMessage('${escapeHtml(m.text || m.fileName || '').replace(/'/g, "\\'")}')">Copy</div>
-        <div class="msg-dropdown-item danger" onclick="deleteMessageRecord('${docId}', ${m.deleted})">Delete</div>
+        <div class="msg-dropdown-item" onclick="replyMessage('${docId}', '${escapeHtml(m.text || m.fileName || m.duration ? 'Voice Note' : (m.type==='image'?'Photo':'Audio')).replace(/'/g, "\\'")}', '${mine ? 'You' : (activePartner ? activePartner.displayName : 'User')}')">💬 Reply</div>
+        <div class="msg-dropdown-item" onclick="forwardMessage('${docId}')">↗ Forward</div>
+        <div class="msg-dropdown-item" onclick="copyMessage('${escapeHtml(m.text || m.fileName || '').replace(/'/g, "\\'")}')">📋 Copy</div>
+        <div class="msg-dropdown-item danger" onclick="deleteMessageRecord('${docId}', ${m.deleted})">🗑️ Delete</div>
       </div>
     </div>
   `;
 
   return `<div class="msg-row ${mine ? 'mine' : ''}" id="msgRow_${docId}">
-            <div class="bubble ${mine ? 'mine' : 'theirs'}" onclick="toggleMessageMenu(event, '${docId}')">${inner}<div class="meta-row"><span class="time">${time}</span>${ticks}</div></div>
+            <div class="bubble ${mine ? 'mine' : 'theirs'}" onclick="toggleMessageMenu(event, '${docId}')" ontouchstart="setupLongPress(event, '${docId}')">${inner}<div class="meta-row"><span class="time">${time}</span>${ticks}</div></div>
             ${msgMenuHtml}
           </div>`;
 }
+
+let longPressTimer = null;
+function setupLongPress(event, docId) {
+  clearTimeout(longPressTimer);
+  longPressTimer = setTimeout(() => {
+    toggleMessageMenu(event, docId);
+  }, 500);
+}
+window.addEventListener('touchend', () => clearTimeout(longPressTimer));
 
 function jumpToMessage(docId) {
   if (!docId) return;
@@ -1414,7 +1434,7 @@ function jumpToMessage(docId) {
   if (target) {
     target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     target.style.transition = 'background 0.3s';
-    target.style.background = 'rgba(37, 99, 235, 0.2)';
+    target.style.background = 'rgba(0, 168, 132, 0.2)';
     setTimeout(() => target.style.background = 'transparent', 1500);
   }
 }
@@ -1496,7 +1516,7 @@ function forwardMessage(docId) {
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         seen: false
       }).then(() => {
-        alert('Message forwarded successfully!');
+        showToast('Message forwarded');
       });
     } else {
       alert('User not found.');
@@ -1568,10 +1588,24 @@ function onDocSelected(event) {
   const file = event.target.files[0];
   if (!file) return;
   pendingAttachmentData = { type: 'document', fileName: file.name };
-  document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%232563EB"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>';
+  document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23008069"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>';
   document.getElementById('imgPreviewText').textContent = 'Document: ' + file.name;
   document.getElementById('imgPreviewBar').style.display = 'flex';
   checkComposerState();
+}
+
+function onAudioSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    pendingAttachmentData = { type: 'audio', audioUrl: e.target.result, fileName: file.name, duration: '0:05' };
+    document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23008069"><path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21s4.5-2.01 4.5-4.5V6h4V3h-7z"/></svg>';
+    document.getElementById('imgPreviewText').textContent = 'Audio: ' + file.name;
+    document.getElementById('imgPreviewBar').style.display = 'flex';
+    checkComposerState();
+  };
+  reader.readAsDataURL(file);
 }
 
 function shareLocation() {
@@ -1589,7 +1623,7 @@ function shareLocation() {
 
 function phoneContactSelectionDone(contactName, contactPhone) {
   pendingAttachmentData = { type: 'contact', contactName, contactPhone };
-  document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%2322C55E"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%2300a884"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
   document.getElementById('imgPreviewText').textContent = `Contact: ${contactName}`;
   document.getElementById('imgPreviewBar').style.display = 'flex';
   checkComposerState();
@@ -1706,7 +1740,9 @@ async function stopAndSendAudioRecording() {
 function clearImagePreview() {
   pendingImageDataUrl = null; pendingAttachmentData = null;
   document.getElementById('imageInput').value = '';
+  document.getElementById('cameraInput').value = '';
   document.getElementById('docInput').value = '';
+  document.getElementById('audioInput').value = '';
   document.getElementById('imgPreviewBar').style.display = 'none';
   checkComposerState();
 }
@@ -1724,6 +1760,11 @@ async function sendMessage() {
         extraData.imageUrl = pendingImageDataUrl;
         if (text) extraData.text = text;
       } else if (msgType === 'document') extraData.fileName = pendingAttachmentData.fileName;
+      else if (msgType === 'audio') {
+        extraData.audioUrl = pendingAttachmentData.audioUrl;
+        extraData.fileName = pendingAttachmentData.fileName;
+        extraData.duration = pendingAttachmentData.duration;
+      }
       else if (msgType === 'location') extraData.locationUrl = pendingAttachmentData.locationUrl;
       else if (msgType === 'contact') {
         extraData.contactName = pendingAttachmentData.contactName;
@@ -1731,7 +1772,7 @@ async function sendMessage() {
       }
     }
 
-    let summaryLabel = text || (msgType === 'image' ? '📷 Photo' : (msgType === 'document' ? '📄 Document' : (msgType === 'contact' ? '👤 Contact' : '📍 Location')));
+    let summaryLabel = text || (msgType === 'image' ? '📷 Photo' : (msgType === 'document' ? '📄 Document' : (msgType === 'audio' ? '🎵 Audio' : (msgType === 'contact' ? '👤 Contact' : '📍 Location'))));
 
     await db.collection('conversations').doc(activeConversationId).set({
       participants: [currentUser.uid, activePartner.uid],
