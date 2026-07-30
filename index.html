@@ -296,15 +296,9 @@
   .msg-row { display: flex; align-items: flex-end; gap: 6px; position: relative; margin-bottom: 2px; }
   .msg-row.mine { justify-content: flex-end; }
   
-  /* WhatsApp-style Context Popup Menu on Tap/Long-press and 3-dot trigger */
-  .msg-menu-wrapper { position: relative; display: inline-block; }
-  .msg-menu-btn { background: none; border: none; color: var(--muted); font-size: 14px; cursor: pointer; padding: 4px 6px; opacity: 0; transition: opacity 0.2s; border-radius: 50%; }
-  .msg-row:hover .msg-menu-btn { opacity: 1; }
-  .msg-menu-btn:hover { background: rgba(0,0,0,0.05); }
-  [data-theme="dark"] .msg-menu-btn:hover { background: rgba(255,255,255,0.05); }
-
+  /* WhatsApp-style Context Popup Menu on Tap/Long-press */
   .msg-dropdown {
-    display: none; position: absolute; right: 0; top: 100%; background: var(--panel);
+    display: none; position: absolute; background: var(--panel);
     border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);
     width: 160px; z-index: 999; overflow: hidden; animation: appOpen 0.15s ease-out;
   }
@@ -314,7 +308,7 @@
   .msg-dropdown-item:hover { background: var(--bg); }
   .msg-dropdown-item.danger { color: #ef4444; }
 
-  .bubble { max-width: 75%; padding: 6px 10px 8px 10px; border-radius: 8px; font-size: 14.5px; line-height: 1.45; position: relative; word-break: break-word; cursor: pointer; box-shadow: 0 1px 0.5px rgba(0,0,0,0.13); }
+  .bubble { max-width: 75%; padding: 6px 10px 8px 10px; border-radius: 7.5px; font-size: 14.5px; line-height: 1.45; position: relative; word-break: break-word; cursor: pointer; box-shadow: 0 1px 0.5px rgba(0,0,0,0.13); }
   .bubble.theirs { background: var(--bubble-theirs); color: var(--text); border-top-left-radius: 0px; }
   .bubble.mine { background: var(--bubble-mine); color: var(--text); border-top-right-radius: 0px; }
   .bubble img { max-width: 100%; border-radius: 6px; display: block; margin-top: 4px; }
@@ -328,6 +322,14 @@
   .forwarded-tag { font-size: 11px; font-style: italic; color: var(--muted); margin-bottom: 2px; display: flex; align-items: center; gap: 3px; }
   .bubble-reply-preview { background: rgba(0,0,0,0.05); padding: 4px 8px; border-left: 4px solid var(--marigold); border-radius: 4px; font-size: 12px; margin-bottom: 4px; color: var(--text); cursor: pointer; }
   [data-theme="dark"] .bubble-reply-preview { background: rgba(255,255,255,0.05); }
+
+  /* Swipe-to-reply button on left of message */
+  .msg-swipe-reply-btn {
+    background: none; border: none; color: var(--muted); cursor: pointer; padding: 6px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; font-size: 14px;
+  }
+  .msg-row:hover .msg-swipe-reply-btn { opacity: 1; }
+  .msg-swipe-reply-btn:hover { background: rgba(0,0,0,0.05); color: var(--teal); }
 
   /* Composer reply preview banner */
   .reply-banner { display: none; background: var(--panel); padding: 8px 12px; border-left: 4px solid var(--marigold); border-top: 1px solid var(--border); align-items: center; justify-content: space-between; font-size: 13px; }
@@ -856,9 +858,22 @@ function closeAttachMenu() { const menu = document.getElementById('attachMenu');
 
 function toggleMessageMenu(event, docId) {
   event.stopPropagation();
+  const btnRect = event.currentTarget.getBoundingClientRect();
+  const dropdown = document.getElementById('msgMenu_' + docId);
+  
   document.querySelectorAll('.msg-dropdown').forEach(m => { if(m.id !== 'msgMenu_' + docId) m.classList.remove('show'); });
-  const menu = document.getElementById('msgMenu_' + docId);
-  if (menu) menu.classList.toggle('show');
+  
+  if (dropdown) {
+    const isVisible = dropdown.classList.contains('show');
+    if (!isVisible) {
+      dropdown.classList.add('show');
+      dropdown.style.position = 'fixed';
+      dropdown.style.top = (btnRect.bottom + 4) + 'px';
+      dropdown.style.left = Math.min(btnRect.left, window.innerWidth - 170) + 'px';
+    } else {
+      dropdown.classList.remove('show');
+    }
+  }
 }
 
 function closeDropdowns(event) {
@@ -1347,7 +1362,7 @@ function openChat(partner) {
       const el = document.getElementById('messagesEl');
       const isAtBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 120;
       el.innerHTML = snap.docs.map(d => renderMessage(d.data(), d.id)).join('');
-      if (isAtBottom) {
+      if (isAtBottom || snap.docChanges().some(change => change.type === 'added' && change.doc.data().senderId === currentUser.uid)) {
         el.scrollTop = el.scrollHeight;
       }
       markIncomingAsSeen(snap.docs);
@@ -1400,27 +1415,37 @@ function renderMessage(m, docId) {
   }
 
   const ticks = mine ? `<span class="ticks ${m.seen ? 'seen' : ''}">${m.seen ? '✓✓' : '✓'}</span>` : '';
+  const previewTextForReply = escapeHtml(m.text || m.fileName || (m.type === 'audio' ? 'Voice Note' : (m.type === 'image' ? 'Photo' : 'Media'))).replace(/'/g, "\\'");
+  const senderNameForReply = mine ? 'You' : (activePartner ? escapeHtml(activePartner.displayName) : 'User');
   
+  const swipeReplyBtn = `<button class="msg-swipe-reply-btn" onclick="replyMessage('${docId}', '${previewTextForReply}', '${senderNameForReply}')" title="Reply">↩</button>`;
+
   const msgMenuHtml = `
-    <div class="msg-menu-wrapper">
-      <button class="msg-menu-btn" onclick="toggleMessageMenu(event, '${docId}')">▼</button>
-      <div class="msg-dropdown" id="msgMenu_${docId}">
-        <div class="msg-dropdown-item" onclick="replyMessage('${docId}', '${escapeHtml(m.text || m.fileName || m.duration ? 'Voice Note' : (m.type==='image'?'Photo':'Audio')).replace(/'/g, "\\'")}', '${mine ? 'You' : (activePartner ? activePartner.displayName : 'User')}')">💬 Reply</div>
-        <div class="msg-dropdown-item" onclick="forwardMessage('${docId}')">↗ Forward</div>
-        <div class="msg-dropdown-item" onclick="copyMessage('${escapeHtml(m.text || m.fileName || '').replace(/'/g, "\\'")}')">📋 Copy</div>
-        <div class="msg-dropdown-item danger" onclick="deleteMessageRecord('${docId}', ${m.deleted})">🗑️ Delete</div>
-      </div>
+    <div class="msg-dropdown" id="msgMenu_${docId}">
+      <div class="msg-dropdown-item" onclick="replyMessage('${docId}', '${previewTextForReply}', '${senderNameForReply}')">💬 Reply</div>
+      <div class="msg-dropdown-item" onclick="forwardMessage('${docId}')">↗ Forward</div>
+      <div class="msg-dropdown-item" onclick="copyMessage('${escapeHtml(m.text || m.fileName || '').replace(/'/g, "\\'")}')">📋 Copy</div>
+      <div class="msg-dropdown-item danger" onclick="deleteMessageRecord('${docId}', ${m.deleted})">🗑️ Delete</div>
     </div>
   `;
 
-  return `<div class="msg-row ${mine ? 'mine' : ''}" id="msgRow_${docId}">
-            <div class="bubble ${mine ? 'mine' : 'theirs'}" onclick="toggleMessageMenu(event, '${docId}')" ontouchstart="setupLongPress(event, '${docId}')">${inner}<div class="meta-row"><span class="time">${time}</span>${ticks}</div></div>
-            ${msgMenuHtml}
-          </div>`;
+  if (mine) {
+    return `<div class="msg-row mine" id="msgRow_${docId}">
+              ${msgMenuHtml}
+              ${swipeReplyBtn}
+              <div class="bubble mine" onclick="toggleMessageMenu(event, '${docId}')" ontouchstart="setupLongPress(event, '${docId}', '${previewTextForReply}', '${senderNameForReply}')">${inner}<div class="meta-row"><span class="time">${time}</span>${ticks}</div></div>
+            </div>`;
+  } else {
+    return `<div class="msg-row" id="msgRow_${docId}">
+              <div class="bubble theirs" onclick="toggleMessageMenu(event, '${docId}')" ontouchstart="setupLongPress(event, '${docId}', '${previewTextForReply}', '${senderNameForReply}')">${inner}<div class="meta-row"><span class="time">${time}</span>${ticks}</div></div>
+              ${swipeReplyBtn}
+              ${msgMenuHtml}
+            </div>`;
+  }
 }
 
 let longPressTimer = null;
-function setupLongPress(event, docId) {
+function setupLongPress(event, docId, previewText, senderName) {
   clearTimeout(longPressTimer);
   longPressTimer = setTimeout(() => {
     toggleMessageMenu(event, docId);
@@ -1696,6 +1721,13 @@ async function stopAndSendAudioRecording() {
       const audioUrl = e.target.result;
       const durationFormatted = document.getElementById('waTimer').textContent;
 
+      let replyDataPayload = {};
+      if (activeReplyData) {
+        replyDataPayload.replyTo = activeReplyData.textPreview;
+        replyDataPayload.replyToId = activeReplyData.docId;
+        replyDataPayload.replyToSender = activeReplyData.senderName;
+      }
+
       const summaryLabel = '🎵 Audio (' + durationFormatted + ')';
       await db.collection('conversations').doc(activeConversationId).set({
         participants: [currentUser.uid, activePartner.uid],
@@ -1705,13 +1737,6 @@ async function stopAndSendAudioRecording() {
         lastMessageSenderId: currentUser.uid,
         unreadCount: { [activePartner.uid]: firebase.firestore.FieldValue.increment(1) }
       }, { merge: true });
-
-      let replyDataPayload = {};
-      if (activeReplyData) {
-        replyDataPayload.replyTo = activeReplyData.textPreview;
-        replyDataPayload.replyToId = activeReplyData.docId;
-        replyDataPayload.replyToSender = activeReplyData.senderName;
-      }
 
       await db.collection('conversations').doc(activeConversationId).collection('messages').add({
         senderId: currentUser.uid,
@@ -1774,6 +1799,13 @@ async function sendMessage() {
 
     let summaryLabel = text || (msgType === 'image' ? '📷 Photo' : (msgType === 'document' ? '📄 Document' : (msgType === 'audio' ? '🎵 Audio' : (msgType === 'contact' ? '👤 Contact' : '📍 Location'))));
 
+    let replyDataPayload = {};
+    if (activeReplyData) {
+      replyDataPayload.replyTo = activeReplyData.textPreview;
+      replyDataPayload.replyToId = activeReplyData.docId;
+      replyDataPayload.replyToSender = activeReplyData.senderName;
+    }
+
     await db.collection('conversations').doc(activeConversationId).set({
       participants: [currentUser.uid, activePartner.uid],
       lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
@@ -1784,84 +1816,64 @@ async function sendMessage() {
       unreadCount: { [activePartner.uid]: firebase.firestore.FieldValue.increment(1) }
     }, { merge: true });
 
-    let replyDataPayload = {};
-    if (activeReplyData) {
-      replyDataPayload.replyTo = activeReplyData.textPreview;
-      replyDataPayload.replyToId = activeReplyData.docId;
-      replyDataPayload.replyToSender = activeReplyData.senderName;
-    }
-
     await db.collection('conversations').doc(activeConversationId).collection('messages').add({
       senderId: currentUser.uid, text: (msgType === 'image' && text) ? text : (msgType === 'text' ? text : null), type: msgType, ...extraData, ...replyDataPayload,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(), seen: false
     });
 
-    input.value = ''; input.style.height = 'auto'; clearImagePreview(); cancelReply(); checkComposerState();
-    if (typingTimeout) clearTimeout(typingTimeout);
+    input.value = '';
+    input.style.height = 'auto';
+    cancelocellularState = false;
+    clearImagePreview();
+    cancelReply();
+    checkComposerState();
+    
+    const messagesEl = document.getElementById('messagesEl');
+    messagesEl.scrollTop = messagesEl.scrollHeight;
   } catch (e) {
-    alert('Failed to send');
+    alert('Failed to send message: ' + e.message);
   }
 }
 
-async function openContactInfoFromChat() { closeDropdowns(); if (activePartner) openContactInfo(activePartner); }
-
-async function openMediaLinksDocs() {
-  closeDropdowns();
-  if (!activeConversationId) return;
-  const container = document.getElementById('mediaViewerContentEl');
-  container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--muted);">Loading media...</div>';
+function openContactInfoFromChat() { if (activePartner) openContactInfo(activePartner); }
+function openMediaLinksDocs() {
+  const contentEl = document.getElementById('mediaViewerContentEl');
+  contentEl.innerHTML = `<div class="media-section-title">Shared Media</div><div class="media-grid" id="mediaThumbGrid"></div>`;
   navigateToScreen('mediaViewerScreen');
-
-  try {
-    const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').orderBy('timestamp', 'desc').get();
-    let imagesHtml = '', docsHtml = '', audioHtml = '';
-    snap.docs.forEach(doc => {
-      const m = doc.data();
-      if (m.type === 'image' && m.imageUrl) imagesHtml += `<div class="media-thumb-box" onclick="window.open('${m.imageUrl}', '_blank')"><img src="${m.imageUrl}" /></div>`;
-      else if (m.type === 'document') docsHtml += `<div class="media-file-item"><span style="font-size:24px;">📄</span><div style="flex:1;min-width:0;"><strong>${escapeHtml(m.fileName)}</strong></div></div>`;
-      else if (m.type === 'audio') audioHtml += `<div class="media-file-item"><span style="font-size:24px;">🎵</span><div style="flex:1;min-width:0;"><strong>Voice Note</strong><audio controls style="height:28px;width:100%;margin-top:4px;"><source src="${m.audioUrl}" type="audio/webm"></audio></div></div>`;
+  
+  db.collection('conversations').doc(activeConversationId).collection('messages')
+    .where('type', '==', 'image').get().then(snap => {
+      const grid = document.getElementById('mediaThumbGrid');
+      if (snap.empty) { grid.innerHTML = '<div style="font-size:13px;color:var(--muted);">No media found</div>'; return; }
+      grid.innerHTML = snap.docs.map(d => `<div class="media-thumb-box"><img src="${d.data().imageUrl}" /></div>`).join('');
     });
-    container.innerHTML = `
-      <div><div class="media-section-title">Photos</div><div class="media-grid">${imagesHtml || '<div style="color:var(--muted)">No images</div>'}</div></div>
-      <div style="margin-top:10px;"><div class="media-section-title">Documents</div><div class="media-file-list">${docsHtml || '<div style="color:var(--muted)">No documents</div>'}</div></div>
-      <div style="margin-top:10px;"><div class="media-section-title">Audio</div><div class="media-file-list">${audioHtml || '<div style="color:var(--muted)">No audio</div>'}</div></div>
-    `;
-  } catch (e) { container.innerHTML = '<div style="color:#ef4444;text-align:center;">Failed to load</div>'; }
 }
-
-async function toggleFavouriteChat() {
-  closeDropdowns();
+function toggleFavouriteChat() {
   if (!activePartner) return;
-  const idx = favouritesList.indexOf(activePartner.uid);
-  if (idx > -1) favouritesList.splice(idx, 1);
-  else favouritesList.push(activePartner.uid);
+  if (favouritesList.includes(activePartner.uid)) {
+    favouritesList = favouritesList.filter(id => id !== activePartner.uid);
+    showToast('Removed from favourites');
+  } else {
+    favouritesList.push(activePartner.uid);
+    showToast('Added to favourites');
+  }
   localStorage.setItem('talknu_favourites', JSON.stringify(favouritesList));
   renderContactList();
-  alert('Favourites updated.');
 }
-
-async function blockChatPartner() { closeDropdowns(); if (confirm('Block user?')) historyBack(); }
-
+function blockChatPartner() { if (confirm('Block this user?')) closeCurrentConversation(); }
 async function clearChatMessages() {
-  closeDropdowns();
-  if (confirm('Clear chat messages?')) {
+  if (confirm('Clear all messages in this chat?')) {
     const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
     const batch = db.batch();
     snap.docs.forEach(d => batch.delete(d.ref));
     await batch.commit();
-    alert('Chat cleared.');
+    document.getElementById('messagesEl').innerHTML = '';
   }
 }
-
 async function deleteChatConversation() {
-  closeDropdowns();
-  if (confirm('Delete conversation?')) {
-    const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
-    const batch = db.batch();
-    snap.docs.forEach(d => batch.delete(d.ref));
-    batch.delete(db.collection('conversations').doc(activeConversationId));
-    await batch.commit();
-    historyBack();
+  if (confirm('Delete entire conversation?')) {
+    await db.collection('conversations').doc(activeConversationId).delete();
+    closeCurrentConversation();
   }
 }
 </script>
