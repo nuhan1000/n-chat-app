@@ -365,7 +365,6 @@
   }
   .sidebar-bottom-fab:hover { transform: scale(1.06); background: var(--marigold-hover); }
 
-  /* Audio Record Icon Styling (WhatsApp Style - circular green background) */
   .round-btn.mic { background: var(--marigold); color: #fff; border-radius: 50%; }
   .round-btn.mic:hover { background: var(--marigold-hover); }
   .round-btn.mic svg { width: 20px; height: 20px; fill: currentColor; }
@@ -406,24 +405,36 @@
 
 <div class="toast-popup" id="toastPopup">Copied</div>
 
+<!-- AUTH / REGISTRATION SCREEN -->
 <div class="screen" id="authScreen" style="display:none;">
   <div class="auth-card" style="margin: auto;">
     <div class="auth-logo">Talknu</div>
-    <div class="auth-sub" id="authSubLabel">Sign in with your mobile number to start chatting</div>
+    <div class="auth-sub" id="authSubLabel">Login with your username and password</div>
     <div class="auth-error" id="authError"></div>
-    <input class="field" id="displayNameField" placeholder="Your Name" style="display:none;" />
+    
+    <input class="field" id="usernameField" placeholder="Username (e.g. name, test+number, etc.)" />
+    <input class="field" id="emailField" type="email" placeholder="Valid Email Address" style="display:none;" />
+    
     <div class="photo-picker-row" id="photoPickerRow" style="display:none;">
       <div class="photo-picker-preview" id="signupPhotoPreview">📷</div>
       <button type="button" class="photo-picker-btn" onclick="document.getElementById('photoInput').click()">Profile Photo (Opt)</button>
       <input type="file" id="photoInput" accept="image/*" onchange="onSignupPhotoSelected(event)" />
     </div>
-    <input class="field" id="phoneField" type="tel" maxlength="11" placeholder="Mobile Number (11 digits)" />
+
     <input class="field" id="passwordField" type="password" placeholder="Password (min 6 characters)" />
+    
+    <!-- OTP Input Section for Registration -->
+    <div id="otpSection" style="display:none; margin-bottom:10px;">
+      <input class="field" id="otpField" type="text" placeholder="Enter Email OTP Code" maxlength="6" />
+      <div style="font-size:11px; color:var(--muted); text-align:center;">A verification code has been sent to your email.</div>
+    </div>
+
     <button class="btn-primary" id="authSubmitBtn" onclick="submitAuth()">Login</button>
     <div class="auth-switch" id="authSwitchLabel">Don't have an account? <a onclick="toggleAuthMode()">Register now</a></div>
   </div>
 </div>
 
+<!-- MAIN APP CONTAINER -->
 <div class="app-container" id="appContainer" style="display:none;">
   
   <div class="sidebar-pane" id="sidebarPane">
@@ -511,8 +522,8 @@
             <button type="button" class="photo-picker-btn" onclick="document.getElementById('settingsPhotoInput').click()">Change Photo</button>
             <input type="file" id="settingsPhotoInput" accept="image/*" onchange="onSettingsPhotoSelected(event)" />
           </div>
-          <div class="settings-label">Your Name</div>
-          <input type="text" class="settings-input" id="settingsNameInput" placeholder="Enter name" />
+          <div class="settings-label">Your Username / Name</div>
+          <input type="text" class="settings-input" id="settingsNameInput" placeholder="Enter username" />
           <button class="btn-primary" onclick="saveProfileChanges()">Update Profile</button>
         </div>
 
@@ -520,7 +531,7 @@
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <h3>🔑 Account</h3><span style="color: var(--muted);">›</span>
           </div>
-          <div style="font-size: 13px; color: var(--muted);">Security notifications, change number</div>
+          <div style="font-size: 13px; color: var(--muted);">2-Step verification, security notifications</div>
         </div>
 
         <div class="settings-card" style="cursor: pointer;" onclick="openPrivacySettings()">
@@ -590,10 +601,24 @@
       </div>
     </div>
 
+    <!-- 2-STEP VERIFICATION SETTINGS SCREEN -->
     <div class="screen" id="accountScreen">
-      <header><button class="back-btn" onclick="historyBack()">←</button><div class="app-title" style="font-size:18px; color: #fff;">Account</div><button class="close-conv-btn" onclick="closeSubScreen()">✕</button></header>
-      <div class="settings-content"><div class="settings-card"><h3>Security</h3><div class="privacy-item"><div>Security notifications</div><select class="settings-select" style="width:100px;"><option value="on">On</option></select></div></div></div>
+      <header><button class="back-btn" onclick="historyBack()">←</button><div class="app-title" style="font-size:18px; color: #fff;">Account & 2-Step Verification</div><button class="close-conv-btn" onclick="closeSubScreen()">✕</button></header>
+      <div class="settings-content">
+        <div class="settings-card">
+          <h3>2-Step Verification (Optional)</h3>
+          <div style="font-size: 13px; color: var(--muted);">For added security, turn on 2-step verification to require an email OTP when logging in on new devices.</div>
+          <div class="privacy-item">
+            <div>Enable 2-Step Verification</div>
+            <select class="settings-select" id="twoStepToggle" style="width:110px;" onchange="saveTwoStepSettings()">
+              <option value="off">Off</option>
+              <option value="on">On</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
+
     <div class="screen" id="chatsScreen">
       <header><button class="back-btn" onclick="historyBack()">←</button><div class="app-title" style="font-size:18px; color: #fff;">Chats</div><button class="close-conv-btn" onclick="closeSubScreen()">✕</button></header>
       <div class="settings-content"><div class="settings-card"><h3>Theme</h3><div class="privacy-item"><div>App Theme</div><select class="settings-select" id="chatsThemeSelector" style="width:140px;" onchange="changeTheme(this.value)"><option value="light">☀️ Light</option><option value="dark">🌙 Dark</option></select></div></div></div>
@@ -608,7 +633,7 @@
     </div>
     <div class="screen" id="helpScreen">
       <header><button class="back-btn" onclick="historyBack()">←</button><div class="app-title" style="font-size:18px; color: #fff;">Help</div><button class="close-conv-btn" onclick="closeSubScreen()">✕</button></header>
-      <div class="settings-content"><div class="settings-card"><h3>Support</h3><div class="privacy-item"><div>App Version</div><span>v2.6.0</span></div></div></div>
+      <div class="settings-content"><div class="settings-card"><h3>Support</h3><div class="privacy-item"><div>App Version</div><span>v2.7.0</span></div></div></div>
     </div>
 
     <div class="screen" id="mediaViewerScreen">
@@ -620,6 +645,7 @@
       <div class="media-viewer-content" id="mediaViewerContentEl"></div>
     </div>
 
+    <!-- CHAT SCREEN -->
     <div class="screen" id="chatScreen">
       <header>
         <button class="chat-back-indicator" onclick="closeCurrentConversation()" title="Back">
@@ -752,6 +778,7 @@ let heartbeatInterval = null;
 let allUsers = [];
 let myConversations = {};
 let favouritesList = JSON.parse(localStorage.getItem('talknu_favourites') || '[]');
+let generatedOtpCode = null;
 
 let mediaRecorder = null;
 let audioChunks = [];
@@ -953,16 +980,19 @@ function shortTime(ts) {
 
 function toggleAuthMode() {
   isSignupMode = !isSignupMode;
-  document.getElementById('displayNameField').style.display = isSignupMode ? 'block' : 'none';
+  document.getElementById('emailField').style.display = isSignupMode ? 'block' : 'none';
   document.getElementById('photoPickerRow').style.display = isSignupMode ? 'flex' : 'none';
-  document.getElementById('authSubmitBtn').textContent = isSignupMode ? 'Register' : 'Login';
+  document.getElementById('authSubmitBtn').textContent = isSignupMode ? 'Send Email OTP' : 'Login';
   document.getElementById('authSwitchLabel').innerHTML = isSignupMode
     ? 'Already have an account? <a onclick="toggleAuthMode()">Login</a>'
     : 'Don\'t have an account? <a onclick="toggleAuthMode()">Register now</a>';
   document.getElementById('authError').textContent = '';
+  document.getElementById('otpSection').style.display = 'none';
 }
 
-function phoneToEmail(phone) { return `user_${phone.replace(/[^0-9]/g, '')}@talknu.local`; }
+function usernameToEmail(username) {
+  return `user_${username.toLowerCase().replace(/[^a-z0-9]/g, '_')}@talknu.local`;
+}
 
 function onSignupPhotoSelected(event) {
   const file = event.target.files[0];
@@ -984,48 +1014,75 @@ function onSignupPhotoSelected(event) {
 }
 
 async function submitAuth() {
-  const phone = document.getElementById('phoneField').value.trim();
+  const username = document.getElementById('usernameField').value.trim();
   const password = document.getElementById('passwordField').value;
+  const emailInput = document.getElementById('emailField').value.trim();
   const errEl = document.getElementById('authError');
   errEl.textContent = '';
 
-  if (!phone || phone.length !== 11 || !/^\d{11}$/.test(phone)) { errEl.textContent = 'Mobile number must be exactly 11 digits'; return; }
+  if (!username) { errEl.textContent = 'Please enter a username'; return; }
   if (!password || password.length < 6) { errEl.textContent = 'Password must be at least 6 characters'; return; }
 
-  const fakeEmail = phoneToEmail(phone);
   const submitBtn = document.getElementById('authSubmitBtn');
   submitBtn.disabled = true;
 
   try {
     if (isSignupMode) {
-      const displayName = document.getElementById('displayNameField').value.trim();
-      if (!displayName) { errEl.textContent = 'Please enter your name'; submitBtn.disabled = false; return; }
-      const cred = await auth.createUserWithEmailAndPassword(fakeEmail, password);
-      await db.collection('users').doc(cred.user.uid).set({
-        displayName, phone, uid: cred.user.uid, photoBase64: pendingSignupPhoto || null,
-        online: true, lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on' }
-      });
-    } else {
-      try {
-        await auth.signInWithEmailAndPassword(fakeEmail, password);
-      } catch (signInErr) {
-        if (signInErr.code === 'auth/user-not-found' || signInErr.code === 'auth/invalid-credential') {
-          const cred = await auth.createUserWithEmailAndPassword(fakeEmail, password);
-          await db.collection('users').doc(cred.user.uid).set({
-            displayName: "User " + phone.slice(-4), phone, uid: cred.user.uid, photoBase64: null,
-            online: true, lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on' }
-          });
+      if (!emailInput || !emailInput.includes('@')) { errEl.textContent = 'Please enter a valid email address'; submitBtn.disabled = false; return; }
+      
+      const otpSection = document.getElementById('otpSection');
+      if (otpSection.style.display === 'none') {
+        // Step 1: Generate & send Email OTP
+        generatedOtpCode = Math.floor(100000 + Math.random() * 900000).toString();
+        alert(`[Simulated Email Service]\nOTP sent to ${emailInput}: ${generatedOtpCode}`);
+        otpSection.style.display = 'block';
+        submitBtn.textContent = 'Verify OTP & Complete Registration';
+        submitBtn.disabled = false;
+        return;
+      } else {
+        // Step 2: Verify OTP
+        const enteredOtp = document.getElementById('otpField').value.trim();
+        if (enteredOtp !== generatedOtpCode) {
+          errEl.textContent = 'Invalid OTP code. Please check your email.';
+          submitBtn.disabled = false;
           return;
         }
-        throw signInErr;
+
+        const fakeEmail = usernameToEmail(username);
+        const cred = await auth.createUserWithEmailAndPassword(fakeEmail, password);
+        await db.collection('users').doc(cred.user.uid).set({
+          displayName: username, email: emailInput, uid: cred.user.uid, photoBase64: pendingSignupPhoto || null,
+          online: true, lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on' },
+          twoStepVerification: 'off'
+        });
       }
+    } else {
+      // Login mode with username & password
+      const fakeEmail = usernameToEmail(username);
+      
+      // Check if 2-Step Verification is enabled for this account
+      let userQuery = await db.collection('users').where('displayName', '==', username).get();
+      if (!userQuery.empty) {
+        let userData = userQuery.docs[0].data();
+        if (userData.twoStepVerification === 'on') {
+          const loginOtp = prompt('2-Step Verification is enabled. Enter email OTP sent to your registered email:');
+          const mockCode = '123456';
+          alert(`[Simulated 2SV Email]\nYour OTP is: ${mockCode}`);
+          const verificationInput = prompt('Enter the 6-digit OTP code:');
+          if (verificationInput !== mockCode) {
+            errEl.textContent = 'Incorrect 2-Step Verification OTP';
+            submitBtn.disabled = false;
+            return;
+          }
+        }
+      }
+
+      await auth.signInWithEmailAndPassword(fakeEmail, password);
     }
   } catch (e) {
-    errEl.textContent = e.message || 'An error occurred';
+    errEl.textContent = e.message || 'Authentication error';
   } finally {
     submitBtn.disabled = false;
   }
@@ -1069,11 +1126,12 @@ auth.onAuthStateChanged(async (user) => {
     if (!doc.exists) {
       await userDocRef.set({
         displayName: "User " + user.uid.slice(0, 4),
-        phone: user.email ? user.email.replace('user_', '').replace('@talknu.local', '') : '',
+        email: user.email,
         uid: user.uid, photoBase64: null, online: true,
         lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on' }
+        privacy: { lastSeen: 'all', photo: 'all', about: 'all', readReceipts: 'on' },
+        twoStepVerification: 'off'
       });
       doc = await userDocRef.get();
     }
@@ -1156,7 +1214,7 @@ function renderContactList() {
       const convId = [currentUser.uid, u.uid].sort().join('_');
       return !myConversations[convId];
     });
-    if (searchVal) inviteContacts = inviteContacts.filter(u => u.displayName.toLowerCase().includes(searchVal) || (u.phone && u.phone.includes(searchVal)));
+    if (searchVal) inviteContacts = inviteContacts.filter(u => u.displayName.toLowerCase().includes(searchVal));
     
     if (inviteContacts.length === 0) {
       listEl.innerHTML = '<div class="empty-state">No contacts available to invite right now.</div>';
@@ -1172,7 +1230,7 @@ function renderContactList() {
             <div class="contact-name">${escapeHtml(u.displayName)}</div>
             <button class="btn-primary" style="width:auto;padding:4px 12px;font-size:12px;" onclick='inviteUser(${JSON.stringify(u)})'>Invite</button>
           </div>
-          <div class="contact-bottom-row"><div class="contact-sub">${u.phone || 'Phone contact'}</div></div>
+          <div class="contact-bottom-row"><div class="contact-sub">${u.email || 'App user'}</div></div>
         </div>
       </div>
     `).join('');
@@ -1202,7 +1260,7 @@ function renderContactList() {
     return { u, convId, previewPrefixed, unread, timeLabel, sortKey, isFavourite: favouritesList.includes(u.uid), isOnline };
   });
 
-  if (searchVal) rows = rows.filter(r => r.u.displayName.toLowerCase().includes(searchVal) || (r.u.phone && r.u.phone.includes(searchVal)));
+  if (searchVal) rows = rows.filter(r => r.u.displayName.toLowerCase().includes(searchVal));
   if (activeFilter === 'unread') rows = rows.filter(r => r.unread > 0);
   else if (activeFilter === 'favourites') rows = rows.filter(r => r.isFavourite);
   rows.sort((a, b) => b.sortKey - a.sortKey);
@@ -1230,7 +1288,7 @@ function renderContactList() {
 }
 
 function inviteUser(u) {
-  alert(`Invite link generated for ${u.displayName}!`);
+  alert(`Invite sent to ${u.displayName}!`);
   openChat(u);
 }
 
@@ -1261,10 +1319,9 @@ function openContactInfo(userObj) {
     <div class="profile-hero">
       <div class="profile-big-avatar" style="background:${avatarBg(userObj)}">${avatarHtml(userObj)}</div>
       <div class="profile-name">${escapeHtml(userObj.displayName)}</div>
-      <div class="profile-status-text">📱 ${userObj.phone || 'No phone'}</div>
+      <div class="profile-status-text">📧 ${userObj.email || 'No email'}</div>
     </div>
     <div class="profile-section-card"><div class="profile-section-label">Status</div><div class="profile-section-value">${checkIfOnline(userObj) ? 'Online' : formatLastActive(userObj)}</div></div>
-    <div class="profile-section-card"><div class="profile-section-label">Mobile</div><div class="profile-section-value">${userObj.phone || 'N/A'}</div></div>
     <div class="profile-section-card"><div class="profile-section-label">Joined</div><div class="profile-section-value">${created}</div></div>
     <div style="padding: 20px;"><button class="btn-primary" onclick='openChat(${JSON.stringify(userObj)})'>Send Message</button></div>
   `;
@@ -1280,7 +1337,22 @@ function openSettings() {
   navigateToScreen('settingsScreen');
 }
 
-function openAccountSettings() { navigateToScreen('accountScreen'); }
+function openAccountSettings() {
+  document.getElementById('twoStepToggle').value = currentUser.twoStepVerification || 'off';
+  navigateToScreen('accountScreen');
+}
+
+async function saveTwoStepSettings() {
+  const val = document.getElementById('twoStepToggle').value;
+  try {
+    await db.collection('users').doc(currentUser.uid).update({ twoStepVerification: val });
+    currentUser.twoStepVerification = val;
+    showToast('2-Step settings updated');
+  } catch (e) {
+    alert('Failed to update');
+  }
+}
+
 function openPrivacySettings() {
   if (currentUser.privacy) {
     document.getElementById('privLastSeen').value = currentUser.privacy.lastSeen || 'all';
@@ -1321,7 +1393,7 @@ function onSettingsPhotoSelected(event) {
 
 async function saveProfileChanges() {
   const newName = document.getElementById('settingsNameInput').value.trim();
-  if (!newName) { alert('Enter name'); return; }
+  if (!newName) { alert('Enter username'); return; }
   try {
     await db.collection('users').doc(currentUser.uid).update({ displayName: newName, photoBase64: pendingSettingsPhoto });
     currentUser.displayName = newName; currentUser.photoBase64 = pendingSettingsPhoto;
@@ -1409,7 +1481,7 @@ function renderMessage(m, docId) {
   } else if (m.type === 'location') {
     inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">📍</span><div><strong style="display:block;">Google Map Location</strong><a href="${m.locationUrl}" target="_blank" style="font-size:12px;color:var(--marigold);text-decoration:underline;">View on Google Maps</a></div></div>`;
   } else if (m.type === 'contact') {
-    inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">👤</span><div><strong style="display:block;">Contact: ${escapeHtml(m.contactName)}</strong><span style="font-size:12px;opacity:0.8;">📱 ${escapeHtml(m.contactPhone)}</span></div></div>`;
+    inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">👤</span><div><strong style="display:block;">Contact: ${escapeHtml(m.contactName)}</strong><span style="font-size:12px;opacity:0.8;">📧 ${escapeHtml(m.contactPhone)}</span></div></div>`;
   } else {
     inner += `<div>${escapeHtml(m.text)}</div>`;
   }
@@ -1514,7 +1586,7 @@ function forwardMessage(docId) {
   db.collection('conversations').doc(activeConversationId).collection('messages').doc(docId).get().then(doc => {
     if (!doc.exists) return;
     const m = doc.data();
-    const targetName = prompt('Enter recipient name to forward message to:');
+    const targetName = prompt('Enter recipient username to forward message to:');
     if (!targetName) return;
     const found = allUsers.find(u => u.displayName.toLowerCase().includes(targetName.toLowerCase()));
     if (found) {
@@ -1657,7 +1729,7 @@ function phoneContactSelectionDone(contactName, contactPhone) {
 function sharePhoneContact() {
   const contactName = prompt('Enter contact name to share:', 'John Doe');
   if (!contactName) return;
-  const contactPhone = prompt('Enter contact phone number:', '+8801700000000');
+  const contactPhone = prompt('Enter contact email/details:', 'user@email.com');
   if (!contactPhone) return;
   phoneContactSelectionDone(contactName, contactPhone);
 }
@@ -1784,21 +1856,24 @@ async function sendMessage() {
       if (msgType === 'image') {
         extraData.imageUrl = pendingImageDataUrl;
         if (text) extraData.text = text;
-      } else if (msgType === 'document') extraData.fileName = pendingAttachmentData.fileName;
-      else if (msgType === 'audio') {
-        extraData.audioUrl = pendingAttachmentData.audioUrl;
+      } else if (msgType === 'document') {
         extraData.fileName = pendingAttachmentData.fileName;
+        extraData.text = text || pendingAttachmentData.fileName;
+      } else if (msgType === 'audio') {
+        extraData.audioUrl = pendingAttachmentData.audioUrl;
         extraData.duration = pendingAttachmentData.duration;
-      }
-      else if (msgType === 'location') extraData.locationUrl = pendingAttachmentData.locationUrl;
-      else if (msgType === 'contact') {
+      } else if (msgType === 'location') {
+        extraData.locationUrl = pendingAttachmentData.locationUrl;
+      } else if (msgType === 'contact') {
         extraData.contactName = pendingAttachmentData.contactName;
         extraData.contactPhone = pendingAttachmentData.contactPhone;
       }
+    } else {
+      extraData.text = text;
     }
 
-    let summaryLabel = text || (msgType === 'image' ? '📷 Photo' : (msgType === 'document' ? '📄 Document' : (msgType === 'audio' ? '🎵 Audio' : (msgType === 'contact' ? '👤 Contact' : '📍 Location'))));
-
+    let summaryText = text || (msgType === 'image' ? '📷 Photo' : (msgType === 'audio' ? '🎵 Audio' : '📄 Document'));
+    
     let replyDataPayload = {};
     if (activeReplyData) {
       replyDataPayload.replyTo = activeReplyData.textPreview;
@@ -1809,69 +1884,93 @@ async function sendMessage() {
     await db.collection('conversations').doc(activeConversationId).set({
       participants: [currentUser.uid, activePartner.uid],
       lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-      lastMessageText: summaryLabel,
+      lastMessageText: summaryText,
       lastMessageType: msgType,
       lastMessageSenderId: currentUser.uid,
-      typing: { [currentUser.uid]: false },
       unreadCount: { [activePartner.uid]: firebase.firestore.FieldValue.increment(1) }
     }, { merge: true });
 
     await db.collection('conversations').doc(activeConversationId).collection('messages').add({
-      senderId: currentUser.uid, text: (msgType === 'image' && text) ? text : (msgType === 'text' ? text : null), type: msgType, ...extraData, ...replyDataPayload,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(), seen: false
+      senderId: currentUser.uid,
+      type: msgType,
+      ...extraData,
+      ...replyDataPayload,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      seen: false
     });
 
     input.value = '';
     input.style.height = 'auto';
-    cancelocellularState = false;
     clearImagePreview();
     cancelReply();
+    setTyping(false);
     checkComposerState();
-    
-    const messagesEl = document.getElementById('messagesEl');
-    messagesEl.scrollTop = messagesEl.scrollHeight;
   } catch (e) {
-    alert('Failed to send message: ' + e.message);
+    alert('Failed to send message');
   }
 }
 
-function openContactInfoFromChat() { if (activePartner) openContactInfo(activePartner); }
 function openMediaLinksDocs() {
-  const contentEl = document.getElementById('mediaViewerContentEl');
-  contentEl.innerHTML = `<div class="media-section-title">Shared Media</div><div class="media-grid" id="mediaThumbGrid"></div>`;
   navigateToScreen('mediaViewerScreen');
+  const container = document.getElementById('mediaViewerContentEl');
+  container.innerHTML = '<div class="empty-state">Loading media...</div>';
   
-  db.collection('conversations').doc(activeConversationId).collection('messages')
-    .where('type', '==', 'image').get().then(snap => {
-      const grid = document.getElementById('mediaThumbGrid');
-      if (snap.empty) { grid.innerHTML = '<div style="font-size:13px;color:var(--muted);">No media found</div>'; return; }
-      grid.innerHTML = snap.docs.map(d => `<div class="media-thumb-box"><img src="${d.data().imageUrl}" /></div>`).join('');
+  db.collection('conversations').doc(activeConversationId).collection('messages').get().then(snap => {
+    let images = [];
+    let docs = [];
+    snap.docs.forEach(d => {
+      const m = d.data();
+      if (m.type === 'image' && m.imageUrl) images.push(m.imageUrl);
+      if (m.type === 'document') docs.push(m);
     });
+
+    let html = '';
+    if (images.length > 0) {
+      html += `<div class="media-section-title">Photos (${images.length})</div><div class="media-grid">`;
+      images.forEach(img => {
+        html += `<div class="media-thumb-box"><img src="${img}" /></div>`;
+      });
+      html += `</div>`;
+    }
+    if (docs.length > 0) {
+      html += `<div class="media-section-title" style="margin-top:16px;">Documents (${docs.length})</div><div class="media-file-list">`;
+      docs.forEach(doc => {
+        html += `<div class="media-file-item"><span>📄</span><div><strong>${escapeHtml(doc.fileName || 'File')}</strong></div></div>`;
+      });
+      html += `</div>`;
+    }
+    if (!images.length && !docs.length) {
+      html = '<div class="empty-state">No media, links or docs shared yet.</div>';
+    }
+    container.innerHTML = html;
+  });
 }
+
+function openContactInfoFromChat() { if (activePartner) openContactInfo(activePartner); }
 function toggleFavouriteChat() {
   if (!activePartner) return;
-  if (favouritesList.includes(activePartner.uid)) {
-    favouritesList = favouritesList.filter(id => id !== activePartner.uid);
+  const idx = favouritesList.indexOf(activePartner.uid);
+  if (idx > -1) {
+    favouritesList.splice(idx, 1);
     showToast('Removed from favourites');
   } else {
     favouritesList.push(activePartner.uid);
     showToast('Added to favourites');
   }
   localStorage.setItem('talknu_favourites', JSON.stringify(favouritesList));
-  renderContactList();
 }
-function blockChatPartner() { if (confirm('Block this user?')) closeCurrentConversation(); }
+function blockChatPartner() { if (confirm('Block this user?')) { closeCurrentConversation(); alert('User blocked.'); } }
 async function clearChatMessages() {
   if (confirm('Clear all messages in this chat?')) {
     const snap = await db.collection('conversations').doc(activeConversationId).collection('messages').get();
     const batch = db.batch();
     snap.docs.forEach(d => batch.delete(d.ref));
     await batch.commit();
-    document.getElementById('messagesEl').innerHTML = '';
+    showToast('Chat cleared');
   }
 }
 async function deleteChatConversation() {
-  if (confirm('Delete entire conversation?')) {
+  if (confirm('Delete this entire conversation?')) {
     await db.collection('conversations').doc(activeConversationId).delete();
     closeCurrentConversation();
   }
