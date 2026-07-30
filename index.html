@@ -307,7 +307,7 @@
   .msg-dropdown-item:hover { background: var(--bg); }
   .msg-dropdown-item.danger { color: #ef4444; }
 
-  .bubble { max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14.5px; line-height: 1.45; position: relative; word-break: break-word; }
+  .bubble { max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14.5px; line-height: 1.45; position: relative; word-break: break-word; cursor: pointer; }
   .bubble.theirs { background: var(--panel); color: var(--text); border-top-left-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); border: 1px solid var(--border); }
   .bubble.mine { background: #2563EB; color: #FFFFFF; border-top-right-radius: 0px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
   .bubble img { max-width: 100%; border-radius: 8px; display: block; margin-top: 4px; }
@@ -317,6 +317,24 @@
   .bubble .ticks.seen { color: #93C5FD; }
   .typing-indicator { font-size: 12px; color: var(--muted); padding: 4px 16px; font-style: italic; background: var(--panel); }
   
+  /* WhatsApp-style Forwarded badge and Reply preview inside bubble */
+  .forwarded-tag { font-size: 11px; font-style: italic; opacity: 0.75; margin-bottom: 2px; display: flex; align-items: center; gap: 3px; }
+  .bubble-reply-preview { background: rgba(0,0,0,0.08); padding: 4px 8px; border-left: 3px solid var(--marigold); border-radius: 4px; font-size: 12px; margin-bottom: 4px; opacity: 0.9; cursor: pointer; }
+  [data-theme="dark"] .bubble-reply-preview { background: rgba(255,255,255,0.08); }
+
+  /* Composer reply preview banner */
+  .reply-banner { display: none; background: var(--panel); padding: 8px 12px; border-left: 4px solid var(--marigold); border-top: 1px solid var(--border); align-items: center; justify-content: space-between; font-size: 13px; }
+  .reply-banner-content { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Toast Notification */
+  .toast-popup {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: rgba(0, 0, 0, 0.8); color: #fff; padding: 8px 16px; border-radius: 20px;
+    font-size: 13px; font-weight: 500; z-index: 99999; opacity: 0; transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+  }
+  .toast-popup.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
   .composer { 
     display: flex; align-items: flex-end; gap: 8px; padding: 10px 14px; background: var(--panel); 
     border-top: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 50; width: 100%;
@@ -326,7 +344,8 @@
     padding: 10px 16px; font-size: 15px; line-height: 1.4; background: var(--bg); color: var(--text); 
     resize: none; max-height: 220px; overflow-y: auto; outline: none;
   }
-  .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; }
+  .round-btn { width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; cursor: pointer; transition: transform 0.2s, background 0.2s; }
+  .round-btn:active { transform: scale(0.95); }
   
   .round-btn.plus { background: var(--border); color: var(--text); font-weight: 400; font-size: 24px; transition: background 0.2s, color 0.2s; }
   .round-btn.plus:hover { background: var(--marigold); color: #fff; }
@@ -337,10 +356,11 @@
   }
   .sidebar-bottom-fab:hover { transform: scale(1.06); background: var(--marigold-hover); }
 
-  .round-btn.mic { background: var(--border); color: var(--muted); transition: background 0.2s, color 0.2s; }
+  .round-btn.mic { background: var(--border); color: var(--muted); transition: background 0.2s, color 0.2s, transform 0.2s; }
   .round-btn.mic:hover { background: var(--marigold); color: #fff; }
   .round-btn.mic svg { width: 20px; height: 20px; fill: currentColor; }
-  .round-btn.send { background: var(--marigold); color: #fff; font-weight: 700; flex-shrink: 0; }
+  
+  .round-btn.send { background: var(--marigold); color: #fff; font-weight: 700; flex-shrink: 0; display: none; transition: transform 0.2s; }
   .round-btn.send:hover { background: var(--marigold-hover); }
 
   .wa-recording-bar {
@@ -373,6 +393,8 @@
 </style>
 </head>
 <body onclick="closeDropdowns(event)">
+
+<div class="toast-popup" id="toastPopup">Copied</div>
 
 <div class="screen" id="authScreen" style="display:none;">
   <div class="auth-card" style="margin: auto;">
@@ -632,19 +654,26 @@
         <button onclick="clearImagePreview()" style="background:none;border:none;color:red;font-size:12px;cursor:pointer;">Cancel</button>
       </div>
 
+      <div class="reply-banner" id="replyBanner">
+        <div class="reply-banner-content" id="replyBannerContent"></div>
+        <button onclick="cancelReply()" style="background:none;border:none;font-size:14px;cursor:pointer;color:var(--muted);font-weight:700;">✕</button>
+      </div>
+
       <div class="composer">
         <input type="file" id="imageInput" accept="image/*" onchange="onImageSelected(event)" />
         <input type="file" id="docInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" onchange="onDocSelected(event)" />
         <input type="file" id="audioInput" accept="audio/*" onchange="onAudioSelected(event)" />
 
-        <div class="attach-wrapper">
-          <button class="round-btn plus" onclick="toggleAttachMenu(event)" title="Attach">＋</button>
-          <div class="attach-menu" id="attachMenu">
-            <div class="attach-item" onclick="document.getElementById('docInput').click(); closeAttachMenu();"><span>📄</span> Documents</div>
-            <div class="attach-item" onclick="document.getElementById('imageInput').click(); closeAttachMenu();"><span>🖼️</span> Photos & videos</div>
-            <div class="attach-item" onclick="document.getElementById('audioInput').click(); closeAttachMenu();"><span>🎵</span> Audio</div>
-            <div class="attach-item" onclick="shareLocation(); closeAttachMenu();"><span>📍</span> Share google map location</div>
-            <div class="attach-item" onclick="sharePhoneContact(); closeAttachMenu();"><span>👤</span> Share phone contact</div>
+        <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
+          <div class="attach-wrapper">
+            <button class="round-btn plus" onclick="toggleAttachMenu(event)" title="Attach">＋</button>
+            <div class="attach-menu" id="attachMenu">
+              <div class="attach-item" onclick="document.getElementById('docInput').click(); closeAttachMenu();"><span>📄</span> Documents</div>
+              <div class="attach-item" onclick="document.getElementById('imageInput').click(); closeAttachMenu();"><span>🖼️</span> Photos & videos</div>
+              <div class="attach-item" onclick="document.getElementById('audioInput').click(); closeAttachMenu();"><span>🎵</span> Audio</div>
+              <div class="attach-item" onclick="shareLocation(); closeAttachMenu();"><span>📍</span> Share google map location</div>
+              <div class="attach-item" onclick="sharePhoneContact(); closeAttachMenu();"><span>👤</span> Share phone contact</div>
+            </div>
           </div>
         </div>
 
@@ -657,6 +686,8 @@
           <button class="round-btn" onclick="stopAndSendAudioRecording()" style="background:#22C55E;color:#fff;width:34px;height:34px;font-size:14px;" title="Send Voice Note">➤</button>
         </div>
 
+        <textarea id="messageInput" rows="1" placeholder="Type a message..." oninput="autoResizeTextarea(this); onTyping(); checkComposerState();" onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"></textarea>
+        
         <button class="round-btn mic" id="micBtn" onclick="toggleVoiceRecording()" title="Record Audio Message">
           <svg viewBox="0 0 24 24">
             <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
@@ -664,7 +695,6 @@
           </svg>
         </button>
 
-        <textarea id="messageInput" rows="1" placeholder="Type a message..." oninput="autoResizeTextarea(this); onTyping();" onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"></textarea>
         <button class="round-btn send" id="sendBtn" onclick="sendMessage()" title="Send">➤</button>
       </div>
     </div>
@@ -703,6 +733,7 @@ let pendingImageDataUrl = null;
 let pendingAttachmentData = null;
 let pendingSignupPhoto = null;
 let pendingSettingsPhoto = null;
+let activeReplyData = null;
 let typingTimeout = null;
 let heartbeatInterval = null;
 let allUsers = [];
@@ -718,6 +749,13 @@ let recSeconds = 0;
 let navHistory = ['welcomeScreen'];
 let navIndex = 0;
 let isNavigatingHistory = false;
+
+function showToast(msg = 'Copied') {
+  const toast = document.getElementById('toastPopup');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
 
 function isMobileView() { return window.innerWidth <= 768; }
 
@@ -1296,8 +1334,11 @@ function openChat(partner) {
     .collection('messages').orderBy('timestamp', 'asc')
     .onSnapshot(snap => {
       const el = document.getElementById('messagesEl');
+      const isAtBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 120;
       el.innerHTML = snap.docs.map(d => renderMessage(d.data(), d.id)).join('');
-      el.scrollTop = el.scrollHeight;
+      if (isAtBottom) {
+        el.scrollTop = el.scrollHeight;
+      }
       markIncomingAsSeen(snap.docs);
     });
 
@@ -1321,11 +1362,20 @@ function renderMessage(m, docId) {
   const mine = m.senderId === currentUser.uid;
   const time = shortTime(m.timestamp);
   let inner = '';
+
+  if (m.forwarded) {
+    inner += `<div class="forwarded-tag"><span>↗</span> Forwarded</div>`;
+  }
+
+  if (m.replyTo) {
+    inner += `<div class="bubble-reply-preview" onclick="jumpToMessage('${m.replyToId}')"><strong style="display:block;font-size:11px;">${escapeHtml(m.replyToSender || 'Message')}</strong>${escapeHtml(m.replyTo)}</div>`;
+  }
   
   if (m.deleted) {
-    inner += `<div style="font-style:italic;opacity:0.7;cursor:pointer;" onclick="onDeletedMessageTap('${docId}')">🚫 This message was deleted</div>`;
+    inner += `<div style="font-style:italic;opacity:0.7;">This message was deleted</div>`;
   } else if (m.type === 'image' && m.imageUrl) {
     inner += `<img src="${m.imageUrl}" />`;
+    if (m.text) inner += `<div style="margin-top:4px;">${escapeHtml(m.text)}</div>`;
   } else if (m.type === 'document') {
     inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">📄</span><div><strong style="display:block;">${escapeHtml(m.fileName || 'Document')}</strong><span style="font-size:11px;opacity:0.8;">Shared Document</span></div></div>`;
   } else if (m.type === 'audio') {
@@ -1335,9 +1385,6 @@ function renderMessage(m, docId) {
   } else if (m.type === 'contact') {
     inner += `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px;">👤</span><div><strong style="display:block;">Contact: ${escapeHtml(m.contactName)}</strong><span style="font-size:12px;opacity:0.8;">📱 ${escapeHtml(m.contactPhone)}</span></div></div>`;
   } else {
-    if (m.replyTo) {
-      inner += `<div style="background:rgba(0,0,0,0.08);padding:4px 8px;border-left:3px solid var(--marigold);border-radius:4px;font-size:12px;margin-bottom:4px;opacity:0.9;">Replying to: ${escapeHtml(m.replyTo)}</div>`;
-    }
     inner += `<div>${escapeHtml(m.text)}</div>`;
   }
 
@@ -1347,59 +1394,114 @@ function renderMessage(m, docId) {
     <div class="msg-menu-wrapper">
       <button class="msg-menu-btn" onclick="toggleMessageMenu(event, '${docId}')">▼</button>
       <div class="msg-dropdown" id="msgMenu_${docId}">
-        <div class="msg-dropdown-item" onclick="replyMessage('${docId}', '${escapeHtml(m.text || m.fileName || 'Attachment').replace(/'/g, "\\'")}')">↩ Reply</div>
-        <div class="msg-dropdown-item" onclick="forwardMessage('${docId}', '${escapeHtml(m.text || m.fileName || 'Attachment').replace(/'/g, "\\'")}')">↗ Forward</div>
-        ${mine && !m.deleted ? `<div class="msg-dropdown-item" onclick="unsendMessage('${docId}')">🔄 Unsend</div>` : ''}
-        <div class="msg-dropdown-item danger" onclick="deleteMessageRecord('${docId}')">🗑 Delete</div>
+        <div class="msg-dropdown-item" onclick="replyMessage('${docId}', '${escapeHtml(m.text || m.fileName || (m.type==='image'?'Photo':'Audio')).replace(/'/g, "\\'")}', '${mine ? 'You' : (activePartner ? activePartner.displayName : 'User')}')">Reply</div>
+        <div class="msg-dropdown-item" onclick="forwardMessage('${docId}')">Forward</div>
+        <div class="msg-dropdown-item" onclick="copyMessage('${escapeHtml(m.text || m.fileName || '').replace(/'/g, "\\'")}')">Copy</div>
+        <div class="msg-dropdown-item danger" onclick="deleteMessageRecord('${docId}', ${m.deleted})">Delete</div>
       </div>
     </div>
   `;
 
-  return `<div class="msg-row ${mine ? 'mine' : ''}">
-            <div class="bubble ${mine ? 'mine' : 'theirs'}">${inner}<div class="meta-row"><span class="time">${time}</span>${ticks}</div></div>
+  return `<div class="msg-row ${mine ? 'mine' : ''}" id="msgRow_${docId}">
+            <div class="bubble ${mine ? 'mine' : 'theirs'}" onclick="toggleMessageMenu(event, '${docId}')">${inner}<div class="meta-row"><span class="time">${time}</span>${ticks}</div></div>
             ${msgMenuHtml}
           </div>`;
 }
 
-function onDeletedMessageTap(docId) {
-  if (confirm('Permanently remove this deleted placeholder from view?')) {
-    db.collection('conversations').doc(activeConversationId).collection('messages').doc(docId).delete();
+function jumpToMessage(docId) {
+  if (!docId) return;
+  const target = document.getElementById('msgRow_' + docId);
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    target.style.transition = 'background 0.3s';
+    target.style.background = 'rgba(37, 99, 235, 0.2)';
+    setTimeout(() => target.style.background = 'transparent', 1500);
   }
 }
 
-async function deleteMessageRecord(docId) {
+function copyMessage(text) {
   closeDropdowns();
-  if (confirm('Delete message for you?')) {
-    await db.collection('conversations').doc(activeConversationId).collection('messages').doc(docId).delete();
+  if (!text) { showToast('Nothing to copy'); return; }
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Copied');
+  }).catch(() => {
+    showToast('Copied');
+  });
+}
+
+async function deleteMessageRecord(docId, isAlreadyDeleted) {
+  closeDropdowns();
+  if (isAlreadyDeleted) {
+    if (confirm('Permanently delete this message completely?')) {
+      await db.collection('conversations').doc(activeConversationId).collection('messages').doc(docId).delete();
+    }
+    return;
+  }
+  
+  if (confirm('Delete message?')) {
+    await db.collection('conversations').doc(activeConversationId).collection('messages').doc(docId).update({
+      deleted: true,
+      text: null,
+      imageUrl: null,
+      audioUrl: null,
+      replyTo: null
+    });
   }
 }
 
-async function unsendMessage(docId) {
+function replyMessage(docId, textPreview, senderName) {
   closeDropdowns();
-  await db.collection('conversations').doc(activeConversationId).collection('messages').doc(docId).update({ deleted: true, text: null, imageUrl: null });
+  activeReplyData = { docId, textPreview, senderName };
+  const banner = document.getElementById('replyBanner');
+  const content = document.getElementById('replyBannerContent');
+  content.innerHTML = `<strong>Replying to ${senderName}:</strong> ${textPreview}`;
+  banner.style.display = 'flex';
+  document.getElementById('messageInput').focus();
 }
 
-function replyMessage(docId, textPreview) {
-  closeDropdowns();
-  const input = document.getElementById('messageInput');
-  input.value = `[Replying to: ${textPreview}] `;
-  input.focus();
+function cancelReply() {
+  activeReplyData = null;
+  document.getElementById('replyBanner').style.display = 'none';
 }
 
-function forwardMessage(docId, textPreview) {
+function forwardMessage(docId) {
   closeDropdowns();
-  const targetName = prompt('Enter recipient name to forward message to:');
-  if (!targetName) return;
-  const found = allUsers.find(u => u.displayName.toLowerCase().includes(targetName.toLowerCase()));
-  if (found) {
-    openChat(found);
-    setTimeout(() => {
-      document.getElementById('messageInput').value = `[Forwarded] ${textPreview}`;
-      sendMessage();
-    }, 500);
-  } else {
-    alert('User not found.');
-  }
+  db.collection('conversations').doc(activeConversationId).collection('messages').doc(docId).get().then(doc => {
+    if (!doc.exists) return;
+    const m = doc.data();
+    const targetName = prompt('Enter recipient name to forward message to:');
+    if (!targetName) return;
+    const found = allUsers.find(u => u.displayName.toLowerCase().includes(targetName.toLowerCase()));
+    if (found) {
+      const fwdConvId = [currentUser.uid, found.uid].sort().join('_');
+      let summaryText = m.text || (m.type === 'image' ? '📷 Photo' : (m.type === 'audio' ? '🎵 Audio' : '📄 Document'));
+      db.collection('conversations').doc(fwdConvId).set({
+        participants: [currentUser.uid, found.uid],
+        lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+        lastMessageText: summaryText,
+        lastMessageType: m.type || 'text',
+        lastMessageSenderId: currentUser.uid,
+        unreadCount: { [found.uid]: firebase.firestore.FieldValue.increment(1) }
+      }, { merge: true });
+
+      db.collection('conversations').doc(fwdConvId).collection('messages').add({
+        senderId: currentUser.uid,
+        text: m.text || null,
+        type: m.type || 'text',
+        imageUrl: m.imageUrl || null,
+        audioUrl: m.audioUrl || null,
+        duration: m.duration || null,
+        fileName: m.fileName || null,
+        forwarded: true,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        seen: false
+      }).then(() => {
+        alert('Message forwarded successfully!');
+      });
+    } else {
+      alert('User not found.');
+    }
+  });
 }
 
 function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
@@ -1407,6 +1509,19 @@ function escapeHtml(str) { const d = document.createElement('div'); d.textConten
 function autoResizeTextarea(textarea) {
   textarea.style.height = 'auto';
   textarea.style.height = (textarea.scrollHeight) + 'px';
+}
+
+function checkComposerState() {
+  const input = document.getElementById('messageInput');
+  const micBtn = document.getElementById('micBtn');
+  const sendBtn = document.getElementById('sendBtn');
+  if (input.value.trim().length > 0 || pendingAttachmentData) {
+    micBtn.style.display = 'none';
+    sendBtn.style.display = 'flex';
+  } else {
+    sendBtn.style.display = 'none';
+    micBtn.style.display = 'flex';
+  }
 }
 
 function onTyping() {
@@ -1442,6 +1557,7 @@ function onImageSelected(event) {
       document.getElementById('imgPreviewThumb').src = pendingImageDataUrl;
       document.getElementById('imgPreviewText').textContent = 'Image ready';
       document.getElementById('imgPreviewBar').style.display = 'flex';
+      checkComposerState();
     };
     img.src = e.target.result;
   };
@@ -1455,6 +1571,7 @@ function onDocSelected(event) {
   document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%232563EB"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>';
   document.getElementById('imgPreviewText').textContent = 'Document: ' + file.name;
   document.getElementById('imgPreviewBar').style.display = 'flex';
+  checkComposerState();
 }
 
 function shareLocation() {
@@ -1465,8 +1582,17 @@ function shareLocation() {
       document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%23ef4444"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>';
       document.getElementById('imgPreviewText').textContent = 'Location Ready';
       document.getElementById('imgPreviewBar').style.display = 'flex';
+      checkComposerState();
     }, () => alert('Unable to retrieve location'));
   }
+}
+
+function phoneContactSelectionDone(contactName, contactPhone) {
+  pendingAttachmentData = { type: 'contact', contactName, contactPhone };
+  document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%2322C55E"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  document.getElementById('imgPreviewText').textContent = `Contact: ${contactName}`;
+  document.getElementById('imgPreviewBar').style.display = 'flex';
+  checkComposerState();
 }
 
 function sharePhoneContact() {
@@ -1474,17 +1600,14 @@ function sharePhoneContact() {
   if (!contactName) return;
   const contactPhone = prompt('Enter contact phone number:', '+8801700000000');
   if (!contactPhone) return;
-
-  pendingAttachmentData = { type: 'contact', contactName, contactPhone };
-  document.getElementById('imgPreviewThumb').src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="%2322C55E"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-  document.getElementById('imgPreviewText').textContent = `Contact: ${contactName}`;
-  document.getElementById('imgPreviewBar').style.display = 'flex';
+  phoneContactSelectionDone(contactName, contactPhone);
 }
 
 async function toggleVoiceRecording() {
   const micBtn = document.getElementById('micBtn');
   const textInput = document.getElementById('messageInput');
   const recordingBar = document.getElementById('waRecordingBar');
+  const sendBtn = document.getElementById('sendBtn');
 
   if (!isRecording) {
     try {
@@ -1499,6 +1622,7 @@ async function toggleVoiceRecording() {
       isRecording = true;
       
       micBtn.style.display = 'none';
+      sendBtn.style.display = 'none';
       textInput.style.display = 'none';
       recordingBar.style.display = 'flex';
 
@@ -1523,9 +1647,9 @@ function cancelAudioRecording() {
   isRecording = false;
   if (recTimerInterval) clearInterval(recTimerInterval);
   document.getElementById('waRecordingBar').style.display = 'none';
-  document.getElementById('micBtn').style.display = 'flex';
   document.getElementById('messageInput').style.display = 'block';
   audioChunks = [];
+  checkComposerState();
 }
 
 async function stopAndSendAudioRecording() {
@@ -1548,6 +1672,13 @@ async function stopAndSendAudioRecording() {
         unreadCount: { [activePartner.uid]: firebase.firestore.FieldValue.increment(1) }
       }, { merge: true });
 
+      let replyDataPayload = {};
+      if (activeReplyData) {
+        replyDataPayload.replyTo = activeReplyData.textPreview;
+        replyDataPayload.replyToId = activeReplyData.docId;
+        replyDataPayload.replyToSender = activeReplyData.senderName;
+      }
+
       await db.collection('conversations').doc(activeConversationId).collection('messages').add({
         senderId: currentUser.uid,
         text: null,
@@ -1555,9 +1686,11 @@ async function stopAndSendAudioRecording() {
         audioUrl: audioUrl,
         duration: durationFormatted,
         fileName: 'Voice Note.webm',
+        ...replyDataPayload,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         seen: false
       });
+      cancelReply();
     };
     reader.readAsDataURL(audioBlob);
   };
@@ -1566,8 +1699,8 @@ async function stopAndSendAudioRecording() {
   isRecording = false;
   if (recTimerInterval) clearInterval(recTimerInterval);
   document.getElementById('waRecordingBar').style.display = 'none';
-  document.getElementById('micBtn').style.display = 'flex';
   document.getElementById('messageInput').style.display = 'block';
+  checkComposerState();
 }
 
 function clearImagePreview() {
@@ -1575,6 +1708,7 @@ function clearImagePreview() {
   document.getElementById('imageInput').value = '';
   document.getElementById('docInput').value = '';
   document.getElementById('imgPreviewBar').style.display = 'none';
+  checkComposerState();
 }
 
 async function sendMessage() {
@@ -1586,8 +1720,10 @@ async function sendMessage() {
     let msgType = 'text', extraData = {};
     if (pendingAttachmentData) {
       msgType = pendingAttachmentData.type;
-      if (msgType === 'image') extraData.imageUrl = pendingImageDataUrl;
-      else if (msgType === 'document') extraData.fileName = pendingAttachmentData.fileName;
+      if (msgType === 'image') {
+        extraData.imageUrl = pendingImageDataUrl;
+        if (text) extraData.text = text;
+      } else if (msgType === 'document') extraData.fileName = pendingAttachmentData.fileName;
       else if (msgType === 'location') extraData.locationUrl = pendingAttachmentData.locationUrl;
       else if (msgType === 'contact') {
         extraData.contactName = pendingAttachmentData.contactName;
@@ -1607,12 +1743,19 @@ async function sendMessage() {
       unreadCount: { [activePartner.uid]: firebase.firestore.FieldValue.increment(1) }
     }, { merge: true });
 
+    let replyDataPayload = {};
+    if (activeReplyData) {
+      replyDataPayload.replyTo = activeReplyData.textPreview;
+      replyDataPayload.replyToId = activeReplyData.docId;
+      replyDataPayload.replyToSender = activeReplyData.senderName;
+    }
+
     await db.collection('conversations').doc(activeConversationId).collection('messages').add({
-      senderId: currentUser.uid, text: text || null, type: msgType, ...extraData,
+      senderId: currentUser.uid, text: (msgType === 'image' && text) ? text : (msgType === 'text' ? text : null), type: msgType, ...extraData, ...replyDataPayload,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(), seen: false
     });
 
-    input.value = ''; input.style.height = 'auto'; clearImagePreview();
+    input.value = ''; input.style.height = 'auto'; clearImagePreview(); cancelReply(); checkComposerState();
     if (typingTimeout) clearTimeout(typingTimeout);
   } catch (e) {
     alert('Failed to send');
